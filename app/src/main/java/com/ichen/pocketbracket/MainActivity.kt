@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberImagePainter
 import com.ichen.pocketbracket.screens.MyProfileScreen
 import com.ichen.pocketbracket.screens.MyTournamentsScreen
 import com.ichen.pocketbracket.screens.TournamentsTimelineScreen
