@@ -24,10 +24,10 @@ val testTournament: Tournament = Tournament(
     Date(1),
     true,
     true,
-    "Example tournament",
+    "Test tournament",
     1,
-    "Example owner",
+    "Test owner",
     ActivityState.ACTIVE,
     "https://images.smash.gg/images/tournament/272580/image-bddfc012a7627bb1f9cd360b50249e80.png",
-    listOf(),
+    listOf(testEvent, testEvent, testEvent, testEvent),
 )

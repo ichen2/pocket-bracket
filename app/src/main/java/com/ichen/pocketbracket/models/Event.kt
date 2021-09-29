@@ -11,3 +11,13 @@ data class Event(
     val state: ActivityState,
     val videogame: Videogame
 )
+
+val testEvent = Event(
+    0,
+    true,
+    "Test event",
+    1,
+    Date(0),
+    ActivityState.ACTIVE,
+    Videogame.MELEE
+)
