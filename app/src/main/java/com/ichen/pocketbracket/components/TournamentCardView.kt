@@ -28,7 +28,7 @@ import java.util.*
 fun TournamentCardView(tournament: Tournament) = Column(
     Modifier
         .fillMaxWidth()
-        .clip(RoundedCornerShape(16.dp))
+        .clip(MaterialTheme.shapes.small)
         .background(MaterialTheme.colors.surface)
 ) {
     Box {
