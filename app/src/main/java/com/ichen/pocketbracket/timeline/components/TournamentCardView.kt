@@ -1,9 +1,11 @@
 package com.ichen.pocketbracket.timeline.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -22,12 +24,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
-fun TournamentCardView(tournament: Tournament) = Column(
+fun TournamentCardView(tournament: Tournament, first: Boolean = false) = Column(
     Modifier
-        .fillMaxWidth()
-        .clip(MaterialTheme.shapes.small)
-        .background(MaterialTheme.colors.surface)
-) {
+        .fillMaxWidth(1f)
+        .then(if(first) Modifier.clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)) else Modifier)
+        .background(MaterialTheme.colors.surface)) {
     Box {
         Image(
             painter = rememberImagePainter(tournament.imageUrl),
@@ -41,13 +42,13 @@ fun TournamentCardView(tournament: Tournament) = Column(
             color = MaterialTheme.colors.onPrimary,
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(10.dp)
+                .padding(16.dp)
                 .clip(RoundedCornerShape(4.dp))
                 .background(MaterialTheme.colors.primary)
                 .padding(4.dp)
         )
     }
-    Column(Modifier.padding(4.dp)) {
+    Column(Modifier.padding(16.dp)) {
         Text(
             text = tournament.name,
             color = MaterialTheme.colors.onSurface,
@@ -62,7 +63,7 @@ fun TournamentCardView(tournament: Tournament) = Column(
             color = MaterialTheme.colors.onSurface
         )
         Spacer(Modifier.height(4.dp))
-        for(event in tournament.events) {
+        for (event in tournament.events) {
             EventCardItemView(event = event)
         }
     }
@@ -84,7 +85,7 @@ fun EventCardItemView(event: Event) {
         )
     }
     Text(
-        text = "${event.numEntrants} ${if(event.numEntrants == 1) "entrant" else "entrants"}",
+        text = "${event.numEntrants} ${if (event.numEntrants == 1) "entrant" else "entrants"}",
         color = MaterialTheme.colors.onSurface,
     )
 }

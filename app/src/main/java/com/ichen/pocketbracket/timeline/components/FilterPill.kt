@@ -19,10 +19,10 @@ fun FilterPill(text: String, enabled: Boolean, clickable: Boolean, onClick: () -
         text = text,
         modifier = Modifier
             .clip(CircleShape)
-            .background(if(enabled) MaterialTheme.colors.primary else MaterialTheme.colors.surface)
-            .then(if(!enabled) Modifier.border(1.dp, Color.White, shape = CircleShape) else Modifier)
+            .background(if(enabled) MaterialTheme.colors.secondary else MaterialTheme.colors.surface)
+            .then(if(!enabled) Modifier.border(1.dp, MaterialTheme.colors.onSurface, shape = CircleShape) else Modifier)
             .clickable(onClick = onClick, enabled = clickable)
             .padding(horizontal = 16.dp, vertical = 8.dp),
-        color = if(enabled) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSurface
+        color = if(enabled) MaterialTheme.colors.onSecondary else MaterialTheme.colors.onSurface
     )
 }

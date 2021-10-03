@@ -29,5 +29,5 @@ val testTournament: Tournament = Tournament(
     "Test owner",
     ActivityState.ACTIVE,
     "https://images.smash.gg/images/tournament/272580/image-bddfc012a7627bb1f9cd360b50249e80.png",
-    listOf(testEvent, testEvent, testEvent, testEvent),
+    listOf(testEvent, testEvent),
 )

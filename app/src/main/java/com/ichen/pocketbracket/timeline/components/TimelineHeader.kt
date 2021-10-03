@@ -1,9 +1,11 @@
 package com.ichen.pocketbracket.timeline.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -16,53 +18,76 @@ import com.ichen.pocketbracket.models.Videogame
 import com.ichen.pocketbracket.utils.SetComposableFunction
 
 @Composable
-fun TimelineHeader(selectedGames: MutableState<List<Videogame>?>, dialogDisplayed: Boolean, setDialogComposable: SetComposableFunction, ) = Column {
+fun TimelineHeader(
+    selectedGames: MutableState<List<Videogame>?>,
+    dialogDisplayed: Boolean,
+    setDialogComposable: SetComposableFunction,
+    clearFilters: () -> Unit
+) = Surface(
+    color = MaterialTheme.colors.primary,
+    contentColor = MaterialTheme.colors.onPrimary,
+    modifier = Modifier.fillMaxWidth(1f)
+) {
 
     var searchFieldText by remember { mutableStateOf("") }
 
-    TextField(
-        value = searchFieldText,
-        onValueChange = { searchFieldText = it },
-        modifier = Modifier
-            .fillMaxWidth(1f)
-            .clip(MaterialTheme.shapes.small),
-        colors = TextFieldDefaults.textFieldColors(
-            focusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
-            errorIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
+    Column(Modifier.padding(vertical = 16.dp)) {
+        TextField(
+            value = searchFieldText,
+            onValueChange = { searchFieldText = it },
+            modifier = Modifier
+                .fillMaxWidth(1f)
+                .clip(MaterialTheme.shapes.small)
+                .padding(horizontal = 16.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                errorIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+            )
         )
-    )
-    Spacer(Modifier.height(16.dp))
-    Row(
-        Modifier
-            .fillMaxWidth(1f)
-            .horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        FilterPill("Games", selectedGames.value != null, !dialogDisplayed) { // sheet with checkbox list of games
-            println("Clicked!!")
-            setDialogComposable {
-                ChooseGamesDialog(setDialogComposable, selectedGames)
+        Spacer(Modifier.height(16.dp))
+        Row(
+            Modifier
+                .fillMaxWidth(1f)
+                .horizontalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            FilterPill(
+                "Games",
+                selectedGames.value != null,
+                !dialogDisplayed
+            ) { // sheet with checkbox list of games
+                println("Clicked!!")
+                setDialogComposable {
+                    ChooseGamesDialog(setDialogComposable, selectedGames)
+                }
             }
-        }
-        FilterPill("Location", false, true) { // sheet with location selction
+            FilterPill("Location", false, true) { // sheet with location selction
 
-        }
-        FilterPill("Dates", false, true) { // sheet with date selection
+            }
+            FilterPill("Dates", false, true) { // sheet with date selection
 
-        }
-        FilterPill("Type", false, true) { // dropdown with online, offline, both
+            }
+            FilterPill("Type", false, true) { // dropdown with online, offline, both
 
-        }
-        FilterPill("Price", false, true) { // dropdown with free, paid, both
+            }
+            FilterPill("Price", false, true) { // dropdown with free, paid, both
 
-        }
-        FilterPill("Registration", false, true) { // dropdown with open, closed, both
+            }
+            FilterPill("Registration", false, true) { // dropdown with open, closed, both
 
-        }
-        FilterPill("Clear", false, true) {
-
+            }
+            Text(
+                text = "Clear",
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colors.error)
+                    .clickable(onClick = clearFilters)
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                color = MaterialTheme.colors.onError
+            )
         }
     }
 }

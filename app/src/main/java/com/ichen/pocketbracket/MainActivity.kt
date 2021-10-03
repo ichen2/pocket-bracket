@@ -67,21 +67,21 @@ fun NavigationFooter(currentTab: MutableState<CurrentTab>) {
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         Image(
-            painter = ColorPainter(Color.White),
+            painter = ColorPainter(MaterialTheme.colors.onBackground),
             modifier = Modifier.size(90.dp).clickable {
                 currentTab.value = CurrentTab.TournamentsTimeline
             },
             contentDescription = "Timeline"
         )
         Image(
-            painter = ColorPainter(Color.White),
+            painter = ColorPainter(MaterialTheme.colors.onBackground),
             modifier = Modifier.size(90.dp).clickable {
                 currentTab.value = CurrentTab.MyTournaments
             },
             contentDescription = "Timeline"
         )
         Image(
-            painter = ColorPainter(Color.White),
+            painter = ColorPainter(MaterialTheme.colors.onBackground),
             modifier = Modifier.size(90.dp).clickable {
                 currentTab.value = CurrentTab.MyProfile
             },
