@@ -8,10 +8,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ichen.pocketbracket.profile.MyProfileScreen
 import com.ichen.pocketbracket.tournaments.MyTournamentsScreen
@@ -35,7 +37,7 @@ class MainActivity : ComponentActivity() {
                     Column(Modifier.background(MaterialTheme.colors.background)) {
                         when (currentTab.value) {
                             CurrentTab.TournamentsTimeline -> {
-                                TournamentsTimelineScreen {
+                                TournamentsTimelineScreen(dialogDisplayed = dialogComposable.value != null) {
                                     dialogComposable.value = it
                                 }
                             }

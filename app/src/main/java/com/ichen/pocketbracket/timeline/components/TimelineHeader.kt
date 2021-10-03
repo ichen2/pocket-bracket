@@ -16,7 +16,7 @@ import com.ichen.pocketbracket.models.Videogame
 import com.ichen.pocketbracket.utils.SetComposableFunction
 
 @Composable
-fun TimelineHeader(setDialogComposable: SetComposableFunction, selectedGames: MutableState<List<Videogame>?>) = Column {
+fun TimelineHeader(selectedGames: MutableState<List<Videogame>?>, dialogDisplayed: Boolean, setDialogComposable: SetComposableFunction, ) = Column {
 
     var searchFieldText by remember { mutableStateOf("") }
 
@@ -40,28 +40,28 @@ fun TimelineHeader(setDialogComposable: SetComposableFunction, selectedGames: Mu
             .horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        FilterPill("Games", selectedGames.value != null) { // sheet with checkbox list of games
+        FilterPill("Games", selectedGames.value != null, !dialogDisplayed) { // sheet with checkbox list of games
             println("Clicked!!")
             setDialogComposable {
                 ChooseGamesDialog(setDialogComposable, selectedGames)
             }
         }
-        FilterPill("Location") { // sheet with location selction
+        FilterPill("Location", false, true) { // sheet with location selction
 
         }
-        FilterPill("Dates") { // sheet with date selection
+        FilterPill("Dates", false, true) { // sheet with date selection
 
         }
-        FilterPill("Type") { // dropdown with online, offline, both
+        FilterPill("Type", false, true) { // dropdown with online, offline, both
 
         }
-        FilterPill("Price") { // dropdown with free, paid, both
+        FilterPill("Price", false, true) { // dropdown with free, paid, both
 
         }
-        FilterPill("Registration") { // dropdown with open, closed, both
+        FilterPill("Registration", false, true) { // dropdown with open, closed, both
 
         }
-        FilterPill("Clear") {
+        FilterPill("Clear", false, true) {
 
         }
     }

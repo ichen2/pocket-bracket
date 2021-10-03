@@ -19,13 +19,13 @@ val tournaments by mutableStateOf(listOf(testTournament, testTournament, testTou
 
 
 @Composable
-fun ColumnScope.TournamentsTimelineScreen(setDialogComposable: SetComposableFunction) = Column(
+fun ColumnScope.TournamentsTimelineScreen(dialogDisplayed: Boolean, setDialogComposable: SetComposableFunction) = Column(
     Modifier
         .weight(1f)
         .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 0.dp)
 ) {
     val selectedGames : MutableState<List<Videogame>?> = remember { mutableStateOf(null) }
-    TimelineHeader(setDialogComposable, selectedGames)
+    TimelineHeader(selectedGames, dialogDisplayed, setDialogComposable)
     Spacer(Modifier.height(16.dp))
     LazyColumn {
         items(tournaments) { tournament ->
@@ -37,5 +37,5 @@ fun ColumnScope.TournamentsTimelineScreen(setDialogComposable: SetComposableFunc
 @Composable
 @Preview
 fun TournamentsTimelineScreenPreview() = Column(Modifier.background(Color.White)) {
-    TournamentsTimelineScreen {}
+    TournamentsTimelineScreen(false) {}
 }

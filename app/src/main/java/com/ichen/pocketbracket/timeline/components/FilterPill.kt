@@ -14,14 +14,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FilterPill(text: String, enabled: Boolean = false, onClick: () -> Unit) {
+fun FilterPill(text: String, enabled: Boolean, clickable: Boolean, onClick: () -> Unit) {
     Text(
         text = text,
         modifier = Modifier
             .clip(CircleShape)
             .background(if(enabled) MaterialTheme.colors.primary else MaterialTheme.colors.surface)
             .then(if(!enabled) Modifier.border(1.dp, Color.White, shape = CircleShape) else Modifier)
-            .clickable(onClick = onClick)
+            .clickable(onClick = onClick, enabled = clickable)
             .padding(horizontal = 16.dp, vertical = 8.dp),
         color = if(enabled) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSurface
     )
