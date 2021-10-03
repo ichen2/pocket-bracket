@@ -1,5 +1,7 @@
 package com.ichen.pocketbracket.utils
 
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.runtime.Composable
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -18,3 +20,5 @@ fun combineDates(date1: Date, date2: Date): String {
         "${date1.toPrettyString()} - ${date2.toPrettyString()}"
     }
 }
+
+typealias SetComposableFunction = (((@Composable BoxScope.() -> Unit)?) -> Unit)

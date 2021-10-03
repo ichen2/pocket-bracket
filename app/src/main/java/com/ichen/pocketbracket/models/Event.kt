@@ -19,5 +19,5 @@ val testEvent = Event(
     1,
     Date(0),
     ActivityState.ACTIVE,
-    Videogame.MELEE
+    videogames[1]!!
 )

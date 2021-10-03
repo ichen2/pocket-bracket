@@ -34,20 +34,26 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PocketBracketTheme {
-                val currentTab = remember { mutableStateOf(CurrentTab.MyProfile) }
-                Column(Modifier.background(MaterialTheme.colors.background)) {
-                    when (currentTab.value) {
-                        CurrentTab.TournamentsTimeline -> {
-                            TournamentsTimelineScreen()
+                val currentTab = remember { mutableStateOf(CurrentTab.TournamentsTimeline) }
+                val dialogComposable : MutableState<(@Composable BoxScope.()->Unit)?> = remember { mutableStateOf(null)}
+                Box {
+                    Column(Modifier.background(MaterialTheme.colors.background)) {
+                        when (currentTab.value) {
+                            CurrentTab.TournamentsTimeline -> {
+                                TournamentsTimelineScreen {
+                                    dialogComposable.value = it
+                                }
+                            }
+                            CurrentTab.MyTournaments -> {
+                                MyTournamentsScreen()
+                            }
+                            CurrentTab.MyProfile -> {
+                                MyProfileScreen()
+                            }
                         }
-                        CurrentTab.MyTournaments -> {
-                            MyTournamentsScreen()
-                        }
-                        CurrentTab.MyProfile -> {
-                            MyProfileScreen()
-                        }
+                        NavigationFooter(currentTab)
                     }
-                    NavigationFooter(currentTab)
+                    dialogComposable.value?.invoke(this)
                 }
             }
         }
