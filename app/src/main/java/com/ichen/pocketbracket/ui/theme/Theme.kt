@@ -10,7 +10,7 @@ private val DarkColorPalette = darkColors(
     primary = lightPurple,
     primaryVariant = darkPurple,
     secondary = lightTeal,
-    surface = medBlack,
+    surface = darkBlack,
     background = darkBlack,
 )
 

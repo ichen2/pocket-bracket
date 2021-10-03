@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
                     Column(Modifier.background(MaterialTheme.colors.background)) {
                         when (currentTab.value) {
                             CurrentTab.TournamentsTimeline -> {
-                                TournamentsTimelineScreen(dialogDisplayed = dialogComposable.value != null) {
+                                TournamentsTimelineScreen(clickable = dialogComposable.value == null) {
                                     dialogComposable.value = it
                                 }
                             }
@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
                                 MyProfileScreen()
                             }
                         }
-                        NavigationFooter(currentTab)
+                        NavigationFooter(currentTab, dialogComposable.value == null)
                     }
                     dialogComposable.value?.invoke(this)
                 }
@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun NavigationFooter(currentTab: MutableState<CurrentTab>) {
+fun NavigationFooter(currentTab: MutableState<CurrentTab>, clickable: Boolean = true) {
     Row(
         Modifier
             .fillMaxWidth()
@@ -68,21 +68,21 @@ fun NavigationFooter(currentTab: MutableState<CurrentTab>) {
     ) {
         Image(
             painter = ColorPainter(MaterialTheme.colors.onBackground),
-            modifier = Modifier.size(90.dp).clickable {
+            modifier = Modifier.size(90.dp).clickable(enabled = clickable) {
                 currentTab.value = CurrentTab.TournamentsTimeline
             },
             contentDescription = "Timeline"
         )
         Image(
             painter = ColorPainter(MaterialTheme.colors.onBackground),
-            modifier = Modifier.size(90.dp).clickable {
+            modifier = Modifier.size(90.dp).clickable(enabled = clickable) {
                 currentTab.value = CurrentTab.MyTournaments
             },
             contentDescription = "Timeline"
         )
         Image(
             painter = ColorPainter(MaterialTheme.colors.onBackground),
-            modifier = Modifier.size(90.dp).clickable {
+            modifier = Modifier.size(90.dp).clickable(enabled = clickable) {
                 currentTab.value = CurrentTab.MyProfile
             },
             contentDescription = "Timeline"

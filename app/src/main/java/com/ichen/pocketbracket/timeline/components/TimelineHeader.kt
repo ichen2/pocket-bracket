@@ -14,13 +14,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.ichen.pocketbracket.models.TournamentPrice
+import com.ichen.pocketbracket.models.TournamentRegistrationStatus
+import com.ichen.pocketbracket.models.TournamentType
 import com.ichen.pocketbracket.models.Videogame
 import com.ichen.pocketbracket.utils.SetComposableFunction
+import com.ichen.pocketbracket.utils.getNextEnumValue
 
 @Composable
 fun TimelineHeader(
     selectedGames: MutableState<List<Videogame>?>,
-    dialogDisplayed: Boolean,
+    searchFieldText: MutableState<String>,
+    tournamentType: MutableState<TournamentType>,
+    tournamentPrice: MutableState<TournamentPrice>,
+    tournamentRegistrationStatus: MutableState<TournamentRegistrationStatus>,
+    clickable: Boolean,
     setDialogComposable: SetComposableFunction,
     clearFilters: () -> Unit
 ) = Surface(
@@ -29,12 +37,10 @@ fun TimelineHeader(
     modifier = Modifier.fillMaxWidth(1f)
 ) {
 
-    var searchFieldText by remember { mutableStateOf("") }
-
     Column(Modifier.padding(vertical = 16.dp)) {
         TextField(
-            value = searchFieldText,
-            onValueChange = { searchFieldText = it },
+            value = searchFieldText.value,
+            onValueChange = { searchFieldText.value = it },
             modifier = Modifier
                 .fillMaxWidth(1f)
                 .clip(MaterialTheme.shapes.small)
@@ -57,27 +63,27 @@ fun TimelineHeader(
             FilterPill(
                 "Games",
                 selectedGames.value != null,
-                !dialogDisplayed
+                clickable
             ) { // sheet with checkbox list of games
                 println("Clicked!!")
                 setDialogComposable {
                     ChooseGamesDialog(setDialogComposable, selectedGames)
                 }
             }
-            FilterPill("Location", false, true) { // sheet with location selction
+            FilterPill("Location", false, clickable) { // sheet with location selction
 
             }
-            FilterPill("Dates", false, true) { // sheet with date selection
+            FilterPill("Dates", false, clickable) { // sheet with date selection
 
             }
-            FilterPill("Type", false, true) { // dropdown with online, offline, both
-
+            FilterPill(tournamentType.value.toString(), tournamentType.value != TournamentType.NO_FILTER, clickable) { // dropdown with online, offline, both
+                tournamentType.value = getNextEnumValue(tournamentType.value)
             }
-            FilterPill("Price", false, true) { // dropdown with free, paid, both
-
+            FilterPill(tournamentPrice.value.toString(), tournamentPrice.value != TournamentPrice.NO_FILTER, clickable) { // dropdown with online, offline, both
+                tournamentPrice.value = getNextEnumValue(tournamentPrice.value)
             }
-            FilterPill("Registration", false, true) { // dropdown with open, closed, both
-
+            FilterPill(tournamentRegistrationStatus.value.toString(), tournamentRegistrationStatus.value != TournamentRegistrationStatus.NO_FILTER, clickable) { // dropdown with online, offline, both
+                tournamentRegistrationStatus.value = getNextEnumValue(tournamentRegistrationStatus.value)
             }
             Text(
                 text = "Clear",
