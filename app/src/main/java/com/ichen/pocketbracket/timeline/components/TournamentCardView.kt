@@ -1,4 +1,4 @@
-package com.ichen.pocketbracket.components
+package com.ichen.pocketbracket.timeline.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,8 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
@@ -20,7 +18,6 @@ import com.ichen.pocketbracket.models.Tournament
 import com.ichen.pocketbracket.models.testTournament
 import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
 import com.ichen.pocketbracket.utils.combineDates
-import com.ichen.pocketbracket.utils.toPrettyString
 import java.text.SimpleDateFormat
 import java.util.*
 

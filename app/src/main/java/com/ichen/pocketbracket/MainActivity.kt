@@ -8,19 +8,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
-import com.ichen.pocketbracket.screens.MyProfileScreen
-import com.ichen.pocketbracket.screens.MyTournamentsScreen
-import com.ichen.pocketbracket.screens.TournamentsTimelineScreen
+import com.ichen.pocketbracket.profile.MyProfileScreen
+import com.ichen.pocketbracket.tournaments.MyTournamentsScreen
+import com.ichen.pocketbracket.timeline.TournamentsTimelineScreen
 import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
 
 enum class CurrentTab {

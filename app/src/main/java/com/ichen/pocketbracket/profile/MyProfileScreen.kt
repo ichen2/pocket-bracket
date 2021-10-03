@@ -1,4 +1,4 @@
-package com.ichen.pocketbracket.screens
+package com.ichen.pocketbracket.profile
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
