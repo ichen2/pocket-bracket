@@ -12,6 +12,7 @@ enum class VideogameName {
 
 data class Videogame(val name: VideogameName, val id: Int, val displayName: String)
 
-val videogames = listOf(
+val videogamesList = listOf(
     Videogame(VideogameName.SMASH_MELEE, 1, "Melee")
-).associateBy { videogame -> (videogame.id)}
+)
+val videogamesMap = videogamesList.associateBy { videogame -> (videogame.id)}
