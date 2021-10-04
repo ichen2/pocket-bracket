@@ -17,34 +17,70 @@ import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.timeline.components.TimelineHeader
 import com.ichen.pocketbracket.timeline.components.TournamentCardView
 import com.ichen.pocketbracket.utils.SetComposableFunction
+import java.util.*
 
-val tournaments by mutableStateOf(listOf(testTournament.copy(id = 0), testTournament.copy(id = 1), testTournament.copy(id = 2)))
+val tournaments by mutableStateOf(
+    listOf(
+        testTournament.copy(id = 0),
+        testTournament.copy(id = 1),
+        testTournament.copy(id = 2)
+    )
+)
 
 
 @Composable
-fun ColumnScope.TournamentsTimelineScreen(clickable: Boolean, setDialogComposable: SetComposableFunction) = Column(
+fun ColumnScope.TournamentsTimelineScreen(
+    clickable: Boolean,
+    setDialogComposable: SetComposableFunction,
+    tournamentDateRange: MutableState<Pair<Date, Date>?>,
+    showDateRangePicker: () -> Unit,
+
+) = Column(
     Modifier
         .weight(1f)
         .fillMaxWidth(1f)
         .background(MaterialTheme.colors.primary)
 ) {
-    val selectedGames : MutableState<List<Videogame>?> = remember { mutableStateOf(null) }
+    val selectedGames: MutableState<List<Videogame>?> = remember { mutableStateOf(null) }
     val searchFieldText = remember { mutableStateOf("") }
     val tournamentType = remember { mutableStateOf(TournamentType.NO_FILTER) }
     val tournamentPrice = remember { mutableStateOf(TournamentPrice.NO_FILTER) }
-    val tournamentRegistrationStatus = remember { mutableStateOf(TournamentRegistrationStatus.NO_FILTER) }
+    val tournamentRegistrationStatus =
+        remember { mutableStateOf(TournamentRegistrationStatus.NO_FILTER) }
     val clearFilters = {
         selectedGames.value = null
         searchFieldText.value = ""
         tournamentType.value = TournamentType.NO_FILTER
         tournamentPrice.value = TournamentPrice.NO_FILTER
+        tournamentRegistrationStatus.value = TournamentRegistrationStatus.NO_FILTER
+        tournamentDateRange.value = null
     }
 
-    TimelineHeader(selectedGames, searchFieldText, tournamentType, tournamentPrice, tournamentRegistrationStatus, clickable, setDialogComposable, clearFilters)
+    TimelineHeader(
+        selectedGames,
+        searchFieldText,
+        tournamentType,
+        tournamentPrice,
+        tournamentRegistrationStatus,
+        tournamentDateRange,
+        showDateRangePicker,
+        clickable,
+        setDialogComposable,
+        clearFilters
+    )
     LazyColumn(Modifier.clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))) {
-        itemsIndexed(items = tournaments, key = { _, tournament -> tournament.id }) { index, tournament ->
-            if(index != 0) {
-                Box(Modifier.fillMaxWidth(1f).background(MaterialTheme.colors.surface).padding(vertical = 16.dp).height(1.dp).background(Color.Gray))
+        itemsIndexed(
+            items = tournaments,
+            key = { _, tournament -> tournament.id }) { index, tournament ->
+            if (index != 0) {
+                Box(
+                    Modifier
+                        .fillMaxWidth(1f)
+                        .background(MaterialTheme.colors.surface)
+                        .padding(vertical = 16.dp)
+                        .height(1.dp)
+                        .background(Color.Gray)
+                )
 
             }
             TournamentCardView(tournament = tournament, first = index == 0)
@@ -55,5 +91,5 @@ fun ColumnScope.TournamentsTimelineScreen(clickable: Boolean, setDialogComposabl
 @Composable
 @Preview
 fun TournamentsTimelineScreenPreview() = Column(Modifier.background(Color.White)) {
-    TournamentsTimelineScreen(false) {}
+    TournamentsTimelineScreen(false, {}, remember { mutableStateOf(null) }, {})
 }

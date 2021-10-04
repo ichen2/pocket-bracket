@@ -13,13 +13,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.ichen.pocketbracket.models.TournamentPrice
 import com.ichen.pocketbracket.models.TournamentRegistrationStatus
 import com.ichen.pocketbracket.models.TournamentType
 import com.ichen.pocketbracket.models.Videogame
 import com.ichen.pocketbracket.utils.SetComposableFunction
 import com.ichen.pocketbracket.utils.getNextEnumValue
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.datetime.date.datepicker
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Composable
 fun TimelineHeader(
@@ -28,14 +34,23 @@ fun TimelineHeader(
     tournamentType: MutableState<TournamentType>,
     tournamentPrice: MutableState<TournamentPrice>,
     tournamentRegistrationStatus: MutableState<TournamentRegistrationStatus>,
+    tournamentDateRange: MutableState<Pair<Date, Date>?>,
+    showDateRangePicker: () -> Unit,
     clickable: Boolean,
     setDialogComposable: SetComposableFunction,
-    clearFilters: () -> Unit
+    clearFilters: () -> Unit,
 ) = Surface(
     color = MaterialTheme.colors.primary,
     contentColor = MaterialTheme.colors.onPrimary,
     modifier = Modifier.fillMaxWidth(1f)
 ) {
+
+    val formattedDateRange: String? = if(tournamentDateRange.value == null) null else {
+        val sdf = SimpleDateFormat("MM/dd")
+        val formattedStartDate = sdf.format(tournamentDateRange.value!!.first)
+        val formattedEndDate = sdf.format(tournamentDateRange.value!!.second)
+        "$formattedStartDate - $formattedEndDate"
+    }
 
     Column(Modifier.padding(vertical = 16.dp)) {
         TextField(
@@ -73,17 +88,34 @@ fun TimelineHeader(
             FilterPill("Location", false, clickable) { // sheet with location selction
 
             }
-            FilterPill("Dates", false, clickable) { // sheet with date selection
-
+            FilterPill(
+                formattedDateRange ?: "Dates",
+                tournamentDateRange.value != null,
+                clickable
+            ) { // sheet with date selection
+                showDateRangePicker()
             }
-            FilterPill(tournamentType.value.toString(), tournamentType.value != TournamentType.NO_FILTER, clickable) { // dropdown with online, offline, both
+            FilterPill(
+                tournamentType.value.toString(),
+                tournamentType.value != TournamentType.NO_FILTER,
+                clickable
+            ) { // dropdown with online, offline, both
                 tournamentType.value = getNextEnumValue(tournamentType.value)
             }
-            FilterPill(tournamentPrice.value.toString(), tournamentPrice.value != TournamentPrice.NO_FILTER, clickable) { // dropdown with online, offline, both
+            FilterPill(
+                tournamentPrice.value.toString(),
+                tournamentPrice.value != TournamentPrice.NO_FILTER,
+                clickable
+            ) { // dropdown with online, offline, both
                 tournamentPrice.value = getNextEnumValue(tournamentPrice.value)
             }
-            FilterPill(tournamentRegistrationStatus.value.toString(), tournamentRegistrationStatus.value != TournamentRegistrationStatus.NO_FILTER, clickable) { // dropdown with online, offline, both
-                tournamentRegistrationStatus.value = getNextEnumValue(tournamentRegistrationStatus.value)
+            FilterPill(
+                tournamentRegistrationStatus.value.toString(),
+                tournamentRegistrationStatus.value != TournamentRegistrationStatus.NO_FILTER,
+                clickable
+            ) { // dropdown with online, offline, both
+                tournamentRegistrationStatus.value =
+                    getNextEnumValue(tournamentRegistrationStatus.value)
             }
             Text(
                 text = "Clear",

@@ -22,8 +22,8 @@ enum class TournamentPrice(private val displayName: String) {
 
 enum class TournamentRegistrationStatus(private val displayName: String) {
     NO_FILTER("Registration"),
-    OPEN("Open"),
-    CLOSED("Closed"),;
+    OPEN("Open Registration"),
+    CLOSED("Closed Registration"),;
 
     override fun toString(): String {
         return displayName
