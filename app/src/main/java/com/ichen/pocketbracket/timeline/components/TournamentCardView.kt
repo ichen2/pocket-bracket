@@ -12,9 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
+import coil.size.OriginalSize
+import coil.size.Scale
 import com.ichen.pocketbracket.models.Event
 import com.ichen.pocketbracket.models.Tournament
 import com.ichen.pocketbracket.models.testTournament
@@ -29,13 +32,15 @@ fun TournamentCardView(tournament: Tournament, first: Boolean = false) = Column(
         .fillMaxWidth(1f)
         .then(if(first) Modifier.clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)) else Modifier)
         .background(MaterialTheme.colors.surface)) {
-    Box {
+    Box(Modifier.fillMaxWidth()) {
         Image(
-            painter = rememberImagePainter(tournament.imageUrl),
+            painter = rememberImagePainter(data = tournament.imageUrl, builder = {
+                size(OriginalSize)
+                scale(Scale.FILL)
+            }),
             contentDescription = "tournament image",
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp)
+            modifier = Modifier.fillMaxWidth(),
+            contentScale = ContentScale.FillWidth,
         )
         Text(
             tournament.state.toString(),

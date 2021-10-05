@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.timeline.components.TimelineHeader
 import com.ichen.pocketbracket.timeline.components.TournamentCardView
+import com.ichen.pocketbracket.utils.LocationRadius
 import com.ichen.pocketbracket.utils.SetComposableFunction
 import java.util.*
 
@@ -34,6 +35,7 @@ fun ColumnScope.TournamentsTimelineScreen(
     setDialogComposable: SetComposableFunction,
     tournamentDateRange: MutableState<Pair<Date, Date>?>,
     showDateRangePicker: () -> Unit,
+    viewModel: TournamentsTimelineViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 
 ) = Column(
     Modifier
@@ -41,8 +43,9 @@ fun ColumnScope.TournamentsTimelineScreen(
         .fillMaxWidth(1f)
         .background(MaterialTheme.colors.primary)
 ) {
-    val selectedGames: MutableState<List<Videogame>?> = remember { mutableStateOf(null) }
     val searchFieldText = remember { mutableStateOf("") }
+    val selectedGames: MutableState<List<Videogame>?> = remember { mutableStateOf(null) }
+    val tournamentLocationRadius: MutableState<LocationRadius?> = remember { mutableStateOf(null) }
     val tournamentType = remember { mutableStateOf(TournamentType.NO_FILTER) }
     val tournamentPrice = remember { mutableStateOf(TournamentPrice.NO_FILTER) }
     val tournamentRegistrationStatus =
@@ -52,6 +55,7 @@ fun ColumnScope.TournamentsTimelineScreen(
         searchFieldText.value = ""
         tournamentType.value = TournamentType.NO_FILTER
         tournamentPrice.value = TournamentPrice.NO_FILTER
+        tournamentLocationRadius.value = null
         tournamentRegistrationStatus.value = TournamentRegistrationStatus.NO_FILTER
         tournamentDateRange.value = null
     }
@@ -59,6 +63,7 @@ fun ColumnScope.TournamentsTimelineScreen(
     TimelineHeader(
         selectedGames,
         searchFieldText,
+        tournamentLocationRadius,
         tournamentType,
         tournamentPrice,
         tournamentRegistrationStatus,
@@ -72,17 +77,6 @@ fun ColumnScope.TournamentsTimelineScreen(
         itemsIndexed(
             items = tournaments,
             key = { _, tournament -> tournament.id }) { index, tournament ->
-            if (index != 0) {
-                Box(
-                    Modifier
-                        .fillMaxWidth(1f)
-                        .background(MaterialTheme.colors.surface)
-                        .padding(vertical = 16.dp)
-                        .height(1.dp)
-                        .background(Color.Gray)
-                )
-
-            }
             TournamentCardView(tournament = tournament, first = index == 0)
         }
     }

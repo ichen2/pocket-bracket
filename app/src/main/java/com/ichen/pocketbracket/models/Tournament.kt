@@ -28,6 +28,6 @@ val testTournament: Tournament = Tournament(
     1,
     "Test owner",
     ActivityState.ACTIVE,
-    "https://images.smash.gg/images/tournament/272580/image-bddfc012a7627bb1f9cd360b50249e80.png",
+    "https://smashgg-images.s3.amazonaws.com/images/tournament/1035/image-10e39229043ff962dd367a516b0bc090.png",
     listOf(testEvent, testEvent),
 )

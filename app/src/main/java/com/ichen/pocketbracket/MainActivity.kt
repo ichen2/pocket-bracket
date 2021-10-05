@@ -1,11 +1,6 @@
 package com.ichen.pocketbracket
 
-import android.app.Activity
-import android.app.DatePickerDialog
 import android.os.Bundle
-import android.util.AttributeSet
-import android.widget.CalendarView
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
@@ -13,25 +8,21 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.fragment.app.FragmentActivity
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.ichen.pocketbracket.profile.MyProfileScreen
-import com.ichen.pocketbracket.tournaments.MyTournamentsScreen
 import com.ichen.pocketbracket.timeline.TournamentsTimelineScreen
+import com.ichen.pocketbracket.timeline.components.LocationPicker
+import com.ichen.pocketbracket.tournaments.MyTournamentsScreen
 import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
-import com.squareup.timessquare.CalendarPickerView
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.datetime.date.datepicker
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.util.*
 
 enum class CurrentTab {
@@ -140,4 +131,10 @@ fun NavigationFooter(currentTab: MutableState<CurrentTab>, clickable: Boolean = 
             contentDescription = "Timeline",
         )
     }
+}
+
+@Composable
+@Preview
+fun TestPreview() {
+    System.out.println(Color.Red.value)
 }

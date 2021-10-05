@@ -2,9 +2,22 @@ package com.ichen.pocketbracket.utils
 
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
-import com.ichen.pocketbracket.models.TournamentType
+import androidx.compose.ui.graphics.toArgb
+import com.google.android.gms.maps.model.LatLng
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.roundToInt
+
+const val METERS_IN_MILE = 1609.34
+
+data class LocationRadius(
+    var center: LatLng,
+    var radius: Float,
+)
+
+fun LocationRadius.getCenterAsString() : String {
+    return "(${center.latitude.roundToInt()}, ${center.longitude.roundToInt()})"
+}
 
 fun Date.toPrettyString(): String {
     return SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(this)
@@ -12,6 +25,10 @@ fun Date.toPrettyString(): String {
 
 fun Date.isSameDay(other: Date): Boolean {
     return this.year == other.year && this.month == other.month && this.day == other.day
+}
+
+fun androidx.compose.ui.graphics.Color.toArgbInt() : Int {
+    return this.toArgb()
 }
 
 fun combineDates(date1: Date, date2: Date): String {

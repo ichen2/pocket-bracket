@@ -20,7 +20,9 @@ import com.ichen.pocketbracket.models.TournamentPrice
 import com.ichen.pocketbracket.models.TournamentRegistrationStatus
 import com.ichen.pocketbracket.models.TournamentType
 import com.ichen.pocketbracket.models.Videogame
+import com.ichen.pocketbracket.utils.LocationRadius
 import com.ichen.pocketbracket.utils.SetComposableFunction
+import com.ichen.pocketbracket.utils.getCenterAsString
 import com.ichen.pocketbracket.utils.getNextEnumValue
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
@@ -31,6 +33,7 @@ import java.util.*
 fun TimelineHeader(
     selectedGames: MutableState<List<Videogame>?>,
     searchFieldText: MutableState<String>,
+    tournamentLocationRadius: MutableState<LocationRadius?>,
     tournamentType: MutableState<TournamentType>,
     tournamentPrice: MutableState<TournamentPrice>,
     tournamentRegistrationStatus: MutableState<TournamentRegistrationStatus>,
@@ -45,7 +48,7 @@ fun TimelineHeader(
     modifier = Modifier.fillMaxWidth(1f)
 ) {
 
-    val formattedDateRange: String? = if(tournamentDateRange.value == null) null else {
+    val formattedDateRange: String? = if (tournamentDateRange.value == null) null else {
         val sdf = SimpleDateFormat("MM/dd")
         val formattedStartDate = sdf.format(tournamentDateRange.value!!.first)
         val formattedEndDate = sdf.format(tournamentDateRange.value!!.second)
@@ -80,13 +83,19 @@ fun TimelineHeader(
                 selectedGames.value != null,
                 clickable
             ) { // sheet with checkbox list of games
-                println("Clicked!!")
                 setDialogComposable {
                     ChooseGamesDialog(setDialogComposable, selectedGames)
                 }
             }
-            FilterPill("Location", false, clickable) { // sheet with location selction
-
+            FilterPill(tournamentLocationRadius.value?.getCenterAsString() ?: "Location", tournamentLocationRadius.value != null, clickable) { // sheet with location selction
+                setDialogComposable {
+                    LocationPicker(
+                        onNegativeButtonClick = { setDialogComposable(null) },
+                        onPositiveButtonClick = { locationRadius ->
+                            tournamentLocationRadius.value = locationRadius
+                            setDialogComposable(null)
+                        })
+                }
             }
             FilterPill(
                 formattedDateRange ?: "Dates",
