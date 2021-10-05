@@ -1,5 +1,6 @@
 package com.ichen.pocketbracket.timeline.components
 
+import android.Manifest
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -15,6 +16,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.ichen.pocketbracket.models.TournamentPrice
 import com.ichen.pocketbracket.models.TournamentRegistrationStatus
@@ -29,6 +32,7 @@ import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import java.text.SimpleDateFormat
 import java.util.*
 
+@ExperimentalPermissionsApi
 @Composable
 fun TimelineHeader(
     selectedGames: MutableState<List<Videogame>?>,

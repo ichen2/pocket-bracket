@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.timeline.components.TimelineHeader
 import com.ichen.pocketbracket.timeline.components.TournamentCardView
@@ -29,6 +30,7 @@ val tournaments by mutableStateOf(
 )
 
 
+@ExperimentalPermissionsApi
 @Composable
 fun ColumnScope.TournamentsTimelineScreen(
     clickable: Boolean,
@@ -82,6 +84,7 @@ fun ColumnScope.TournamentsTimelineScreen(
     }
 }
 
+@ExperimentalPermissionsApi
 @Composable
 @Preview
 fun TournamentsTimelineScreenPreview() = Column(Modifier.background(Color.White)) {

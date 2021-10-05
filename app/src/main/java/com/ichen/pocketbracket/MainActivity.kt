@@ -7,7 +7,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +19,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.ichen.pocketbracket.profile.MyProfileScreen
 import com.ichen.pocketbracket.timeline.TournamentsTimelineScreen
@@ -40,6 +45,7 @@ class MainActivity : AppCompatActivity() {
             .build()
     private val tournamentDateRange: MutableState<Pair<Date, Date>?> = mutableStateOf(null)
 
+    @ExperimentalPermissionsApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeDateRangePickerListeners()
@@ -133,8 +139,18 @@ fun NavigationFooter(currentTab: MutableState<CurrentTab>, clickable: Boolean = 
     }
 }
 
+@ExperimentalPermissionsApi
 @Composable
 @Preview
 fun TestPreview() {
-    System.out.println(Color.Red.value)
+    Column {
+        val locationPermissionState = rememberMultiplePermissionsState(permissions = listOf(android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION))
+        if(!locationPermissionState.allPermissionsGranted) {
+            Button(onClick = { locationPermissionState.launchMultiplePermissionRequest() }) {
+                Text("Request Permissions")
+            }
+        } else {
+            Text("Permissions Granted!")
+        }
+    }
 }

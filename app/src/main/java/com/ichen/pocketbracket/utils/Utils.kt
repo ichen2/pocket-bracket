@@ -16,7 +16,7 @@ data class LocationRadius(
 )
 
 fun LocationRadius.getCenterAsString() : String {
-    return "(${center.latitude.roundToInt()}, ${center.longitude.roundToInt()})"
+    return "(${center.latitude.roundToInt()}\u00B0, ${center.longitude.roundToInt()}\u00B0)"
 }
 
 fun Date.toPrettyString(): String {
