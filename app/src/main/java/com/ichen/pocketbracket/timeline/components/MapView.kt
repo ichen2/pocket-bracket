@@ -33,6 +33,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -41,12 +42,15 @@ import com.google.android.gms.maps.model.LatLng
 import kotlin.math.roundToInt
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.Circle
+
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.ichen.pocketbracket.utils.LocationRadius
 import com.ichen.pocketbracket.utils.METERS_IN_MILE
+import com.ichen.pocketbracket.utils.getScaledRadius
 
-const val SLIDER_MAX = 1500f
-const val SLIDER_MIN = 10f
-const val SLIDER_START = 50f
+const val RADIUS_MAX: Double = 1500.0
+const val RADIUS_MIN: Double = 10.0
+const val RADIUS_START: Double = RADIUS_MIN
 
 @SuppressLint("PermissionLaunchedDuringComposition", "MissingPermission")
 @ExperimentalPermissionsApi
@@ -68,13 +72,15 @@ fun LocationPicker(
     val locationRadius = remember {
         mutableStateOf(
             LocationRadius(
-                coordinates, SLIDER_START
+                coordinates, RADIUS_START
             )
         )
     }
+    var sliderValue by remember { mutableStateOf(0f)}
+    val map: MutableState<GoogleMap?> = remember { mutableStateOf(null) }
     val context = LocalContext.current
     Box {
-        MapView(mapIsMoving, locationRadius)
+        MapView(map, mapIsMoving, locationRadius)
         Row(
             Modifier
                 .fillMaxWidth()
@@ -103,7 +109,7 @@ fun LocationPicker(
             Box(
                 Modifier
                     .align(Alignment.End)
-                    .padding(48.dp)
+                    .padding(16.dp)
                     .size(32.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colors.background)
@@ -119,21 +125,49 @@ fun LocationPicker(
                                 Manifest.permission.ACCESS_FINE_LOCATION
                             ) == PackageManager.PERMISSION_GRANTED
                         ) {
-                            LocationServices.getFusedLocationProviderClient(context).lastLocation.addOnSuccessListener { location ->
-                                if(location != null) {
-                                    locationRadius.value = LocationRadius(
-                                        LatLng(location.latitude, location.longitude),
-                                        locationRadius.value.radius
-                                    )
-                                } else {
-                                    Toast.makeText(context, "Error retrieving user location", Toast.LENGTH_SHORT).show()
+                            LocationServices
+                                .getFusedLocationProviderClient(context)
+                                .getCurrentLocation(
+                                    LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY,
+                                    CancellationTokenSource().token
+                                )
+                                .addOnSuccessListener { location ->
+                                    if (location != null) {
+                                        locationRadius.value = LocationRadius(
+                                            LatLng(location.latitude, location.longitude),
+                                            locationRadius.value.radius
+                                        )
+                                        map.value?.moveCamera(
+                                            CameraUpdateFactory.newLatLngZoom(
+                                                locationRadius.value.center, 6f
+                                            )
+                                        )
+                                    } else {
+                                        Toast
+                                            .makeText(
+                                                context,
+                                                "Error retrieving user location",
+                                                Toast.LENGTH_SHORT
+                                            )
+                                            .show()
+                                    }
                                 }
-                            }
                         } else {
-                            Toast.makeText(context, "Error retrieving user location", Toast.LENGTH_SHORT).show()
+                            Toast
+                                .makeText(
+                                    context,
+                                    "Error retrieving user location",
+                                    Toast.LENGTH_SHORT
+                                )
+                                .show()
                         }
-                    }, contentAlignment = Alignment.Center) {
-                Icon(Icons.Filled.LocationOn, contentDescription = "get my location", tint = MaterialTheme.colors.primary)
+                    }, contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    Icons.Filled.LocationOn,
+                    contentDescription = "get my location",
+                    tint = MaterialTheme.colors.primary
+                )
             }
             Column(
                 Modifier
@@ -145,12 +179,13 @@ fun LocationPicker(
                     color = MaterialTheme.colors.onBackground
                 )
                 Slider(
-                    value = locationRadius.value.radius,
-                    onValueChange = { newRadius ->
+                    value = sliderValue,
+                    onValueChange = { newSliderValue ->
+                        sliderValue = newSliderValue
                         locationRadius.value =
-                            LocationRadius(locationRadius.value.center, newRadius)
+                            LocationRadius(locationRadius.value.center, getScaledRadius(newSliderValue))
                     },
-                    valueRange = SLIDER_MIN..SLIDER_MAX,
+                    valueRange = 0f..1f,
                     colors = SliderDefaults.colors(thumbColor = MaterialTheme.colors.primary)
                 )
             }
@@ -158,16 +193,15 @@ fun LocationPicker(
     }
 }
 
-
 const val CIRCLE_SELECTED_TRANSPARENCY = .25f
 const val CIRCLE_UNSELECTED_TRANSPARENCY = .1f
 
 @Composable
 fun MapView(
+    map: MutableState<GoogleMap?>,
     mapIsMoving: MutableState<Boolean>,
     locationRadius: MutableState<LocationRadius>,
 ) {
-    var map: GoogleMap? by remember { mutableStateOf(null) }
     val circle: MutableState<Circle?> = remember { mutableStateOf(null) }
     val themeColors = MaterialTheme.colors
 
@@ -179,7 +213,7 @@ fun MapView(
             { context ->
                 val mapView = MapView(context)
                 mapView.getMapAsync { googleMap ->
-                    map = googleMap
+                    map.value = googleMap
                     googleMap.moveCamera(
                         CameraUpdateFactory.newLatLngZoom(
                             locationRadius.value.center, 6f
@@ -205,13 +239,14 @@ fun MapView(
                         }
                     }
                     googleMap.setOnCameraIdleListener {
+                        // TODO: Look at this stuff!!
                         if (mapIsMoving.value) {
                             locationRadius.value = LocationRadius(
-                                map!!.cameraPosition.target,
+                                map.value!!.cameraPosition.target,
                                 locationRadius.value.radius
                             )
                             mapIsMoving.value = false
-                            circle.value!!.center = map?.cameraPosition?.target
+                            circle.value!!.center = map.value?.cameraPosition?.target
                             if (circle.value!!.center != null) {
                                 circle.value!!.fillColor =
                                     themeColors.primary.copy(alpha = CIRCLE_SELECTED_TRANSPARENCY)
