@@ -81,7 +81,7 @@ fun TimelineHeader(
                     ChooseGamesDialog(setDialogComposable, tournamentGames)
                 }
             }
-            FilterPill(tournamentLocationRadius.value?.getCenterAsString() ?: "Location", tournamentLocationRadius.value != null, clickable) { // sheet with location selction
+            FilterPill("Location", tournamentLocationRadius.value != null, clickable) { // sheet with location selction
                 setDialogComposable {
                     LocationPicker(
                         onNegativeButtonClick = { setDialogComposable(null) },
@@ -92,7 +92,7 @@ fun TimelineHeader(
                 }
             }
             FilterPill(
-                tournamentDateRange.value.toString() ?: "Dates",
+                tournamentDateRange.value?.toString() ?: "Dates",
                 tournamentDateRange.value != null,
                 clickable
             ) { // sheet with date selection

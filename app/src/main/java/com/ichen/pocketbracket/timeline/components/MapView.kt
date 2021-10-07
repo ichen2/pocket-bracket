@@ -3,9 +3,7 @@ package com.ichen.pocketbracket.timeline.components
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
-import android.view.DragEvent
 import android.widget.Toast
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
@@ -14,7 +12,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -30,6 +27,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -38,15 +36,14 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.model.LatLng
-import kotlin.math.roundToInt
-import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.Circle
-
+import com.google.android.gms.maps.model.CircleOptions
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.CancellationTokenSource
-import com.ichen.pocketbracket.utils.LocationRadius
+import com.ichen.pocketbracket.models.LocationRadius
 import com.ichen.pocketbracket.utils.METERS_IN_MILE
 import com.ichen.pocketbracket.utils.getScaledRadius
+import kotlin.math.roundToInt
 
 const val RADIUS_MAX: Double = 1500.0
 const val RADIUS_MIN: Double = 10.0
@@ -282,11 +279,10 @@ fun BoxScope.LocationMarker(mapIsMoving: Boolean) = Column(
         .offset(y = -18.dp), horizontalAlignment = Alignment.CenterHorizontally
 ) {
     val offset by animateDpAsState(
-        if (mapIsMoving) -8.dp else 0.dp,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
+        if (mapIsMoving) -10.dp else 0.dp,
+        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow)
     )
-
-    Box(Modifier.offset(y = offset), contentAlignment = Alignment.TopCenter) {
+    Box(Modifier.offset(y = offset + 3.dp).zIndex(1000f), contentAlignment = Alignment.TopCenter) {
         Box(
             Modifier
                 .width(2.dp)
@@ -310,7 +306,7 @@ fun BoxScope.LocationMarker(mapIsMoving: Boolean) = Column(
     }
     Box(
         Modifier
-            .size(4.dp)
+            .size(5.dp)
             .clip(CircleShape)
             .background(Color.Black)
     )
