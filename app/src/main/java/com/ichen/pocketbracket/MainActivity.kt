@@ -38,17 +38,9 @@ enum class CurrentTab {
 
 class MainActivity : AppCompatActivity() {
 
-
-    private val dateRangePicker =
-        MaterialDatePicker.Builder.dateRangePicker()
-            .setTitleText("Select dates")
-            .build()
-    private val tournamentDateRange: MutableState<Pair<Date, Date>?> = mutableStateOf(null)
-
     @ExperimentalPermissionsApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initializeDateRangePickerListeners()
         setContent {
             PocketBracketTheme {
                 val currentTab = remember { mutableStateOf(CurrentTab.TournamentsTimeline) }
@@ -62,8 +54,6 @@ class MainActivity : AppCompatActivity() {
                                 TournamentsTimelineScreen(
                                     clickable = dialogComposable.value == null,
                                     setDialogComposable = { dialogComposable.value = it },
-                                    tournamentDateRange = tournamentDateRange,
-                                    showDateRangePicker = { showDateRangePicker() }
                                 )
                             }
                             CurrentTab.MyTournaments -> {
@@ -79,24 +69,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    private fun initializeDateRangePickerListeners() {
-        dateRangePicker.addOnPositiveButtonClickListener { _ ->
-            val startDate = dateRangePicker.selection?.first
-            val endDate = dateRangePicker.selection?.second
-            tournamentDateRange.value = if(startDate != null && endDate != null) Pair(Date(startDate), Date(endDate)) else null
-        }
-        dateRangePicker.addOnNegativeButtonClickListener {
-            tournamentDateRange.value = null
-        }
-        dateRangePicker.addOnCancelListener {
-            tournamentDateRange.value = null
-        }
-    }
-
-    private fun showDateRangePicker() {
-        dateRangePicker.show(this.supportFragmentManager, null)
     }
 }
 

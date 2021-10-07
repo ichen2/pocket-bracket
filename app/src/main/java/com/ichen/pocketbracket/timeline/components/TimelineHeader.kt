@@ -1,68 +1,58 @@
 package com.ichen.pocketbracket.timeline.components
 
-import android.Manifest
+import android.content.Context
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.ichen.pocketbracket.models.TournamentPrice
-import com.ichen.pocketbracket.models.TournamentRegistrationStatus
-import com.ichen.pocketbracket.models.TournamentType
-import com.ichen.pocketbracket.models.Videogame
-import com.ichen.pocketbracket.utils.LocationRadius
-import com.ichen.pocketbracket.utils.SetComposableFunction
-import com.ichen.pocketbracket.utils.getCenterAsString
-import com.ichen.pocketbracket.utils.getNextEnumValue
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.datetime.date.datepicker
+import com.ichen.pocketbracket.models.*
+import com.ichen.pocketbracket.utils.*
 import java.text.SimpleDateFormat
 import java.util.*
+
+private val dateRangePicker =
+    MaterialDatePicker.Builder.dateRangePicker()
+        .setTitleText("Select dates")
+        .build()
 
 @ExperimentalPermissionsApi
 @Composable
 fun TimelineHeader(
-    selectedGames: MutableState<List<Videogame>?>,
-    searchFieldText: MutableState<String>,
+    tournamentName: MutableState<String>,
+    tournamentGames: MutableState<List<Videogame>?>,
     tournamentLocationRadius: MutableState<LocationRadius?>,
+    tournamentDateRange: MutableState<DateRange?>,
     tournamentType: MutableState<TournamentType>,
     tournamentPrice: MutableState<TournamentPrice>,
     tournamentRegistrationStatus: MutableState<TournamentRegistrationStatus>,
-    tournamentDateRange: MutableState<Pair<Date, Date>?>,
-    showDateRangePicker: () -> Unit,
+    clearFilters: () -> Unit,
     clickable: Boolean,
     setDialogComposable: SetComposableFunction,
-    clearFilters: () -> Unit,
 ) = Surface(
     color = MaterialTheme.colors.primary,
     contentColor = MaterialTheme.colors.onPrimary,
     modifier = Modifier.fillMaxWidth(1f)
 ) {
 
-    val formattedDateRange: String? = if (tournamentDateRange.value == null) null else {
-        val sdf = SimpleDateFormat("MM/dd")
-        val formattedStartDate = sdf.format(tournamentDateRange.value!!.first)
-        val formattedEndDate = sdf.format(tournamentDateRange.value!!.second)
-        "$formattedStartDate - $formattedEndDate"
-    }
+    val context = LocalContext.current
 
     Column(Modifier.padding(vertical = 16.dp)) {
         TextField(
-            value = searchFieldText.value,
-            onValueChange = { searchFieldText.value = it },
+            value = tournamentName.value,
+            onValueChange = { tournamentName.value = it },
             modifier = Modifier
                 .fillMaxWidth(1f)
                 .clip(MaterialTheme.shapes.small)
@@ -84,11 +74,11 @@ fun TimelineHeader(
         ) {
             FilterPill(
                 "Games",
-                selectedGames.value != null,
+                tournamentGames.value != null,
                 clickable
             ) { // sheet with checkbox list of games
                 setDialogComposable {
-                    ChooseGamesDialog(setDialogComposable, selectedGames)
+                    ChooseGamesDialog(setDialogComposable, tournamentGames)
                 }
             }
             FilterPill(tournamentLocationRadius.value?.getCenterAsString() ?: "Location", tournamentLocationRadius.value != null, clickable) { // sheet with location selction
@@ -102,11 +92,12 @@ fun TimelineHeader(
                 }
             }
             FilterPill(
-                formattedDateRange ?: "Dates",
+                tournamentDateRange.value.toString() ?: "Dates",
                 tournamentDateRange.value != null,
                 clickable
             ) { // sheet with date selection
-                showDateRangePicker()
+                initializeDateRangePickerListeners(tournamentDateRange)
+                showDateRangePicker(context)
             }
             FilterPill(
                 tournamentType.value.toString(),
@@ -140,5 +131,27 @@ fun TimelineHeader(
                 color = MaterialTheme.colors.onError
             )
         }
+    }
+}
+
+private fun initializeDateRangePickerListeners(tournamentDateRange: MutableState<DateRange?>) {
+    dateRangePicker.addOnPositiveButtonClickListener { _ ->
+        val startDate = dateRangePicker.selection?.first
+        val endDate = dateRangePicker.selection?.second
+        tournamentDateRange.value = if(startDate != null && endDate != null) DateRange(Date(startDate), Date(endDate)) else null
+    }
+    dateRangePicker.addOnNegativeButtonClickListener {
+        tournamentDateRange.value = null
+    }
+    dateRangePicker.addOnCancelListener {
+        tournamentDateRange.value = null
+    }
+}
+
+private fun showDateRangePicker(context: Context) {
+    if(context is AppCompatActivity) {
+        dateRangePicker.show(context.supportFragmentManager, null)
+    } else {
+        Toast.makeText(context, "Error displaying date picker", Toast.LENGTH_SHORT).show()
     }
 }

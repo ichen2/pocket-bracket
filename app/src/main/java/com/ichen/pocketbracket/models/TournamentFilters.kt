@@ -1,5 +1,20 @@
 package com.ichen.pocketbracket.models
 
+import com.google.android.gms.maps.model.LatLng
+import com.ichen.pocketbracket.utils.isSameDay
+import com.ichen.pocketbracket.utils.toPrettyString
+import java.util.*
+
+data class TournamentFilter(
+    val name: String,
+    val games: List<Videogame>?,
+    val location: LocationRadius?,
+    val dates: DateRange?,
+    val type: TournamentType,
+    val price: TournamentPrice,
+    val registration: TournamentRegistrationStatus,
+)
+
 enum class TournamentType(private val displayName: String) {
     NO_FILTER("Type"),
     IS_ONLINE("Online"),
@@ -27,5 +42,23 @@ enum class TournamentRegistrationStatus(private val displayName: String) {
 
     override fun toString(): String {
         return displayName
+    }
+}
+
+data class LocationRadius(
+    var center: LatLng,
+    var radius: Double,
+)
+
+data class DateRange(
+    val start: Date,
+    val end: Date,
+) {
+    override fun toString(): String {
+        return if (start.isSameDay(end)) {
+            start.toPrettyString()
+        } else {
+            "${start.toPrettyString()} - ${end.toPrettyString()}"
+        }
     }
 }

@@ -24,7 +24,7 @@ import com.ichen.pocketbracket.utils.SetComposableFunction
 @Composable
 fun ChooseGamesDialog(
     setDialogComposable: SetComposableFunction,
-    selectedGames: MutableState<(List<Videogame>?)>
+    tournamentGames: MutableState<(List<Videogame>?)>
 ) = Box(
     Modifier
         .fillMaxSize(1f)
@@ -34,7 +34,7 @@ fun ChooseGamesDialog(
     val checkedGames = videogamesList.map { videogame ->
         remember {
             mutableStateOf(
-                selectedGames.value != null && selectedGames.value!!.contains(
+                tournamentGames.value != null && tournamentGames.value!!.contains(
                     videogame
                 )
             )
@@ -63,7 +63,7 @@ fun ChooseGamesDialog(
                 color = MaterialTheme.colors.onSurface,
                 style = MaterialTheme.typography.h5,
                 modifier = Modifier.clickable {
-                    selectedGames.value = videogamesList.filterIndexed { index, _ ->
+                    tournamentGames.value = videogamesList.filterIndexed { index, _ ->
                         checkedGames[index].value
                     }.ifEmpty { null }
                     setDialogComposable(null)

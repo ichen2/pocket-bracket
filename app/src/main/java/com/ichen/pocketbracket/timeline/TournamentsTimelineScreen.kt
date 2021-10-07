@@ -1,9 +1,10 @@
 package com.ichen.pocketbracket.timeline
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -17,9 +18,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.timeline.components.TimelineHeader
 import com.ichen.pocketbracket.timeline.components.TournamentCardView
-import com.ichen.pocketbracket.utils.LocationRadius
 import com.ichen.pocketbracket.utils.SetComposableFunction
-import java.util.*
 
 val tournaments by mutableStateOf(
     listOf(
@@ -29,14 +28,11 @@ val tournaments by mutableStateOf(
     )
 )
 
-
 @ExperimentalPermissionsApi
 @Composable
 fun ColumnScope.TournamentsTimelineScreen(
     clickable: Boolean,
     setDialogComposable: SetComposableFunction,
-    tournamentDateRange: MutableState<Pair<Date, Date>?>,
-    showDateRangePicker: () -> Unit,
     viewModel: TournamentsTimelineViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 
 ) = Column(
@@ -45,35 +41,35 @@ fun ColumnScope.TournamentsTimelineScreen(
         .fillMaxWidth(1f)
         .background(MaterialTheme.colors.primary)
 ) {
-    val searchFieldText = remember { mutableStateOf("") }
-    val selectedGames: MutableState<List<Videogame>?> = remember { mutableStateOf(null) }
+    val tournamentName = remember { mutableStateOf("") }
+    val tournamentGames: MutableState<List<Videogame>?> = remember { mutableStateOf(null) }
     val tournamentLocationRadius: MutableState<LocationRadius?> = remember { mutableStateOf(null) }
+    val tournamentDateRange: MutableState<DateRange?> = remember { mutableStateOf(null) }
     val tournamentType = remember { mutableStateOf(TournamentType.NO_FILTER) }
     val tournamentPrice = remember { mutableStateOf(TournamentPrice.NO_FILTER) }
     val tournamentRegistrationStatus =
         remember { mutableStateOf(TournamentRegistrationStatus.NO_FILTER) }
     val clearFilters = {
-        selectedGames.value = null
-        searchFieldText.value = ""
+        tournamentName.value = ""
+        tournamentGames.value = null
+        tournamentLocationRadius.value = null
+        tournamentDateRange.value = null
         tournamentType.value = TournamentType.NO_FILTER
         tournamentPrice.value = TournamentPrice.NO_FILTER
-        tournamentLocationRadius.value = null
         tournamentRegistrationStatus.value = TournamentRegistrationStatus.NO_FILTER
-        tournamentDateRange.value = null
     }
 
     TimelineHeader(
-        selectedGames,
-        searchFieldText,
+        tournamentName,
+        tournamentGames,
         tournamentLocationRadius,
+        tournamentDateRange,
         tournamentType,
         tournamentPrice,
         tournamentRegistrationStatus,
-        tournamentDateRange,
-        showDateRangePicker,
+        clearFilters,
         clickable,
         setDialogComposable,
-        clearFilters
     )
     LazyColumn(Modifier.clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))) {
         itemsIndexed(
@@ -88,5 +84,5 @@ fun ColumnScope.TournamentsTimelineScreen(
 @Composable
 @Preview
 fun TournamentsTimelineScreenPreview() = Column(Modifier.background(Color.White)) {
-    TournamentsTimelineScreen(false, {}, remember { mutableStateOf(null) }, {})
+    TournamentsTimelineScreen(false, {})
 }

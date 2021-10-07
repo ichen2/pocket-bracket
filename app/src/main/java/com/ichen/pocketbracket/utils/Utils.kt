@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.toArgb
 import com.google.android.gms.maps.model.LatLng
+import com.ichen.pocketbracket.models.LocationRadius
 import com.ichen.pocketbracket.timeline.components.RADIUS_MAX
 import com.ichen.pocketbracket.timeline.components.RADIUS_MIN
 import java.text.SimpleDateFormat
@@ -11,11 +12,6 @@ import java.util.*
 import kotlin.math.roundToInt
 
 const val METERS_IN_MILE = 1609.34
-
-data class LocationRadius(
-    var center: LatLng,
-    var radius: Double,
-)
 
 fun LocationRadius.getCenterAsString() : String {
     return "(${center.latitude.roundToInt()}\u00B0, ${center.longitude.roundToInt()}\u00B0)"
