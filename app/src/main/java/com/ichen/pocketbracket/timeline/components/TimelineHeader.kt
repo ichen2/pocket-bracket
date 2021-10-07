@@ -10,7 +10,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -19,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.ichen.pocketbracket.models.*
-import com.ichen.pocketbracket.utils.*
-import java.text.SimpleDateFormat
+import com.ichen.pocketbracket.utils.SetComposableFunction
+import com.ichen.pocketbracket.utils.getNextEnumValue
 import java.util.*
 
 private val dateRangePicker =
@@ -42,7 +43,7 @@ fun TimelineHeader(
     clickable: Boolean,
     setDialogComposable: SetComposableFunction,
 ) = Surface(
-    color = MaterialTheme.colors.primary,
+    color = MaterialTheme.colors.primarySurface,
     contentColor = MaterialTheme.colors.onPrimary,
     modifier = Modifier.fillMaxWidth(1f)
 ) {
@@ -58,6 +59,7 @@ fun TimelineHeader(
                 .clip(MaterialTheme.shapes.small)
                 .padding(horizontal = 16.dp),
             colors = TextFieldDefaults.textFieldColors(
+                cursorColor = MaterialTheme.colors.onPrimary,
                 focusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
                 errorIndicatorColor = Color.Transparent,
@@ -81,7 +83,11 @@ fun TimelineHeader(
                     ChooseGamesDialog(setDialogComposable, tournamentGames)
                 }
             }
-            FilterPill("Location", tournamentLocationRadius.value != null, clickable) { // sheet with location selction
+            FilterPill(
+                "Location",
+                tournamentLocationRadius.value != null,
+                clickable
+            ) { // sheet with location selction
                 setDialogComposable {
                     LocationPicker(
                         onNegativeButtonClick = { setDialogComposable(null) },
@@ -138,7 +144,10 @@ private fun initializeDateRangePickerListeners(tournamentDateRange: MutableState
     dateRangePicker.addOnPositiveButtonClickListener { _ ->
         val startDate = dateRangePicker.selection?.first
         val endDate = dateRangePicker.selection?.second
-        tournamentDateRange.value = if(startDate != null && endDate != null) DateRange(Date(startDate), Date(endDate)) else null
+        tournamentDateRange.value = if (startDate != null && endDate != null) DateRange(
+            Date(startDate),
+            Date(endDate)
+        ) else null
     }
     dateRangePicker.addOnNegativeButtonClickListener {
         tournamentDateRange.value = null
@@ -149,7 +158,7 @@ private fun initializeDateRangePickerListeners(tournamentDateRange: MutableState
 }
 
 private fun showDateRangePicker(context: Context) {
-    if(context is AppCompatActivity) {
+    if (context is AppCompatActivity) {
         dateRangePicker.show(context.supportFragmentManager, null)
     } else {
         Toast.makeText(context, "Error displaying date picker", Toast.LENGTH_SHORT).show()

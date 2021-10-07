@@ -10,7 +10,7 @@ private val DarkColorPalette = darkColors(
     primary = lightPurple,
     primaryVariant = darkPurple,
     secondary = lightTeal,
-    surface = darkBlack,
+    surface = medBlack,
     background = darkBlack,
 )
 
@@ -41,7 +41,7 @@ fun PocketBracketTheme(
     } else {
         LightColorPalette
     }
-
+    val outlineColor = if (darkTheme) medWhite else medBlack
     MaterialTheme(
         colors = colors,
         typography = Typography,

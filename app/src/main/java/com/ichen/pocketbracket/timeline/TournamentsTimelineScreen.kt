@@ -5,15 +5,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.primarySurface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.timeline.components.TimelineHeader
@@ -39,7 +37,6 @@ fun ColumnScope.TournamentsTimelineScreen(
     Modifier
         .weight(1f)
         .fillMaxWidth(1f)
-        .background(MaterialTheme.colors.primary)
 ) {
     val tournamentName = remember { mutableStateOf("") }
     val tournamentGames: MutableState<List<Videogame>?> = remember { mutableStateOf(null) }
@@ -71,11 +68,11 @@ fun ColumnScope.TournamentsTimelineScreen(
         clickable,
         setDialogComposable,
     )
-    LazyColumn(Modifier.clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))) {
-        itemsIndexed(
+    LazyColumn {//(Modifier.clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))) {
+        items(
             items = tournaments,
-            key = { _, tournament -> tournament.id }) { index, tournament ->
-            TournamentCardView(tournament = tournament, first = index == 0)
+            key = { tournament -> tournament.id }) { tournament ->
+            TournamentCardView(tournament)
         }
     }
 }

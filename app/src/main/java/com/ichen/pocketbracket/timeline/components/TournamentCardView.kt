@@ -1,11 +1,9 @@
 package com.ichen.pocketbracket.timeline.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -27,11 +25,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
-fun TournamentCardView(tournament: Tournament, first: Boolean = false) = Column(
+fun TournamentCardView(tournament: Tournament) = Column(
     Modifier
         .fillMaxWidth(1f)
-        .then(if(first) Modifier.clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)) else Modifier)
-        .background(MaterialTheme.colors.surface)) {
+        .background(MaterialTheme.colors.background)) {
     Box(Modifier.fillMaxWidth()) {
         Image(
             painter = rememberImagePainter(data = tournament.imageUrl, builder = {

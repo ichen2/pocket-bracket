@@ -31,8 +31,7 @@ import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
@@ -40,6 +39,7 @@ import com.google.android.gms.maps.model.Circle
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.CancellationTokenSource
+import com.google.android.gms.tasks.Task
 import com.ichen.pocketbracket.models.LocationRadius
 import com.ichen.pocketbracket.utils.METERS_IN_MILE
 import com.ichen.pocketbracket.utils.getScaledRadius
@@ -73,7 +73,7 @@ fun LocationPicker(
             )
         )
     }
-    var sliderValue by remember { mutableStateOf(0f)}
+    var sliderValue by remember { mutableStateOf(0f) }
     val map: MutableState<GoogleMap?> = remember { mutableStateOf(null) }
     val context = LocalContext.current
     Box {
@@ -107,7 +107,7 @@ fun LocationPicker(
                 Modifier
                     .align(Alignment.End)
                     .padding(16.dp)
-                    .size(32.dp)
+                    .size(48.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colors.background)
                     .clickable {
@@ -122,33 +122,57 @@ fun LocationPicker(
                                 Manifest.permission.ACCESS_FINE_LOCATION
                             ) == PackageManager.PERMISSION_GRANTED
                         ) {
-                            LocationServices
-                                .getFusedLocationProviderClient(context)
-                                .getCurrentLocation(
-                                    LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY,
-                                    CancellationTokenSource().token
-                                )
-                                .addOnSuccessListener { location ->
-                                    if (location != null) {
-                                        locationRadius.value = LocationRadius(
-                                            LatLng(location.latitude, location.longitude),
-                                            locationRadius.value.radius
-                                        )
-                                        map.value?.moveCamera(
-                                            CameraUpdateFactory.newLatLngZoom(
-                                                locationRadius.value.center, 6f
+                            val builder = LocationSettingsRequest
+                                .Builder()
+                                .addLocationRequest(
+                                    LocationRequest
+                                        .create()
+                                        .apply {
+                                            priority =
+                                                LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+                                            interval = 10000
+                                        })
+                            val client: SettingsClient = LocationServices.getSettingsClient(context)
+                            val task: Task<LocationSettingsResponse> =
+                                client.checkLocationSettings(builder.build())
+                            task.addOnSuccessListener {
+                                LocationServices
+                                    .getFusedLocationProviderClient(context)
+                                    .getCurrentLocation(
+                                        LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY,
+                                        CancellationTokenSource().token
+                                    )
+                                    .addOnSuccessListener { location ->
+                                        if (location != null) {
+                                            locationRadius.value = LocationRadius(
+                                                LatLng(location.latitude, location.longitude),
+                                                locationRadius.value.radius
                                             )
-                                        )
-                                    } else {
-                                        Toast
-                                            .makeText(
-                                                context,
-                                                "Error retrieving user location",
-                                                Toast.LENGTH_SHORT
+                                            map.value?.moveCamera(
+                                                CameraUpdateFactory.newLatLngZoom(
+                                                    locationRadius.value.center, 12f
+                                                )
                                             )
-                                            .show()
+                                        } else {
+                                            Toast
+                                                .makeText(
+                                                    context,
+                                                    "Error retrieving user location",
+                                                    Toast.LENGTH_SHORT
+                                                )
+                                                .show()
+                                        }
                                     }
-                                }
+                            }
+                            task.addOnFailureListener {
+                                Toast
+                                    .makeText(
+                                        context,
+                                        "Error retrieving usr location. Please enable location services in your settings",
+                                        Toast.LENGTH_LONG
+                                    )
+                                    .show()
+                            }
                         } else {
                             Toast
                                 .makeText(
@@ -180,7 +204,10 @@ fun LocationPicker(
                     onValueChange = { newSliderValue ->
                         sliderValue = newSliderValue
                         locationRadius.value =
-                            LocationRadius(locationRadius.value.center, getScaledRadius(newSliderValue))
+                            LocationRadius(
+                                locationRadius.value.center,
+                                getScaledRadius(newSliderValue)
+                            )
                     },
                     valueRange = 0f..1f,
                     colors = SliderDefaults.colors(thumbColor = MaterialTheme.colors.primary)
@@ -280,9 +307,15 @@ fun BoxScope.LocationMarker(mapIsMoving: Boolean) = Column(
 ) {
     val offset by animateDpAsState(
         if (mapIsMoving) -10.dp else 0.dp,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow)
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        )
     )
-    Box(Modifier.offset(y = offset + 3.dp).zIndex(1000f), contentAlignment = Alignment.TopCenter) {
+    Box(
+        Modifier
+            .offset(y = offset + 3.dp)
+            .zIndex(1000f), contentAlignment = Alignment.TopCenter) {
         Box(
             Modifier
                 .width(2.dp)

@@ -10,7 +10,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -19,10 +18,16 @@ fun FilterPill(text: String, enabled: Boolean, clickable: Boolean, onClick: () -
         text = text,
         modifier = Modifier
             .clip(CircleShape)
-            .background(if(enabled) MaterialTheme.colors.secondary else MaterialTheme.colors.surface)
-            .then(if(!enabled) Modifier.border(1.dp, MaterialTheme.colors.onSurface, shape = CircleShape) else Modifier)
+            .background(if (enabled) MaterialTheme.colors.secondary else MaterialTheme.colors.background)
+            .then(
+                if (!enabled) Modifier.border(
+                    1.dp,
+                    MaterialTheme.colors.onSurface,
+                    shape = CircleShape
+                ) else Modifier
+            )
             .clickable(onClick = onClick, enabled = clickable)
             .padding(horizontal = 16.dp, vertical = 8.dp),
-        color = if(enabled) MaterialTheme.colors.onSecondary else MaterialTheme.colors.onSurface
+        color = if (enabled) MaterialTheme.colors.onSecondary else MaterialTheme.colors.onSurface
     )
 }
