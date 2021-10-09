@@ -6,13 +6,13 @@ import com.ichen.pocketbracket.utils.toPrettyString
 import java.util.*
 
 data class TournamentFilter(
-    val name: String,
-    val games: List<Videogame>?,
-    val location: LocationRadius?,
-    val dates: DateRange?,
-    val type: TournamentType,
-    val price: TournamentPrice,
-    val registration: TournamentRegistrationStatus,
+    val name: String = "",
+    val games: List<Videogame>? = null,
+    val location: LocationRadius? = null,
+    val dates: DateRange? = null,
+    val type: TournamentType? = null,
+    val price: TournamentPrice? = null,
+    val registration: TournamentRegistrationStatus? = null,
 )
 
 enum class TournamentType(private val displayName: String) {

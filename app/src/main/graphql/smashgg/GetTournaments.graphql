@@ -1,0 +1,43 @@
+query GetTournaments(
+    $perPage: Int!,
+    $name:String,
+    $isOnline: Boolean,
+    $videogameIds:[ID],
+    $location:TournamentLocationFilter,
+    $registrationIsOpen:Boolean
+    $afterDate:Timestamp,
+    $beforeDate:Timestamp
+) {
+    tournaments(query: {
+        perPage: $perPage
+        filter: {
+            name:$name
+            hasOnlineEvents:$isOnline
+            videogameIds:$videogameIds
+            location: $location
+            regOpen:$registrationIsOpen
+            afterDate:$afterDate
+            beforeDate:$beforeDate
+        }
+    }) {
+        nodes {
+            id
+            name
+            startAt
+            endAt
+            isOnline
+            state
+            city
+            isRegistrationOpen
+            events {
+                name
+                startAt
+                numEntrants
+                videogame {
+                    id
+                    displayName
+                }
+            }
+        }
+    }
+}

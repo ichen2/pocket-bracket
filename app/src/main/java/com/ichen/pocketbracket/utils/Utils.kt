@@ -49,3 +49,15 @@ inline fun<reified T: Enum<T>> getNextEnumValue(curr: T): T {
 }
 
 typealias SetComposableFunction = (((@Composable BoxScope.() -> Unit)?) -> Unit)
+
+enum class Status {
+    NOT_STARTED,
+    LOADING,
+    SUCCESS,
+    ERROR,
+}
+
+data class Field<T>(
+    val value: T,
+    val status: Status
+)
