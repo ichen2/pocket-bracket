@@ -7,6 +7,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.ichen.pocketbracket.models.LocationRadius
 import com.ichen.pocketbracket.timeline.components.RADIUS_MAX
 import com.ichen.pocketbracket.timeline.components.RADIUS_MIN
+import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
@@ -64,4 +65,8 @@ data class Field<T>(
     fun withData(data: T) = Field(data, status)
 
     fun withStatus(status: Status) = Field(data, status)
+}
+
+fun convertBigDecimalToDate(date: Any?) : Date? {
+    return if(date != null && date is BigDecimal) Date((date).toLong() * 1000) else null
 }

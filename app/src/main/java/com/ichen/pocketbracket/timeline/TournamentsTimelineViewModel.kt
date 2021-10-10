@@ -6,15 +6,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ichen.pocketbracket.models.ActivityState
-import com.ichen.pocketbracket.models.Tournament
-import com.ichen.pocketbracket.models.TournamentFilter
-import com.ichen.pocketbracket.models.testTournament
+import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.utils.Field
 import com.ichen.pocketbracket.utils.Status
+import com.ichen.pocketbracket.utils.convertBigDecimalToDate
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 import java.math.BigInteger
 import java.util.*
 
@@ -36,6 +35,7 @@ class TournamentsTimelineViewModel : ViewModel() {
                 } else {
                     val nodes = response.data?.tournaments?.nodes
                     if(nodes != null) {
+                        // SUS
                         val unfilteredTournaments =
                             nodes.filter { node ->
                                 node?.id != null
@@ -44,19 +44,29 @@ class TournamentsTimelineViewModel : ViewModel() {
                                 Tournament(
                                     id = node!!.id!!.toInt(),
                                     name = node.name!!,
-                                    startAt = if(node.startAt != null && node.startAt is BigInteger) Date((node.startAt).toLong()) else null,
-                                    endAt = if(node.endAt != null && node.endAt is BigInteger) Date((node.endAt).toLong()) else null,
+                                    startAt = convertBigDecimalToDate(node.startAt),
+                                    endAt = convertBigDecimalToDate(node.endAt),
                                     isOnline = node.isOnline,
                                     isRegistrationOpen = node.isRegistrationOpen,
-                                    numAttendees = null,
+                                    numAttendees = node.numAttendees,
                                     state = when(node.state) {
                                         0 -> ActivityState.CREATED
                                         1 -> ActivityState.ACTIVE
                                         2 -> ActivityState.COMPLETED
                                         else -> null
                                     },
-                                    imageUrl = null,
-                                    events = null
+                                    imageUrl = node.images?.getOrNull(0)?.url,
+                                    events = node.events?.filter { event ->
+                                        event?.name != null
+                                    }?.map { event ->
+                                        Event(
+                                            id = 0,
+                                            name = event!!.name!!,
+                                            numEntrants = event.numEntrants,
+                                            startAt = convertBigDecimalToDate(node.startAt),
+                                            videogame = if(event.videogame?.id != null && videogamesMap.containsKey(event.videogame.id.toInt())) videogamesMap[event.videogame.id.toInt()] else null
+                                        )
+                                    }
                                 )
                             }
                         tournaments.value = Field(unfilteredTournaments, Status.SUCCESS)

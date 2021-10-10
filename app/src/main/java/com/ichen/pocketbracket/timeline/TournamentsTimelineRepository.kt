@@ -32,7 +32,6 @@ class TournamentsTimelineRepository {
             )
             .build()
 
-        // in your coroutine scope, call `ApolloClient.query(...).toDeferred().await()`
         coroutineScope {
             launch {
                 val response = try {

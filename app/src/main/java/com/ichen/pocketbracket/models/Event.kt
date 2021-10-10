@@ -4,20 +4,16 @@ import java.util.*
 
 data class Event(
     val id: Int,
-    val isOnline: Boolean,
     val name: String,
-    val numEntrants: Int,
-    val startAt: Date,
-    val state: ActivityState,
-    val videogame: Videogame
+    val numEntrants: Int?,
+    val startAt: Date?,
+    val videogame: Videogame?
 )
 
 val testEvent = Event(
-    0,
-    true,
-    "Test event",
-    1,
-    Date(0),
-    ActivityState.ACTIVE,
-    videogamesList[0]
+    id = 0,
+    name = "Test event",
+    numEntrants = 1,
+    startAt = Date(0),
+    videogame = videogamesList[0]
 )

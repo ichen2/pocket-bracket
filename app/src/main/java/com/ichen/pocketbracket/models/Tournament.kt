@@ -4,11 +4,11 @@ import java.util.*
 
 data class Tournament(
     val id: Int,
+    val name: String,
     val startAt: Date?,
     val endAt: Date?,
     val isOnline: Boolean?,
     val isRegistrationOpen: Boolean?,
-    val name: String,
     val numAttendees: Int?,
     val state: ActivityState?,
     val imageUrl: String?,

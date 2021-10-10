@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
@@ -69,7 +70,8 @@ fun TournamentCardView(tournament: Tournament) = Column(
             color = MaterialTheme.colors.onSurface
         )
         Spacer(Modifier.height(4.dp))
-        for (event in tournament.events ?: listOf()) {
+        (tournament.events ?: listOf()).forEachIndexed { index, event ->
+            if(index != 0) Spacer(Modifier.height(16.dp))
             EventCardItemView(event = event)
         }
     }
@@ -77,23 +79,30 @@ fun TournamentCardView(tournament: Tournament) = Column(
 
 @Composable
 fun EventCardItemView(event: Event) {
-    Row {
+    Column(Modifier.fillMaxWidth()) {
         Text(
             text = event.name,
             color = MaterialTheme.colors.primary,
             style = MaterialTheme.typography.h5
         )
-        Spacer(Modifier.weight(1f))
-        Text(
-            text = SimpleDateFormat("h:mm a", Locale.getDefault()).format(event.startAt),
-            color = MaterialTheme.colors.secondary,
-            style = MaterialTheme.typography.h5,
-        )
+        Row {
+            Text(
+                modifier = Modifier.weight(1f),
+                text = if (event.startAt != null) SimpleDateFormat(
+                    "h:mm a",
+                    Locale.getDefault()
+                ).format(event.startAt) else "Date unavailable",
+                color = MaterialTheme.colors.secondary,
+                style = MaterialTheme.typography.h5,
+            )
+            Text(
+                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.End,
+                text = if(event.numEntrants != null) ("${event.numEntrants} ${if (event.numEntrants == 1) "entrant" else "entrants"}") else "Number of entrants unavailable",
+                color = MaterialTheme.colors.onSurface,
+            )
+        }
     }
-    Text(
-        text = "${event.numEntrants} ${if (event.numEntrants == 1) "entrant" else "entrants"}",
-        color = MaterialTheme.colors.onSurface,
-    )
 }
 
 @Preview

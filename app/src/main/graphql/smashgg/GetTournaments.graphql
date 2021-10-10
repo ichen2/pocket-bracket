@@ -28,8 +28,13 @@ query GetTournaments(
             isOnline
             state
             city
+            numAttendees
+            images {
+                url
+            }
             isRegistrationOpen
             events {
+                id
                 name
                 startAt
                 numEntrants

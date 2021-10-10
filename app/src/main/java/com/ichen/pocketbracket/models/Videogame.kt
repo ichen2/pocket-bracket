@@ -15,4 +15,4 @@ data class Videogame(val name: VideogameName, val id: Int, val displayName: Stri
 val videogamesList = listOf(
     Videogame(VideogameName.SMASH_MELEE, 1, "Melee")
 )
-val videogamesMap = videogamesList.associateBy { videogame -> (videogame.id)}
+val videogamesMap : Map<Int, Videogame> = videogamesList.associateBy { videogame -> (videogame.id)}

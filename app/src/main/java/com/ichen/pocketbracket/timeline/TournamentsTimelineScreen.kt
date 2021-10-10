@@ -62,7 +62,13 @@ fun ColumnScope.TournamentsTimelineScreen(
         clickable,
         setDialogComposable,
     )
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth().weight(1f).background(MaterialTheme.colors.background)) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .weight(1f)
+            .background(MaterialTheme.colors.background)
+    ) {
         when (viewModel.tournaments.value.status) {
             Status.SUCCESS ->
                 LazyColumn {
@@ -73,10 +79,11 @@ fun ColumnScope.TournamentsTimelineScreen(
                     }
                 }
             Status.NOT_STARTED ->
+                // SUS
                 viewModel.getTournaments(context = context)
             Status.LOADING ->
                 CircularProgressIndicator()
-            Status.ERROR ->
+            else ->
                 Text("Error", color = MaterialTheme.colors.onBackground)
         }
     }
