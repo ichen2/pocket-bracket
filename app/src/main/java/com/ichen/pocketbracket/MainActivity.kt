@@ -14,10 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -30,6 +27,8 @@ import com.ichen.pocketbracket.timeline.TournamentsTimelineScreen
 import com.ichen.pocketbracket.tournaments.MyTournamentsScreen
 import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
 import com.ichen.pocketbracket.ui.theme.medWhite
+import com.ichen.pocketbracket.utils.Field
+import com.ichen.pocketbracket.utils.Status
 
 enum class CurrentTab {
     TournamentsTimeline,
@@ -74,80 +73,82 @@ class MainActivity : AppCompatActivity() {
 }
 
 @Composable
-fun NavigationFooter(currentTab: MutableState<CurrentTab>, clickable: Boolean = true) = Column(Modifier.shadow(20.dp)) {
-    Row(
-        Modifier
-            .background(MaterialTheme.colors.surface)
-            .fillMaxWidth()) {
-        Box(
+fun NavigationFooter(currentTab: MutableState<CurrentTab>, clickable: Boolean = true) =
+    Column(Modifier.shadow(20.dp)) {
+        Row(
             Modifier
-                .weight(1f)
-                .clickable(enabled = clickable) {
-                    currentTab.value = CurrentTab.TournamentsTimeline
-                }, contentAlignment = Alignment.Center
+                .background(MaterialTheme.colors.surface)
+                .fillMaxWidth()
         ) {
-            Icon(
-                Icons.Filled.Search,
-                contentDescription = "search",
-                tint = MaterialTheme.colors.primary,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .size(32.dp)
-            )
+            Box(
+                Modifier
+                    .weight(1f)
+                    .clickable(enabled = clickable) {
+                        currentTab.value = CurrentTab.TournamentsTimeline
+                    }, contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    Icons.Filled.Search,
+                    contentDescription = "search",
+                    tint = MaterialTheme.colors.primary,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .size(32.dp)
+                )
+            }
+            Box(
+                Modifier
+                    .weight(1f)
+                    .clickable(enabled = clickable) {
+                        currentTab.value = CurrentTab.MyTournaments
+                    }, contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    Icons.Filled.EmojiEvents,
+                    contentDescription = "search",
+                    tint = MaterialTheme.colors.primary,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .size(32.dp)
+                )
+            }
+            Box(
+                Modifier
+                    .weight(1f)
+                    .clickable(enabled = clickable) {
+                        currentTab.value = CurrentTab.MyProfile
+                    }, contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    Icons.Filled.Person,
+                    contentDescription = "profile",
+                    tint = MaterialTheme.colors.primary,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .size(32.dp)
+                )
+            }
         }
-        Box(
-            Modifier
-                .weight(1f)
-                .clickable(enabled = clickable) {
-                    currentTab.value = CurrentTab.MyTournaments
-                }, contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                Icons.Filled.EmojiEvents,
-                contentDescription = "search",
-                tint = MaterialTheme.colors.primary,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .size(32.dp)
-            )
-        }
-        Box(
-            Modifier
-                .weight(1f)
-                .clickable(enabled = clickable) {
-                    currentTab.value = CurrentTab.MyProfile
-                }, contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                Icons.Filled.Person,
-                contentDescription = "profile",
-                tint = MaterialTheme.colors.primary,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .size(32.dp)
-            )
-        }
-    }
 
-}
+    }
 
 @ExperimentalPermissionsApi
 @Composable
 @Preview
 fun TestPreview() {
+    val field = remember { mutableStateOf(Field("Hello", Status.NOT_STARTED)) }
     Column {
-        val locationPermissionState = rememberMultiplePermissionsState(
-            permissions = listOf(
-                android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            )
-        )
-        if (!locationPermissionState.allPermissionsGranted) {
-            Button(onClick = { locationPermissionState.launchMultiplePermissionRequest() }) {
-                Text("Request Permissions")
-            }
-        } else {
-            Text("Permissions Granted!")
+        Text(field.value.data)
+        Text(field.value.status.toString())
+        Button(onClick = {
+            field.value = field.value.withData("World")
+        }) {
+            Text("Update value")
+        }
+        Button(onClick = {
+            field.value = field.value.withStatus(Status.SUCCESS)
+        }) {
+            Text("Update status")
         }
     }
 }

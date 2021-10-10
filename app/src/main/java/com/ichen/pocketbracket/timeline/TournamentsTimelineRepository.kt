@@ -14,17 +14,21 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 
 const val API_ENDPOINT = "https://api.smash.gg/gql/alpha"
 
 class TournamentsTimelineRepository {
-    suspend fun getTournaments(filter: TournamentFilter, tournamentsState: Field<List<Tournament>>, context: Context) {
+    suspend fun getTournaments(
+        filter: TournamentFilter,
+        context: Context,
+        onResponse: (com.apollographql.apollo.api.Response<GetTournamentsQuery.Data>?) -> Unit
+    ) {
         val apolloClient = ApolloClient.builder()
             .serverUrl(API_ENDPOINT)
-            .okHttpClient(OkHttpClient.Builder()
-                .addInterceptor(AuthorizationInterceptor(context))
-                .build()
+            .okHttpClient(
+                OkHttpClient.Builder()
+                    .addInterceptor(AuthorizationInterceptor(context))
+                    .build()
             )
             .build()
 
@@ -32,24 +36,20 @@ class TournamentsTimelineRepository {
         coroutineScope {
             launch {
                 val response = try {
-                    apolloClient.query(GetTournamentsQuery(perPage=4, Input.optional(""))).toDeferred().await()
+                    apolloClient.query(GetTournamentsQuery(perPage = 4, Input.optional("")))
+                        .toDeferred().await()
                 } catch (e: ApolloException) {
                     // handle protocol errors
-                    return@launch
+                    null
                 }
-
-                val launch = response.data
-                if (launch == null || response.hasErrors()) {
-                    // handle application errors
-                    return@launch
-                }
+                onResponse(response)
             }
         }
     }
 }
 
-private class AuthorizationInterceptor(val context: Context): Interceptor {
-    override fun intercept(chain: Interceptor.Chain): Response {
+private class AuthorizationInterceptor(val context: Context) : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
         val request = chain.request().newBuilder()
             .addHeader("Authorization", "Bearer ${BuildConfig.SMASHGG_API_KEY}")
             .build()

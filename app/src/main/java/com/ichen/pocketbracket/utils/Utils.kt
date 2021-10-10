@@ -58,6 +58,10 @@ enum class Status {
 }
 
 data class Field<T>(
-    val value: T,
-    val status: Status
-)
+    var data: T,
+    var status: Status
+) {
+    fun withData(data: T) = Field(data, status)
+
+    fun withStatus(status: Status) = Field(data, status)
+}

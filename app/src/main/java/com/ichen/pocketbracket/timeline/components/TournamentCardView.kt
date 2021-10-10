@@ -28,7 +28,8 @@ import java.util.*
 fun TournamentCardView(tournament: Tournament) = Column(
     Modifier
         .fillMaxWidth(1f)
-        .background(MaterialTheme.colors.background)) {
+        .background(MaterialTheme.colors.background)
+) {
     Box(Modifier.fillMaxWidth()) {
         Image(
             painter = rememberImagePainter(data = tournament.imageUrl, builder = {
@@ -57,15 +58,18 @@ fun TournamentCardView(tournament: Tournament) = Column(
             style = MaterialTheme.typography.h4
         )
         Text(
-            text = combineDates(tournament.startAt, tournament.endAt),
+            text = if (tournament.startAt != null && tournament.endAt != null) combineDates(
+                tournament.startAt,
+                tournament.endAt
+            ) else "Dates unavailable",
             color = MaterialTheme.colors.onSurface
         )
         Text(
-            text = if (tournament.isOnline) "Online" else "Offline",
+            text = if (tournament.isOnline != null) if (tournament.isOnline) "Online" else "Offline" else "Status unavailable",
             color = MaterialTheme.colors.onSurface
         )
         Spacer(Modifier.height(4.dp))
-        for (event in tournament.events) {
+        for (event in tournament.events ?: listOf()) {
             EventCardItemView(event = event)
         }
     }
