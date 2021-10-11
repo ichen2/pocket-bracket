@@ -23,7 +23,8 @@ import com.ichen.pocketbracket.utils.SetComposableFunction
 @Composable
 fun ChooseGamesDialog(
     setDialogComposable: SetComposableFunction,
-    tournamentGames: MutableState<(List<Videogame>?)>
+    tournamentGames: MutableState<(List<Videogame>?)>,
+    onPositiveButtonClick: () -> Unit,
 ) = Box(
     Modifier
         .fillMaxSize(1f)
@@ -58,7 +59,7 @@ fun ChooseGamesDialog(
             )
             Spacer(Modifier.weight(1f))
             Text(
-                text = "Close",
+                text = "Save",
                 color = MaterialTheme.colors.onSurface,
                 style = MaterialTheme.typography.h5,
                 modifier = Modifier.clickable {
@@ -66,6 +67,7 @@ fun ChooseGamesDialog(
                         checkedGames[index].value
                     }.ifEmpty { null }
                     setDialogComposable(null)
+                    onPositiveButtonClick()
                 })
         }
         videogamesList.forEachIndexed { index, videogame ->

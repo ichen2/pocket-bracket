@@ -29,7 +29,8 @@ class TournamentsTimelineViewModel : ViewModel() {
 
     fun getTournaments(filter: TournamentFilter = TournamentFilter(), context: Context) {
         tournaments.value = tournaments.value.withStatus(Status.LOADING)
-        viewModelScope.launch { repository.getTournaments(filter = filter, context = context) { response ->
+        viewModelScope.launch {
+            repository.getTournaments(filter = filter, context = context) { response ->
                 if(response?.data?.tournaments?.nodes == null || response.data?.tournaments?.nodes?.size == 0) {
                     tournaments.value = Field(listOf(), Status.ERROR)
                 } else {

@@ -93,7 +93,9 @@ fun LocationPicker(
             Spacer(Modifier.weight(1f))
             Text(
                 "Save",
-                Modifier.clickable { onPositiveButtonClick(locationRadius.value) },
+                Modifier.clickable {
+                    onPositiveButtonClick(locationRadius.value)
+                },
                 color = MaterialTheme.colors.onPrimary
             )
         }

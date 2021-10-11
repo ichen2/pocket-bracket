@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.ichen.pocketbracket.models.*
+import com.ichen.pocketbracket.timeline.TournamentsTimelineViewModel
 import com.ichen.pocketbracket.utils.SetComposableFunction
 import com.ichen.pocketbracket.utils.getNextEnumValue
 import java.util.*
@@ -42,6 +43,7 @@ fun TimelineHeader(
     clearFilters: () -> Unit,
     clickable: Boolean,
     setDialogComposable: SetComposableFunction,
+    viewModel: TournamentsTimelineViewModel,
 ) = Surface(
     color = MaterialTheme.colors.primarySurface,
     contentColor = MaterialTheme.colors.onPrimary,
@@ -49,6 +51,20 @@ fun TimelineHeader(
 ) {
 
     val context = LocalContext.current
+    fun getTournaments() = run {
+        viewModel.getTournaments(
+            TournamentFilter(
+                tournamentName.value,
+                tournamentGames.value,
+                tournamentLocationRadius.value,
+                tournamentDateRange.value,
+                tournamentType.value,
+                tournamentPrice.value,
+                tournamentRegistrationStatus.value
+            ),
+            context
+        )
+    }
 
     Column(Modifier.padding(vertical = 16.dp)) {
         TextField(
@@ -80,7 +96,9 @@ fun TimelineHeader(
                 clickable
             ) { // sheet with checkbox list of games
                 setDialogComposable {
-                    ChooseGamesDialog(setDialogComposable, tournamentGames)
+                    ChooseGamesDialog(setDialogComposable, tournamentGames) {
+                        getTournaments()
+                    }
                 }
             }
             FilterPill(
@@ -94,6 +112,7 @@ fun TimelineHeader(
                         onPositiveButtonClick = { locationRadius ->
                             tournamentLocationRadius.value = locationRadius
                             setDialogComposable(null)
+                            getTournaments()
                         })
                 }
             }
@@ -102,7 +121,9 @@ fun TimelineHeader(
                 tournamentDateRange.value != null,
                 clickable
             ) { // sheet with date selection
-                initializeDateRangePickerListeners(tournamentDateRange)
+                initializeDateRangePickerListeners(tournamentDateRange) {
+                    getTournaments()
+                }
                 showDateRangePicker(context)
             }
             FilterPill(
@@ -111,6 +132,7 @@ fun TimelineHeader(
                 clickable
             ) { // dropdown with online, offline, both
                 tournamentType.value = getNextEnumValue(tournamentType.value)
+                getTournaments()
             }
             FilterPill(
                 tournamentPrice.value.toString(),
@@ -118,6 +140,7 @@ fun TimelineHeader(
                 clickable
             ) { // dropdown with online, offline, both
                 tournamentPrice.value = getNextEnumValue(tournamentPrice.value)
+                getTournaments()
             }
             FilterPill(
                 tournamentRegistrationStatus.value.toString(),
@@ -126,6 +149,7 @@ fun TimelineHeader(
             ) { // dropdown with online, offline, both
                 tournamentRegistrationStatus.value =
                     getNextEnumValue(tournamentRegistrationStatus.value)
+                getTournaments()
             }
             Text(
                 text = "Clear",
@@ -140,7 +164,7 @@ fun TimelineHeader(
     }
 }
 
-private fun initializeDateRangePickerListeners(tournamentDateRange: MutableState<DateRange?>) {
+private fun initializeDateRangePickerListeners(tournamentDateRange: MutableState<DateRange?>, onPositiveButtonClick: () -> Unit) {
     dateRangePicker.addOnPositiveButtonClickListener { _ ->
         val startDate = dateRangePicker.selection?.first
         val endDate = dateRangePicker.selection?.second
@@ -148,6 +172,7 @@ private fun initializeDateRangePickerListeners(tournamentDateRange: MutableState
             Date(startDate),
             Date(endDate)
         ) else null
+        onPositiveButtonClick()
     }
     dateRangePicker.addOnNegativeButtonClickListener {
         tournamentDateRange.value = null

@@ -61,6 +61,7 @@ fun ColumnScope.TournamentsTimelineScreen(
         clearFilters,
         clickable,
         setDialogComposable,
+        viewModel,
     )
     Box(
         contentAlignment = Alignment.Center,

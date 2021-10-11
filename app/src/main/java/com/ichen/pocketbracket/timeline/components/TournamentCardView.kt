@@ -66,18 +66,22 @@ fun TournamentCardView(tournament: Tournament) = Column(
             color = MaterialTheme.colors.onSurface,
             style = MaterialTheme.typography.h4
         )
-        Text(
-            text = if (tournament.startAt != null && tournament.endAt != null) combineDates(
-                tournament.startAt,
-                tournament.endAt
-            ) else "Dates unavailable",
-            color = MaterialTheme.colors.onSurface
-        )
-        Text(
-            text = if (tournament.isOnline != null) if (tournament.isOnline) "Online" else "Offline" else "Status unavailable",
-            color = MaterialTheme.colors.onSurface
-        )
-        Spacer(Modifier.height(8.dp))
+        if (tournament.startAt != null && tournament.endAt != null) {
+            Text(
+                text = combineDates(
+                    tournament.startAt,
+                    tournament.endAt
+                ),
+                color = MaterialTheme.colors.onSurface
+            )
+        }
+        if(tournament.isOnline != null) {
+            Text(
+                text = if (tournament.isOnline) "Online" else "Offline",
+                color = MaterialTheme.colors.onSurface
+            )
+        }
+        Spacer(Modifier.height(16.dp))
         for (i in 0..min(
             if (eventsListIsExpanded.value) Int.MAX_VALUE else 1,
             tournament.events?.size ?: 0
@@ -85,13 +89,13 @@ fun TournamentCardView(tournament: Tournament) = Column(
             if (i != 0) Spacer(Modifier.height(16.dp))
             if (tournament.events?.getOrNull(i) != null) EventCardItemView(event = tournament.events[0])
         }
-        if (!eventsListIsExpanded.value && tournament.events?.size ?: 0 > 2) {
-            Spacer(Modifier.height(8.dp))
+        if (tournament.events?.size ?: 0 > 2) {
+            Spacer(Modifier.height(16.dp))
             Text(
                 modifier = Modifier.clickable {
-                    eventsListIsExpanded.value = true
+                    eventsListIsExpanded.value = !eventsListIsExpanded.value
                 },
-                text = "Show ${tournament.events!!.size - 2} more",
+                text = "Show ${if(eventsListIsExpanded.value) "less" else "${tournament.events!!.size - 2} more"}",
                 color = MaterialTheme.colors.primary,
                 style = MaterialTheme.typography.body1
             )
@@ -108,21 +112,25 @@ fun EventCardItemView(event: Event) {
             style = MaterialTheme.typography.h5
         )
         Row {
-            Text(
-                modifier = Modifier.weight(1f),
-                text = if (event.startAt != null) SimpleDateFormat(
-                    "h:mm a",
-                    Locale.getDefault()
-                ).format(event.startAt) else "Date unavailable",
-                color = MaterialTheme.colors.secondary,
-                style = MaterialTheme.typography.h5,
-            )
-            Text(
-                modifier = Modifier.weight(1f),
-                textAlign = TextAlign.End,
-                text = if (event.numEntrants != null) ("${event.numEntrants} ${if (event.numEntrants == 1) "entrant" else "entrants"}") else "Number of entrants unavailable",
-                color = MaterialTheme.colors.onSurface,
-            )
+            if(event.startAt != null) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = SimpleDateFormat(
+                        "h:mm a",
+                        Locale.getDefault()
+                    ).format(event.startAt),
+                    color = MaterialTheme.colors.secondary,
+                    style = MaterialTheme.typography.h5,
+                )
+            }
+            if(event.numEntrants != null) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.End,
+                    text = "${event.numEntrants} ${if (event.numEntrants == 1) "entrant" else "entrants"}",
+                    color = MaterialTheme.colors.onSurface,
+                )
+            }
         }
     }
 }
