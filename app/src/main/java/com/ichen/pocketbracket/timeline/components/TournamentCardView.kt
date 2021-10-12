@@ -1,8 +1,10 @@
 package com.ichen.pocketbracket.timeline.components
 
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -14,17 +16,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import coil.size.OriginalSize
 import coil.size.Scale
+import com.ichen.pocketbracket.components.ShimmerAnimation
 import com.ichen.pocketbracket.models.Event
 import com.ichen.pocketbracket.models.Tournament
 import com.ichen.pocketbracket.models.testTournament
-import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
+import com.ichen.pocketbracket.ui.theme.*
 import com.ichen.pocketbracket.utils.combineDates
 import java.text.SimpleDateFormat
 import java.util.*
@@ -75,7 +81,7 @@ fun TournamentCardView(tournament: Tournament) = Column(
                 color = MaterialTheme.colors.onSurface
             )
         }
-        if(tournament.isOnline != null) {
+        if (tournament.isOnline != null) {
             Text(
                 text = if (tournament.isOnline) "Online" else "Offline",
                 color = MaterialTheme.colors.onSurface
@@ -95,11 +101,56 @@ fun TournamentCardView(tournament: Tournament) = Column(
                 modifier = Modifier.clickable {
                     eventsListIsExpanded.value = !eventsListIsExpanded.value
                 },
-                text = "Show ${if(eventsListIsExpanded.value) "less" else "${tournament.events!!.size - 2} more"}",
+                text = "Show ${if (eventsListIsExpanded.value) "less" else "${tournament.events!!.size - 2} more"}",
                 color = MaterialTheme.colors.primary,
                 style = MaterialTheme.typography.body1
             )
         }
+    }
+}
+
+@Composable
+fun TournamentCardViewLoading(brush: Brush) = Column(
+    modifier = Modifier
+        .fillMaxWidth(1f)
+        .background(brush = brush)
+) {
+    Spacer(Modifier.height(200.dp))
+    Box(
+        Modifier
+            .height(16.dp)
+            .fillMaxWidth()
+            .background(MaterialTheme.colors.background))
+    LoadingCardItem(height = 48.dp)
+    Box(
+        Modifier
+            .height(16.dp)
+            .fillMaxWidth()
+            .background(MaterialTheme.colors.background))
+    for(i in 0..2) {
+        LoadingCardItem(height = 16.dp)
+        Box(
+            Modifier
+                .height(16.dp)
+                .fillMaxWidth()
+                .background(MaterialTheme.colors.background))
+    }
+}
+
+@Composable
+fun LoadingCardItem(height: Dp, padding: Dp = 16.dp) {
+    Row(Modifier.height(height)) {
+        Box(
+            Modifier
+                .fillMaxHeight()
+                .width(padding)
+                .background(MaterialTheme.colors.background))
+        Spacer(Modifier.weight(1f))
+        Box(
+            Modifier
+                .fillMaxHeight()
+                .width(padding)
+                .background(MaterialTheme.colors.background))
     }
 }
 
@@ -112,7 +163,7 @@ fun EventCardItemView(event: Event) {
             style = MaterialTheme.typography.h5
         )
         Row {
-            if(event.startAt != null) {
+            if (event.startAt != null) {
                 Text(
                     modifier = Modifier.weight(1f),
                     text = SimpleDateFormat(
@@ -123,7 +174,7 @@ fun EventCardItemView(event: Event) {
                     style = MaterialTheme.typography.h5,
                 )
             }
-            if(event.numEntrants != null) {
+            if (event.numEntrants != null) {
                 Text(
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.End,
@@ -135,8 +186,17 @@ fun EventCardItemView(event: Event) {
     }
 }
 
+
 @Preview
 @Composable
 fun TournamentCardViewPreview() = PocketBracketTheme {
     TournamentCardView(testTournament)
+}
+
+@Preview
+@Composable
+fun TournamentCardViewLoadingPreview() = PocketBracketTheme {
+    ShimmerAnimation { brush ->
+        TournamentCardViewLoading(brush)
+    }
 }

@@ -69,7 +69,11 @@ fun TimelineHeader(
     Column(Modifier.padding(vertical = 16.dp)) {
         TextField(
             value = tournamentName.value,
-            onValueChange = { tournamentName.value = it },
+            onValueChange = {
+                tournamentName.value = it
+                // SUS (maybe we could not get tournaments every time the user types something)
+                getTournaments()
+            },
             modifier = Modifier
                 .fillMaxWidth(1f)
                 .clip(MaterialTheme.shapes.small)

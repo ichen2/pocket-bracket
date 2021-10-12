@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -12,11 +14,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.ichen.pocketbracket.components.ShimmerAnimation
 import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.timeline.components.TimelineHeader
 import com.ichen.pocketbracket.timeline.components.TournamentCardView
+import com.ichen.pocketbracket.timeline.components.TournamentCardViewLoading
 import com.ichen.pocketbracket.utils.SetComposableFunction
 import com.ichen.pocketbracket.utils.Status
+import java.lang.Integer.max
 
 @ExperimentalPermissionsApi
 @Composable
@@ -48,6 +53,7 @@ fun ColumnScope.TournamentsTimelineScreen(
         tournamentType.value = TournamentType.NO_FILTER
         tournamentPrice.value = TournamentPrice.NO_FILTER
         tournamentRegistrationStatus.value = TournamentRegistrationStatus.NO_FILTER
+        viewModel.getTournaments(context = context)
     }
 
     TimelineHeader(
@@ -71,7 +77,7 @@ fun ColumnScope.TournamentsTimelineScreen(
             .background(MaterialTheme.colors.background)
     ) {
         when (viewModel.tournaments.value.status) {
-            Status.SUCCESS ->
+            Status.SUCCESS -> {
                 LazyColumn {
                     items(
                         items = viewModel.tournaments.value.data,
@@ -79,13 +85,31 @@ fun ColumnScope.TournamentsTimelineScreen(
                         TournamentCardView(tournament)
                     }
                 }
-            Status.NOT_STARTED ->
+            }
+            Status.NOT_STARTED -> {
                 // SUS
                 viewModel.getTournaments(context = context)
-            Status.LOADING ->
-                CircularProgressIndicator()
-            else ->
-                Text("Error", color = MaterialTheme.colors.onBackground)
+                TournamentsTimelineScreenLoading(viewModel.tournaments.value.data.size)
+            }
+            Status.LOADING -> {
+                TournamentsTimelineScreenLoading(viewModel.tournaments.value.data.size)
+            }
+            else -> {
+                Text("No Tournaments Founds", color = MaterialTheme.colors.onBackground)
+            }
+        }
+    }
+}
+
+@Composable
+fun TournamentsTimelineScreenLoading(numItems: Int) = Column(
+    Modifier.verticalScroll(
+        rememberScrollState()
+    )
+) {
+    for (i in 0..max(numItems, 2)) {
+        ShimmerAnimation { brush ->
+            TournamentCardViewLoading(brush = brush)
         }
     }
 }
