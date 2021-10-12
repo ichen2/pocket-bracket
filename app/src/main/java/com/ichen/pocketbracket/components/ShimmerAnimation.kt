@@ -2,6 +2,7 @@ package com.ichen.pocketbracket.components
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.geometry.Offset
@@ -13,14 +14,10 @@ import com.ichen.pocketbracket.ui.theme.medWhite
 
 @Composable
 fun ShimmerAnimation(shimmerItem: @Composable (brush: Brush) -> Unit) {
-    val shimmerColorShades = if (isSystemInDarkTheme()) listOf(
-        medBlack,
-        lightBlack,
-        medBlack,
-    ) else listOf(
-        medWhite,
-        lightWhite,
-        medWhite,
+    val shimmerColorShades = listOf(
+        MaterialTheme.colors.secondaryVariant,
+        MaterialTheme.colors.surface,
+        MaterialTheme.colors.secondaryVariant
     )
 
     val transition = rememberInfiniteTransition()

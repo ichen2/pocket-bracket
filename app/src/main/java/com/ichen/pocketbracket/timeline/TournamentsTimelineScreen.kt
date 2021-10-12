@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
@@ -13,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.ichen.pocketbracket.components.ShimmerAnimation
 import com.ichen.pocketbracket.models.*
@@ -76,26 +78,43 @@ fun ColumnScope.TournamentsTimelineScreen(
             .weight(1f)
             .background(MaterialTheme.colors.background)
     ) {
-        when (viewModel.tournaments.value.status) {
-            Status.SUCCESS -> {
-                LazyColumn {
-                    items(
-                        items = viewModel.tournaments.value.data,
-                        key = { tournament -> tournament.id }) { tournament ->
-                        TournamentCardView(tournament)
+        if (viewModel.tournaments.value.data.isEmpty()) {
+            if (viewModel.tournaments.value.status == Status.ERROR || viewModel.tournaments.value.status == Status.SUCCESS) {
+                Text("No Tournaments Founds", color = MaterialTheme.colors.onBackground)
+            } else {
+                if (viewModel.tournaments.value.status == Status.NOT_STARTED) {
+                    viewModel.getTournaments(context = context)
+                }
+                TournamentsTimelineScreenLoading(viewModel.tournaments.value.data.size)
+            }
+        } else {
+            LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
+                itemsIndexed(
+                    items = viewModel.tournaments.value.data,
+                    key = { _, tournament -> tournament.id }) { index, tournament ->
+                    if (index == viewModel.tournaments.value.data.size - 1) viewModel.getMoreTournaments(
+                        context
+                    )
+                    TournamentCardView(tournament)
+                }
+                if (viewModel.tournaments.value.status == Status.LOADING) {
+                    item {
+                        CircularProgressIndicator(
+                            strokeWidth = 4.dp
+                        )
+                        Text(
+                            "Loading additional tournaments",
+                            color = MaterialTheme.colors.onBackground
+                        )
+                    }
+                } else if (viewModel.tournaments.value.status == Status.ERROR) {
+                    item {
+                        Text(
+                            "Could not load additional tournaments",
+                            color = MaterialTheme.colors.onBackground
+                        )
                     }
                 }
-            }
-            Status.NOT_STARTED -> {
-                // SUS
-                viewModel.getTournaments(context = context)
-                TournamentsTimelineScreenLoading(viewModel.tournaments.value.data.size)
-            }
-            Status.LOADING -> {
-                TournamentsTimelineScreenLoading(viewModel.tournaments.value.data.size)
-            }
-            else -> {
-                Text("No Tournaments Founds", color = MaterialTheme.colors.onBackground)
             }
         }
     }

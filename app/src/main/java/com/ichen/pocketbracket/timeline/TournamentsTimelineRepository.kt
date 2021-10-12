@@ -35,18 +35,13 @@ class TournamentsTimelineRepository {
                     .build()
             )
             .build()
-        val test = filter.location
-        if(filter.location != null) {
-            val a = "${filter.location.center.latitude},${filter.location.center.longitude}"
-            val b = "${filter.location.radius.toInt()}mi"
-            val c = "penis"
-        }
         coroutineScope {
             launch {
                 val response = try {
                     apolloClient.query(
                         GetTournamentsQuery(
-                            perPage = 10,
+                            page = filter.page,
+                            perPage = filter.perPage,
                             name = Input.optional(filter.name),
                             isOnline = when (filter.type) {
                                 TournamentType.IS_ONLINE -> Input.optional(true)

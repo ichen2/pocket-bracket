@@ -6,6 +6,8 @@ import com.ichen.pocketbracket.utils.toPrettyString
 import java.util.*
 
 data class TournamentFilter(
+    val perPage: Int = 10,
+    var page: Int = 1,
     val name: String = "",
     val games: List<Videogame>? = null,
     val location: LocationRadius? = null,

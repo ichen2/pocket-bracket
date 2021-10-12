@@ -54,13 +54,13 @@ fun TimelineHeader(
     fun getTournaments() = run {
         viewModel.getTournaments(
             TournamentFilter(
-                tournamentName.value,
-                tournamentGames.value,
-                tournamentLocationRadius.value,
-                tournamentDateRange.value,
-                tournamentType.value,
-                tournamentPrice.value,
-                tournamentRegistrationStatus.value
+                name = tournamentName.value,
+                games = tournamentGames.value,
+                location = tournamentLocationRadius.value,
+                dates = tournamentDateRange.value,
+                type = tournamentType.value,
+                price = tournamentPrice.value,
+                registration = tournamentRegistrationStatus.value
             ),
             context
         )

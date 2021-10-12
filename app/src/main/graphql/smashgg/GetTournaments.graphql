@@ -1,4 +1,5 @@
 query GetTournaments(
+    $page: Int!,
     $perPage: Int!,
     $name:String,
     $isOnline: Boolean,
@@ -9,6 +10,7 @@ query GetTournaments(
     $beforeDate:Timestamp
 ) {
     tournaments(query: {
+        page: $page
         perPage: $perPage
         filter: {
             name:$name
