@@ -46,7 +46,7 @@ class TournamentsTimelineViewModel : ViewModel() {
         }
     }
 
-    fun parseResponse(response:  Response<GetTournamentsQuery.Data>?) : List<Tournament> {
+    private fun parseResponse(response:  Response<GetTournamentsQuery.Data>?) : List<Tournament> {
         val nodes = response?.data?.tournaments?.nodes
         if(nodes == null || nodes.isEmpty()) {
             return listOf()

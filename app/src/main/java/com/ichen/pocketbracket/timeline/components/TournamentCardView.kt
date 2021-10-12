@@ -57,6 +57,7 @@ fun TournamentCardView(tournament: Tournament) = Column(
                 painter = rememberImagePainter(data = tournament.imageUrl, builder = {
                     size(OriginalSize)
                     scale(Scale.FILL)
+                    placeholder(R.drawable.image_unavailable)
                 }),
                 contentDescription = "tournament image",
                 modifier = Modifier.fillMaxWidth(),
