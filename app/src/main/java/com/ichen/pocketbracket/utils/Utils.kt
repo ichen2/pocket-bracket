@@ -4,9 +4,11 @@ import android.content.Context
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.toArgb
+import com.apollographql.apollo.api.Response
 import com.google.android.gms.maps.model.LatLng
 import com.ichen.pocketbracket.BuildConfig
-import com.ichen.pocketbracket.models.LocationRadius
+import com.ichen.pocketbracket.GetTournamentsQuery
+import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.timeline.components.RADIUS_MAX
 import com.ichen.pocketbracket.timeline.components.RADIUS_MIN
 import okhttp3.Interceptor

@@ -46,47 +46,48 @@ class TournamentsTimelineViewModel : ViewModel() {
         }
     }
 
-    private fun parseResponse(response:  Response<GetTournamentsQuery.Data>?) : List<Tournament> {
+    fun parseResponse(response:  Response<GetTournamentsQuery.Data>?) : List<Tournament> {
         val nodes = response?.data?.tournaments?.nodes
         if(nodes == null || nodes.isEmpty()) {
             return listOf()
         } else {
             // SUS
             return nodes.filter { node ->
-                    node?.id != null
-                    node?.name != null
-                }.map { node ->
-                    Tournament(
-                        id = node!!.id!!.toInt(),
-                        name = node.name!!,
-                        startAt = convertBigDecimalToDate(node.startAt),
-                        endAt = convertBigDecimalToDate(node.endAt),
-                        isOnline = node.isOnline,
-                        isRegistrationOpen = node.isRegistrationOpen,
-                        numAttendees = node.numAttendees,
-                        state = when (node.state) {
-                            0 -> ActivityState.CREATED
-                            1 -> ActivityState.ACTIVE
-                            2 -> ActivityState.COMPLETED
-                            else -> null
-                        },
-                        imageUrl = node.images?.getOrNull(0)?.url,
-                        events = node.events?.filter { event ->
-                            event?.name != null
-                        }?.map { event ->
-                            Event(
-                                id = 0,
-                                name = event!!.name!!,
-                                numEntrants = event.numEntrants,
-                                startAt = convertBigDecimalToDate(node.startAt),
-                                videogame = if (event.videogame?.id != null && videogamesMap.containsKey(
-                                        event.videogame.id.toInt()
-                                    )
-                                ) videogamesMap[event.videogame.id.toInt()] else null
-                            )
-                        }
-                    )
-                }
+                node?.id != null
+                node?.name != null
+            }.map { node ->
+                Tournament(
+                    id = node!!.id!!.toInt(),
+                    name = node.name!!,
+                    startAt = convertBigDecimalToDate(node.startAt),
+                    endAt = convertBigDecimalToDate(node.endAt),
+                    isOnline = node.isOnline,
+                    isRegistrationOpen = node.isRegistrationOpen,
+                    numAttendees = node.numAttendees,
+                    state = when (node.state) {
+                        0 -> ActivityState.CREATED
+                        1 -> ActivityState.ACTIVE
+                        2 -> ActivityState.COMPLETED
+                        else -> null
+                    },
+                    imageUrl = node.images?.getOrNull(0)?.url,
+                    events = node.events?.filter { event ->
+                        event?.id != null
+                        event?.name != null
+                    }?.map { event ->
+                        Event(
+                            id = event!!.id!!,
+                            name = event.name!!,
+                            numEntrants = event.numEntrants,
+                            startAt = convertBigDecimalToDate(node.startAt),
+                            videogame = if (event.videogame?.id != null && videogamesMap.containsKey(
+                                    event.videogame.id.toInt()
+                                )
+                            ) videogamesMap[event.videogame.id.toInt()] else null
+                        )
+                    }
+                )
+            }
         }
     }
 

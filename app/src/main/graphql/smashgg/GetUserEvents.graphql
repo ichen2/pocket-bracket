@@ -1,0 +1,34 @@
+query GetUserEvents(
+    $page: Int!,
+    $perPage: Int!
+) {
+    currentUser {
+        id
+        events(query:{perPage:$perPage, page:$page}) {
+            nodes {
+                id
+                name
+                startAt
+                numEntrants
+                videogame {
+                    id
+                    displayName
+                }
+                tournament {
+                    id
+                    name
+                    startAt
+                    endAt
+                    isOnline
+                    state
+                    city
+                    numAttendees
+                    images {
+                        url
+                    }
+                    isRegistrationOpen
+                }
+            }
+        }
+    }
+}

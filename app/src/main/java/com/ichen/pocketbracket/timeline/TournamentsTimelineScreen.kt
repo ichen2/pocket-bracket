@@ -97,6 +97,7 @@ fun ColumnScope.TournamentsTimelineScreen(
                 itemsIndexed(
                     items = viewModel.tournaments.value.data,
                     key = { _, tournament -> tournament.id }) { index, tournament ->
+                    // ERROR: if no new tournaments, repeatedly tries to fetch new ones anyways
                     if (index == viewModel.tournaments.value.data.size - 1) viewModel.getMoreTournaments(
                         context
                     )
