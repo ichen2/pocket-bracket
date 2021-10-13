@@ -11,8 +11,11 @@ import com.ichen.pocketbracket.models.Tournament
 import com.ichen.pocketbracket.models.TournamentFilter
 import com.ichen.pocketbracket.models.TournamentRegistrationStatus
 import com.ichen.pocketbracket.models.TournamentType
+import com.ichen.pocketbracket.tournaments.MyTournamentsJobs
 import com.ichen.pocketbracket.type.TournamentLocationFilter
+import com.ichen.pocketbracket.utils.AuthorizationInterceptor
 import com.ichen.pocketbracket.utils.Field
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import okhttp3.Interceptor
@@ -21,7 +24,15 @@ import java.time.LocalDateTime
 
 const val API_ENDPOINT = "https://api.smash.gg/gql/alpha"
 
+enum class TournamentsTimelineJobs {
+    GET_TOURNAMENTS
+}
+
 class TournamentsTimelineRepository {
+
+    val jobs: MutableMap<TournamentsTimelineJobs, Job?> =
+        mutableMapOf(TournamentsTimelineJobs.GET_TOURNAMENTS to null)
+
     suspend fun getTournaments(
         filter: TournamentFilter,
         context: Context,
@@ -36,7 +47,7 @@ class TournamentsTimelineRepository {
             )
             .build()
         coroutineScope {
-            launch {
+            jobs[TournamentsTimelineJobs.GET_TOURNAMENTS] = launch {
                 val response = try {
                     apolloClient.query(
                         GetTournamentsQuery(
@@ -59,14 +70,13 @@ class TournamentsTimelineRepository {
                                 TournamentRegistrationStatus.CLOSED -> Input.optional(false)
                                 else -> Input.absent()
                             },
-                            afterDate = if(filter.dates != null) Input.optional(filter.dates.start.time / 1000) else Input.absent(),
-                            beforeDate = if(filter.dates != null) Input.optional((filter.dates.end.time + 86399999) / 1000) else Input.absent(),
-                            videogameIds = if(filter.games != null) Input.optional(filter.games.map { videogame ->
+                            afterDate = if (filter.dates != null) Input.optional(filter.dates.start.time / 1000) else Input.absent(),
+                            beforeDate = if (filter.dates != null) Input.optional((filter.dates.end.time + 86399999) / 1000) else Input.absent(),
+                            videogameIds = if (filter.games != null) Input.optional(filter.games.map { videogame ->
                                 videogame.id.toString()
                             }) else Input.absent()
                         )
-                    )
-                        .toDeferred().await()
+                    ).toDeferred().await()
                 } catch (e: ApolloException) {
                     // handle protocol errors
                     null
@@ -74,15 +84,5 @@ class TournamentsTimelineRepository {
                 onResponse(response)
             }
         }
-    }
-}
-
-private class AuthorizationInterceptor(val context: Context) : Interceptor {
-    override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
-        val request = chain.request().newBuilder()
-            .addHeader("Authorization", "Bearer ${BuildConfig.SMASHGG_API_KEY}")
-            .build()
-
-        return chain.proceed(request)
     }
 }

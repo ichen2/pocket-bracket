@@ -1,12 +1,15 @@
 package com.ichen.pocketbracket.utils
 
+import android.content.Context
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.toArgb
 import com.google.android.gms.maps.model.LatLng
+import com.ichen.pocketbracket.BuildConfig
 import com.ichen.pocketbracket.models.LocationRadius
 import com.ichen.pocketbracket.timeline.components.RADIUS_MAX
 import com.ichen.pocketbracket.timeline.components.RADIUS_MIN
+import okhttp3.Interceptor
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
@@ -69,4 +72,14 @@ data class Field<T>(
 
 fun convertBigDecimalToDate(date: Any?) : Date? {
     return if(date != null && date is BigDecimal) Date((date).toLong() * 1000) else null
+}
+
+class AuthorizationInterceptor(val context: Context) : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
+        val request = chain.request().newBuilder()
+            .addHeader("Authorization", "Bearer ${BuildConfig.SMASHGG_API_KEY}")
+            .build()
+
+        return chain.proceed(request)
+    }
 }

@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
                     remember { mutableStateOf(null) }
 
                 Box {
+                    // SUS (This navigation kinda sucks, viewModels and jobs stay in memory even when their screen is not being used)
                     Column(Modifier.background(MaterialTheme.colors.background)) {
                         when (currentTab.value) {
                             CurrentTab.TournamentsTimeline -> {

@@ -89,4 +89,10 @@ class TournamentsTimelineViewModel : ViewModel() {
                 }
         }
     }
+
+    fun cleanup() {
+        repository.jobs.forEach { pair ->
+            pair.value?.cancel()
+        }
+    }
 }
