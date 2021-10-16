@@ -16,8 +16,9 @@ import kotlinx.coroutines.launch
 class TournamentsTimelineViewModel : ViewModel() {
 
     private val repository = TournamentsTimelineRepository()
+    private var hasMoreTournaments = true
     private var filter = TournamentFilter()
-    val tournaments : MutableState<Field<List<Tournament>>> = mutableStateOf(
+    val tournaments: MutableState<Field<List<Tournament>>> = mutableStateOf(
         Field(
             listOf(),
             Status.NOT_STARTED
@@ -30,25 +31,35 @@ class TournamentsTimelineViewModel : ViewModel() {
         viewModelScope.launch {
             repository.getTournaments(filter, context) { response ->
                 val parsedResponse = parseResponse(response)
-                tournaments.value = Field(parsedResponse, if(parsedResponse.isEmpty()) Status.ERROR else Status.SUCCESS)
+                tournaments.value = Field(
+                    parsedResponse ?: listOf(),
+                    if (parsedResponse == null) Status.ERROR else Status.SUCCESS
+                )
+                hasMoreTournaments = parsedResponse?.size ?: 0 > 0
             }
         }
     }
 
     fun getMoreTournaments(context: Context) {
-        this.filter.page++
-        tournaments.value = tournaments.value.withStatus(Status.LOADING)
-        viewModelScope.launch {
-            repository.getTournaments(filter, context) { response ->
-                val parsedResponse = parseResponse(response)
-                tournaments.value = Field(tournaments.value.data + parsedResponse, if(parsedResponse.isEmpty()) Status.ERROR else Status.SUCCESS)
+        if(hasMoreTournaments) {
+            this.filter.page++
+            tournaments.value = tournaments.value.withStatus(Status.LOADING)
+            viewModelScope.launch {
+                repository.getTournaments(filter, context) { response ->
+                    val parsedResponse = parseResponse(response)
+                    tournaments.value = Field(
+                        tournaments.value.data + (parsedResponse ?: listOf()),
+                        if (parsedResponse == null) Status.ERROR else Status.SUCCESS
+                    )
+                    hasMoreTournaments = parsedResponse?.size ?: 0 > 0
+                }
             }
         }
     }
 
-    fun parseResponse(response:  Response<GetTournamentsQuery.Data>?) : List<Tournament> {
+    fun parseResponse(response: Response<GetTournamentsQuery.Data>?): List<Tournament>? {
         val nodes = response?.data?.tournaments?.nodes
-        if(nodes == null || nodes.isEmpty()) {
+        if (nodes == null || nodes.isEmpty()) {
             return listOf()
         } else {
             // SUS
