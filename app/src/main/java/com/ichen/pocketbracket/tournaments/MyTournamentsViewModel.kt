@@ -16,6 +16,7 @@ const val EVENTS_PER_PAGE = 10
 
 class MyTournamentsViewModel : ViewModel() {
     private val repository = MyTournamentsRepository()
+    var hasMoreEvents = true
     private var page = 1
     val tournaments: MutableState<Field<List<Tournament>>> = mutableStateOf(
         Field(
@@ -30,64 +31,69 @@ class MyTournamentsViewModel : ViewModel() {
         viewModelScope.launch {
             repository.getUserEvents(page, EVENTS_PER_PAGE, context) { response ->
                 val parsedResponse = parseResponse(response)
-                tournaments.value = Field(parsedResponse, if(parsedResponse.isEmpty()) Status.ERROR else Status.SUCCESS)
+                tournaments.value = Field(
+                    parsedResponse ?: listOf(),
+                    if (parsedResponse == null) Status.ERROR else Status.SUCCESS
+                )
+                hasMoreEvents = parsedResponse?.size ?: 0 > 0
             }
         }
     }
 
     fun getMoreEvents(context: Context) {
-        page++
-        tournaments.value = tournaments.value.withStatus(Status.LOADING)
-        viewModelScope.launch {
-            repository.getUserEvents(page, EVENTS_PER_PAGE, context) { response ->
-                val parsedResponse = parseResponse(response)
-                tournaments.value = Field(tournaments.value.data + parsedResponse, if(parsedResponse.isEmpty()) Status.ERROR else Status.SUCCESS)
+        if(hasMoreEvents) {
+            page++
+            tournaments.value = tournaments.value.withStatus(Status.LOADING)
+            viewModelScope.launch {
+                repository.getUserEvents(page, EVENTS_PER_PAGE, context) { response ->
+                    val parsedResponse = parseResponse(response)
+                    tournaments.value = Field(
+                        tournaments.value.data + (parsedResponse ?: listOf()),
+                        if (parsedResponse == null) Status.ERROR else Status.SUCCESS
+                    )
+                    hasMoreEvents = parsedResponse?.size ?: 0 > 0
+                }
             }
         }
     }
 
-    fun parseResponse(response: com.apollographql.apollo.api.Response<GetUserEventsQuery.Data>?) : List<Tournament> {
-        val nodes = response?.data?.currentUser?.events?.nodes
-        if (nodes == null || nodes.isEmpty()) {
-            return listOf()
-        } else {
-            return nodes.filter { event ->
-                event?.tournament?.id != null
-                event?.tournament?.name != null
-            }.map { event ->
-                val tournament = event!!.tournament
-                Tournament(
-                    id = tournament!!.id!!.toInt(),
-                    name = tournament.name!!,
-                    startAt = convertBigDecimalToDate(tournament.startAt),
-                    endAt = convertBigDecimalToDate(tournament.endAt),
-                    isOnline = tournament.isOnline,
-                    isRegistrationOpen = tournament.isRegistrationOpen,
-                    numAttendees = tournament.numAttendees,
-                    state = when (tournament.state) {
-                        1 -> ActivityState.CREATED
-                        2 -> ActivityState.ACTIVE
-                        3 -> ActivityState.COMPLETED
-                        else -> null
-                    },
-                    imageUrl = tournament.images?.getOrNull(0)?.url,
-                    events = listOf(
-                        Event(
-                            id = event.id!!,
-                            name = event.name!!,
-                            numEntrants = event.numEntrants,
-                            startAt = convertBigDecimalToDate(tournament.startAt),
-                            videogame = if (event.videogame?.id != null && videogamesMap.containsKey(
-                                    event.videogame.id.toInt()
-                                )
-                            ) videogamesMap[event.videogame.id.toInt()] else null
-                        )
+    private fun parseResponse(response: com.apollographql.apollo.api.Response<GetUserEventsQuery.Data>?): List<Tournament>? {
+        val nodes = response?.data?.currentUser?.events?.nodes ?: return null
+        return nodes.filter { event ->
+            event?.tournament?.id != null
+            event?.tournament?.name != null
+        }.map { event ->
+            val tournament = event!!.tournament
+            Tournament(
+                id = tournament!!.id!!.toInt(),
+                name = tournament.name!!,
+                startAt = convertBigDecimalToDate(tournament.startAt),
+                endAt = convertBigDecimalToDate(tournament.endAt),
+                isOnline = tournament.isOnline,
+                isRegistrationOpen = tournament.isRegistrationOpen,
+                numAttendees = tournament.numAttendees,
+                state = when (tournament.state) {
+                    1 -> ActivityState.CREATED
+                    2 -> ActivityState.ACTIVE
+                    3 -> ActivityState.COMPLETED
+                    else -> null
+                },
+                imageUrl = tournament.images?.getOrNull(0)?.url,
+                events = listOf(
+                    Event(
+                        id = event.id!!,
+                        name = event.name!!,
+                        numEntrants = event.numEntrants,
+                        startAt = convertBigDecimalToDate(tournament.startAt),
+                        videogame = if (event.videogame?.id != null && videogamesMap.containsKey(
+                                event.videogame.id.toInt()
+                            )
+                        ) videogamesMap[event.videogame.id.toInt()] else null
                     )
                 )
-            }
+            )
         }
     }
-
     fun cleanup() {
         repository.jobs.forEach { pair ->
             pair.value?.cancel()
