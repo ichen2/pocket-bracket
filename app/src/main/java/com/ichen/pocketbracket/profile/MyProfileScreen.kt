@@ -1,16 +1,12 @@
 package com.ichen.pocketbracket.profile
 
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -23,23 +19,18 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
 import coil.compose.rememberImagePainter
-import coil.size.OriginalSize
 import coil.size.Scale
-import coil.size.Size
 import coil.transform.CircleCropTransformation
 import com.ichen.pocketbracket.R
 import com.ichen.pocketbracket.auth.AuthActivity
 import com.ichen.pocketbracket.components.ShimmerAnimation
 import com.ichen.pocketbracket.components.WebView
 import com.ichen.pocketbracket.profile.components.UserSetting
-import com.ichen.pocketbracket.timeline.TournamentsTimelineViewModel
 import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
 import com.ichen.pocketbracket.ui.theme.medGrey
 import com.ichen.pocketbracket.utils.SetComposableFunction
@@ -67,7 +58,7 @@ fun ColumnScope.MyProfileScreen(
             Box {
                 Image(
                     painter = if (userDetails?.imageUrls?.getOrNull(1) != null) rememberImagePainter(
-                        data = userDetails?.imageUrls?.getOrNull(1),
+                        data = userDetails.imageUrls[1],
                         builder = {
                             scale(Scale.FILL)
                             placeholder(R.drawable.image_unavailable)

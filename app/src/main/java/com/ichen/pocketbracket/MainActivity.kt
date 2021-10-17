@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
             Context.MODE_PRIVATE
         ).getString("API_KEY", null)
         val sentKey = intent.extras?.get("API_KEY")
+        val userIsAuthenticated = prevKey != null || savedKey != null || sentKey != null
         if(sentKey != null && sentKey is String) {
             apiKey = sentKey
         } else if(prevKey != null) {
@@ -64,27 +65,33 @@ class MainActivity : AppCompatActivity() {
         }
         setContent {
             PocketBracketTheme {
-                val dialogComposable: MutableState<(@Composable BoxScope.() -> Unit)?> =
-                    remember { mutableStateOf(null) }
-                Box {
-                    Column(Modifier.background(MaterialTheme.colors.background)) {
-                        when (currentTab.value) {
-                            CurrentTab.TournamentsTimeline -> {
-                                TournamentsTimelineScreen(
-                                    clickable = dialogComposable.value == null,
-                                    setDialogComposable = { dialogComposable.value = it },
-                                )
+                if(userIsAuthenticated) {
+                    val dialogComposable: MutableState<(@Composable BoxScope.() -> Unit)?> =
+                        remember { mutableStateOf(null) }
+                    Box {
+                        Column(Modifier.background(MaterialTheme.colors.background)) {
+                            when (currentTab.value) {
+                                CurrentTab.TournamentsTimeline -> {
+                                    TournamentsTimelineScreen(
+                                        clickable = dialogComposable.value == null,
+                                        setDialogComposable = { dialogComposable.value = it },
+                                    )
+                                }
+                                CurrentTab.MyTournaments -> {
+                                    MyTournamentsScreen(setDialogComposable = {
+                                        dialogComposable.value = it
+                                    })
+                                }
+                                CurrentTab.MyProfile -> {
+                                    MyProfileScreen(setDialogComposable = {
+                                        dialogComposable.value = it
+                                    })
+                                }
                             }
-                            CurrentTab.MyTournaments -> {
-                                MyTournamentsScreen(setDialogComposable = { dialogComposable.value = it })
-                            }
-                            CurrentTab.MyProfile -> {
-                                MyProfileScreen(setDialogComposable = { dialogComposable.value = it })
-                            }
+                            NavigationFooter(currentTab, dialogComposable.value == null)
                         }
-                        NavigationFooter(currentTab, dialogComposable.value == null)
+                        dialogComposable.value?.invoke(this)
                     }
-                    dialogComposable.value?.invoke(this)
                 }
             }
         }
@@ -92,12 +99,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        getPreferences(Context.MODE_PRIVATE).edit().putString("API_KEY", apiKey).apply()
+        if(::apiKey.isInitialized) getPreferences(Context.MODE_PRIVATE).edit().putString("API_KEY", apiKey).apply()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("API_KEY", apiKey)
+        if(::apiKey.isInitialized) outState.putString("API_KEY", apiKey)
         outState.putSerializable("CURRENT_TAB", currentTab.value)
     }
 
