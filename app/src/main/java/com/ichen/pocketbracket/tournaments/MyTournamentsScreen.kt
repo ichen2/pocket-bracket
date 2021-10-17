@@ -29,7 +29,7 @@ fun ColumnScope.MyTournamentsScreen(
     val context = LocalContext.current
 
     DisposableEffect(key1 = viewModel) {
-        viewModel.getEvents(context = context)
+        if(viewModel.tournaments.value.status != Status.SUCCESS) viewModel.getEvents(context = context)
         onDispose {
             viewModel.cleanup()
         }

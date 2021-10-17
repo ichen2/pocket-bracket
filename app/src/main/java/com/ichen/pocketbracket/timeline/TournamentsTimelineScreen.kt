@@ -61,7 +61,7 @@ fun ColumnScope.TournamentsTimelineScreen(
     }
 
     DisposableEffect(key1 = viewModel) {
-        viewModel.getTournaments(context = context)
+        if(viewModel.tournaments.value.status != Status.SUCCESS) viewModel.getTournaments(context = context)
         onDispose {
             viewModel.cleanup()
         }
