@@ -76,24 +76,29 @@ fun ColumnScope.MyProfileScreen(viewModel: MyProfileViewModel = androidx.lifecyc
                         ),
                 )
             }
-            if (userDetails?.name != null) {
-                Text(userDetails.name, color = MaterialTheme.colors.onBackground)
-            }
-            if (userDetails?.location != null) {
-                Row {
-                    Icon(
-                        Icons.Filled.LocationOn,
-                        contentDescription = "user location",
-                        tint = MaterialTheme.colors.primary
-                    )
-                    Text(userDetails.location, color = MaterialTheme.colors.onBackground)
+            Column {
+                if (userDetails?.name != null) {
+                    Text(userDetails.name, color = MaterialTheme.colors.onBackground)
                 }
-            }
-            Button(onClick = {
-                (context as Activity).getPreferences(Context.MODE_PRIVATE).edit().remove("API_KEY")
-                context.startActivity(Intent(context, AuthActivity::class.java))
-            }) {
-                Text("Log Out")
+                if (userDetails?.location != null) {
+                    Row {
+                        Icon(
+                            Icons.Filled.LocationOn,
+                            contentDescription = "user location",
+                            tint = MaterialTheme.colors.primary
+                        )
+                        Text(userDetails.location, color = MaterialTheme.colors.onBackground)
+                    }
+                }
+                Button(onClick = {
+                    if(context is Activity) {
+                        context.getPreferences(Context.MODE_PRIVATE).edit()
+                            .remove("API_KEY").apply()
+                    }
+                    context.startActivity(Intent(context, AuthActivity::class.java))
+                }) {
+                    Text("Log Out")
+                }
             }
         } else if (viewModel.userDetails.value.status == Status.ERROR) {
             Text("Error", color = MaterialTheme.colors.onBackground)
