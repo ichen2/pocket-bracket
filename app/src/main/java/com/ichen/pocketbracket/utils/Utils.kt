@@ -76,12 +76,14 @@ fun convertBigDecimalToDate(date: Any?) : Date? {
     return if(date != null && date is BigDecimal) Date((date).toLong() * 1000) else null
 }
 
-class AuthorizationInterceptor(val context: Context) : Interceptor {
+class AuthorizationInterceptor(val context: Context, val apiKey: String) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
         val request = chain.request().newBuilder()
-            .addHeader("Authorization", "Bearer ${BuildConfig.SMASHGG_API_KEY}")
+            .addHeader("Authorization", "Bearer $apiKey")
             .build()
 
         return chain.proceed(request)
     }
 }
+
+const val API_ENDPOINT = "https://api.smash.gg/gql/alpha"

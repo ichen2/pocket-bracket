@@ -1,5 +1,7 @@
 package com.ichen.pocketbracket
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.ichen.pocketbracket.auth.AuthActivity
 import com.ichen.pocketbracket.profile.MyProfileScreen
 import com.ichen.pocketbracket.timeline.TournamentsTimelineScreen
 import com.ichen.pocketbracket.tournaments.MyTournamentsScreen
@@ -36,11 +39,27 @@ enum class CurrentTab {
     MyProfile,
 }
 
+lateinit var apiKey: String
+
 class MainActivity : AppCompatActivity() {
 
     @ExperimentalPermissionsApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val prevKey = savedInstanceState?.getString("API_KEY")
+        val savedKey = this.getPreferences(
+            Context.MODE_PRIVATE
+        ).getString("API_KEY", null)
+        val sentKey = intent.extras?.get("API_KEY")
+        if(sentKey != null && sentKey is String) {
+            apiKey = sentKey
+        } else if(prevKey != null) {
+            apiKey = prevKey
+        } else if(savedKey != null) {
+            apiKey = savedKey
+        } else {
+            startActivity(Intent(this, AuthActivity::class.java))
+        }
         setContent {
             PocketBracketTheme {
                 val currentTab = remember { mutableStateOf(CurrentTab.TournamentsTimeline) }
@@ -48,7 +67,6 @@ class MainActivity : AppCompatActivity() {
                     remember { mutableStateOf(null) }
 
                 Box {
-                    // SUS (This navigation kinda sucks, viewModels and jobs stay in memory even when their screen is not being used)
                     Column(Modifier.background(MaterialTheme.colors.background)) {
                         when (currentTab.value) {
                             CurrentTab.TournamentsTimeline -> {
@@ -71,6 +89,17 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun onPause() {
+        super.onPause()
+        getPreferences(Context.MODE_PRIVATE).edit().putString("API_KEY", apiKey).apply()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("API_KEY", apiKey)
+    }
+
 }
 
 @Composable

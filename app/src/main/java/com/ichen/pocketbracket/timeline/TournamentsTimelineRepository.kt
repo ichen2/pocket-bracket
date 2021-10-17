@@ -7,12 +7,14 @@ import com.apollographql.apollo.coroutines.toDeferred
 import com.apollographql.apollo.exception.ApolloException
 import com.ichen.pocketbracket.BuildConfig
 import com.ichen.pocketbracket.GetTournamentsQuery
+import com.ichen.pocketbracket.apiKey
 import com.ichen.pocketbracket.models.Tournament
 import com.ichen.pocketbracket.models.TournamentFilter
 import com.ichen.pocketbracket.models.TournamentRegistrationStatus
 import com.ichen.pocketbracket.models.TournamentType
 import com.ichen.pocketbracket.tournaments.MyTournamentsJobs
 import com.ichen.pocketbracket.type.TournamentLocationFilter
+import com.ichen.pocketbracket.utils.API_ENDPOINT
 import com.ichen.pocketbracket.utils.AuthorizationInterceptor
 import com.ichen.pocketbracket.utils.Field
 import kotlinx.coroutines.Job
@@ -21,8 +23,6 @@ import kotlinx.coroutines.launch
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import java.time.LocalDateTime
-
-const val API_ENDPOINT = "https://api.smash.gg/gql/alpha"
 
 enum class TournamentsTimelineJobs {
     GET_TOURNAMENTS
@@ -42,7 +42,7 @@ class TournamentsTimelineRepository {
             .serverUrl(API_ENDPOINT)
             .okHttpClient(
                 OkHttpClient.Builder()
-                    .addInterceptor(AuthorizationInterceptor(context))
+                    .addInterceptor(AuthorizationInterceptor(context, apiKey))
                     .build()
             )
             .build()

@@ -1,9 +1,12 @@
-package com.ichen.pocketbracket.tournaments
+package com.ichen.pocketbracket.profile
 
 import android.content.Context
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.toDeferred
 import com.apollographql.apollo.exception.ApolloException
+import com.ichen.pocketbracket.GetUserDetailsQuery
 import com.ichen.pocketbracket.GetUserEventsQuery
 import com.ichen.pocketbracket.apiKey
 import com.ichen.pocketbracket.utils.API_ENDPOINT
@@ -13,19 +16,17 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 
-enum class MyTournamentsJobs {
-    GET_EVENTS,
+enum class MyProfileJobs {
+    GET_USER_DETAILS
 }
 
-class MyTournamentsRepository {
+class MyProfileRepository {
+    val jobs: MutableMap<MyProfileJobs, Job?> =
+        mutableMapOf(MyProfileJobs.GET_USER_DETAILS to null)
 
-    val jobs : MutableMap<MyTournamentsJobs, Job?> = mutableMapOf(MyTournamentsJobs.GET_EVENTS to null)
-
-    suspend fun getUserEvents(
-        page: Int,
-        perPage: Int,
+    suspend fun getUserDetails(
         context: Context,
-        onResponse: (com.apollographql.apollo.api.Response<GetUserEventsQuery.Data>?) -> Unit
+        onResponse: (com.apollographql.apollo.api.Response<GetUserDetailsQuery.Data>?) -> Unit
     ) {
         val apolloClient = ApolloClient.builder()
             .serverUrl(API_ENDPOINT)
@@ -36,10 +37,10 @@ class MyTournamentsRepository {
             )
             .build()
         coroutineScope {
-            jobs[MyTournamentsJobs.GET_EVENTS] = launch {
+            jobs[MyProfileJobs.GET_USER_DETAILS] = launch {
                 val response = try {
                     apolloClient.query(
-                        GetUserEventsQuery(page, perPage)
+                        GetUserDetailsQuery()
                     ).toDeferred().await()
                 } catch (e: ApolloException) {
                     // handle protocol errors

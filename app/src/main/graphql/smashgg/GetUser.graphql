@@ -1,0 +1,12 @@
+query GetUserDetails {
+    currentUser {
+        id
+        images {
+            url
+        }
+        name
+        location {
+            country
+        }
+    }
+}
