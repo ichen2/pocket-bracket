@@ -72,10 +72,6 @@ fun ColumnScope.MyTournamentsScreen(
                         CircularProgressIndicator(
                             strokeWidth = 4.dp
                         )
-                        Text(
-                            "Loading additional tournaments",
-                            color = MaterialTheme.colors.onBackground
-                        )
                     }
                 } else if (viewModel.tournaments.value.status == Status.ERROR) {
                     item {
