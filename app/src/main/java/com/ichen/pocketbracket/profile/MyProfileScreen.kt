@@ -9,6 +9,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -25,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import coil.compose.rememberImagePainter
@@ -34,9 +36,11 @@ import coil.size.Size
 import coil.transform.CircleCropTransformation
 import com.ichen.pocketbracket.R
 import com.ichen.pocketbracket.auth.AuthActivity
+import com.ichen.pocketbracket.components.ShimmerAnimation
 import com.ichen.pocketbracket.components.WebView
 import com.ichen.pocketbracket.profile.components.UserSetting
 import com.ichen.pocketbracket.timeline.TournamentsTimelineViewModel
+import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
 import com.ichen.pocketbracket.ui.theme.medGrey
 import com.ichen.pocketbracket.utils.SetComposableFunction
 import com.ichen.pocketbracket.utils.Status
@@ -50,7 +54,9 @@ fun ColumnScope.MyProfileScreen(
     Column(
         Modifier
             .weight(1f)
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colors.background),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         val context = LocalContext.current
         LaunchedEffect(key1 = viewModel) {
@@ -69,11 +75,11 @@ fun ColumnScope.MyProfileScreen(
                     contentDescription = "profile image",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(164.dp)
+                        .height(128.dp)
                         .background(medGrey),
                 )
                 Column(Modifier.padding(horizontal = 16.dp)) {
-                    Spacer(Modifier.height(148.dp))
+                    Spacer(Modifier.height(100.dp))
                     Row {
                         Image(
                             painter = if (userDetails?.imageUrls?.getOrNull(0) != null) rememberImagePainter(
@@ -125,7 +131,11 @@ fun ColumnScope.MyProfileScreen(
                         }
                     }
                     Spacer(Modifier.height(32.dp))
-                    Column(Modifier.fillMaxWidth().background(MaterialTheme.colors.surface)) {
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colors.surface)
+                    ) {
                         Text(
                             "User Settings",
                             color = MaterialTheme.colors.onBackground,
@@ -148,7 +158,12 @@ fun ColumnScope.MyProfileScreen(
                         }
                     }
                     Spacer(Modifier.height(32.dp))
-                    Column(Modifier.fillMaxWidth().background(MaterialTheme.colors.surface).padding(16.dp)) {
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colors.surface)
+                            .padding(16.dp)
+                    ) {
                         Text(
                             "About",
                             color = MaterialTheme.colors.onBackground,
@@ -160,8 +175,60 @@ fun ColumnScope.MyProfileScreen(
                 }
             }
         } else if (viewModel.userDetails.value.status == Status.ERROR) {
-            Text("Error", color = MaterialTheme.colors.onBackground)
+            Text("Error loading user profile", color = MaterialTheme.colors.onBackground)
         } else {
-            Text("Loading", color = MaterialTheme.colors.onBackground)
+            MyProfileScreenLoading()
         }
     }
+
+@Composable
+fun MyProfileScreenLoading() = ShimmerAnimation { brush ->
+    Box(Modifier.fillMaxSize().clip(RoundedCornerShape(16.dp)).background(MaterialTheme.colors.background)) {
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .height(128.dp)
+                .background(brush)
+        )
+        Column(Modifier.padding(16.dp)) {
+            Spacer(Modifier.height(100.dp))
+            Row {
+                Box(
+                    Modifier
+                        .size(100.dp)
+                        .background(brush, CircleShape)
+                        .border(
+                            color = MaterialTheme.colors.background,
+                            width = 4.dp,
+                            shape = CircleShape
+                        )
+                )
+                Spacer(Modifier.width(16.dp))
+                Column {
+                    Spacer(Modifier.height(36.dp))
+                    Box(
+                        Modifier
+                            .height(16.dp)
+                            .fillMaxWidth()
+                            .background(brush = brush)
+                    )
+                    Spacer(Modifier.height(16.dp))
+                    Box(
+                        Modifier
+                            .height(16.dp)
+                            .fillMaxWidth()
+                            .background(brush = brush)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun MyProfileScreenLoadingPreview() {
+    PocketBracketTheme {
+        MyProfileScreenLoading()
+    }
+}
