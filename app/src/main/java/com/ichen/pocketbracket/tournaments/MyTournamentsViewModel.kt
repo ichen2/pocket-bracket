@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.ichen.pocketbracket.GetUserEventsQuery
 import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.utils.Field
+import com.ichen.pocketbracket.utils.SITE_ENDPOINT
 import com.ichen.pocketbracket.utils.Status
 import com.ichen.pocketbracket.utils.convertBigDecimalToDate
 import kotlinx.coroutines.launch
@@ -62,11 +63,13 @@ class MyTournamentsViewModel : ViewModel() {
         return nodes.filter { event ->
             event?.tournament?.id != null
             event?.tournament?.name != null
+            event?.slug != null
         }.map { event ->
             val tournament = event!!.tournament
             Tournament(
                 id = tournament!!.id!!.toInt(),
                 name = tournament.name!!,
+                url = SITE_ENDPOINT + event.slug!!,
                 startAt = convertBigDecimalToDate(tournament.startAt),
                 endAt = convertBigDecimalToDate(tournament.endAt),
                 isOnline = tournament.isOnline,

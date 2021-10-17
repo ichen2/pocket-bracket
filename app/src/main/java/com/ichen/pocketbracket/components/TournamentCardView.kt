@@ -43,7 +43,7 @@ import java.util.*
 import kotlin.math.min
 
 @Composable
-fun TournamentCardView(tournament: Tournament) = Column(
+fun TournamentCardView(tournament: Tournament, onClick: (String) -> Unit) = Column(
     Modifier
         .fillMaxWidth(1f)
         .background(MaterialTheme.colors.background)
@@ -51,7 +51,7 @@ fun TournamentCardView(tournament: Tournament) = Column(
 
     val eventsListIsExpanded = remember { mutableStateOf(false) }
 
-    Box(Modifier.fillMaxWidth()) {
+    Box(Modifier.fillMaxWidth().clickable { onClick(tournament.url)}) {
         if (tournament.imageUrl != null) {
             Image(
                 painter = rememberImagePainter(data = tournament.imageUrl, builder = {
@@ -222,7 +222,7 @@ fun EventCardItemView(event: Event) {
 @Preview
 @Composable
 fun TournamentCardViewPreview() = PocketBracketTheme {
-    TournamentCardView(testTournament)
+    TournamentCardView(testTournament, {})
 }
 
 @Preview

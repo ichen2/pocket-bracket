@@ -5,6 +5,7 @@ import java.util.*
 data class Tournament(
     val id: Int,
     val name: String,
+    val url: String,
     val startAt: Date?,
     val endAt: Date?,
     val isOnline: Boolean?,
@@ -18,6 +19,7 @@ data class Tournament(
 val testTournament: Tournament = Tournament(
     id = 0,
     startAt = Date(0),
+    url = "",
     endAt = Date(1),
     isOnline = true,
     isRegistrationOpen = true,

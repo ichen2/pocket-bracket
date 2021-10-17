@@ -13,13 +13,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.ichen.pocketbracket.components.WebView
 import com.ichen.pocketbracket.timeline.TournamentsTimelineScreenLoading
 import com.ichen.pocketbracket.timeline.TournamentsTimelineViewModel
 import com.ichen.pocketbracket.timeline.components.TournamentCardView
+import com.ichen.pocketbracket.utils.SetComposableFunction
 import com.ichen.pocketbracket.utils.Status
 
 @Composable
 fun ColumnScope.MyTournamentsScreen(
+    setDialogComposable: SetComposableFunction,
     viewModel: MyTournamentsViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) = Column(Modifier.weight(1f)) {
 
@@ -56,7 +59,13 @@ fun ColumnScope.MyTournamentsScreen(
                     if (index == viewModel.tournaments.value.data.size - 1) {
                         viewModel.getMoreEvents(context)
                     }
-                    TournamentCardView(tournament)
+                    TournamentCardView(tournament) { url ->
+                        setDialogComposable {
+                            WebView(url) {
+                                setDialogComposable(null)
+                            }
+                        }
+                    }
                 }
                 if (viewModel.tournaments.value.status == Status.LOADING) {
                     item {

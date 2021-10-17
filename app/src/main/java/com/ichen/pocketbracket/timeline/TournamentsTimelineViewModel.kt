@@ -9,6 +9,7 @@ import com.apollographql.apollo.api.Response
 import com.ichen.pocketbracket.GetTournamentsQuery
 import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.utils.Field
+import com.ichen.pocketbracket.utils.SITE_ENDPOINT
 import com.ichen.pocketbracket.utils.Status
 import com.ichen.pocketbracket.utils.convertBigDecimalToDate
 import kotlinx.coroutines.launch
@@ -66,10 +67,12 @@ class TournamentsTimelineViewModel : ViewModel() {
             return nodes.filter { node ->
                 node?.id != null
                 node?.name != null
+                node?.slug != null
             }.map { node ->
                 Tournament(
                     id = node!!.id!!.toInt(),
                     name = node.name!!,
+                    url = SITE_ENDPOINT + node.slug!!,
                     startAt = convertBigDecimalToDate(node.startAt),
                     endAt = convertBigDecimalToDate(node.endAt),
                     isOnline = node.isOnline,

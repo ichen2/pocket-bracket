@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                                 )
                             }
                             CurrentTab.MyTournaments -> {
-                                MyTournamentsScreen()
+                                MyTournamentsScreen(setDialogComposable = { dialogComposable.value = it })
                             }
                             CurrentTab.MyProfile -> {
                                 MyProfileScreen()

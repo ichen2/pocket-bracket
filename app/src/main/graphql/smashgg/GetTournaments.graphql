@@ -25,6 +25,7 @@ query GetTournaments(
         nodes {
             id
             name
+            slug
             startAt
             endAt
             isOnline
@@ -38,6 +39,7 @@ query GetTournaments(
             events {
                 id
                 name
+                slug
                 startAt
                 numEntrants
                 videogame {

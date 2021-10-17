@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.ichen.pocketbracket.components.ShimmerAnimation
+import com.ichen.pocketbracket.components.WebView
 import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.timeline.components.TimelineHeader
 import com.ichen.pocketbracket.timeline.components.TournamentCardView
@@ -101,7 +102,13 @@ fun ColumnScope.TournamentsTimelineScreen(
                     if (index == viewModel.tournaments.value.data.size - 1) viewModel.getMoreTournaments(
                         context
                     )
-                    TournamentCardView(tournament)
+                    TournamentCardView(tournament) { url ->
+                        setDialogComposable {
+                            WebView(url) {
+                                setDialogComposable(null)
+                            }
+                        }
+                    }
                 }
                 if (viewModel.tournaments.value.status == Status.LOADING) {
                     item {
