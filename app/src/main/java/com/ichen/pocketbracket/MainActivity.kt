@@ -42,10 +42,12 @@ enum class CurrentTab {
 lateinit var apiKey: String
 
 class MainActivity : AppCompatActivity() {
-
+    val currentTab = mutableStateOf(CurrentTab.TournamentsTimeline)
     @ExperimentalPermissionsApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val prevTab = savedInstanceState?.get("CURRENT_TAB")
+        if(prevTab != null && prevTab is CurrentTab) currentTab.value = prevTab
         val prevKey = savedInstanceState?.getString("API_KEY")
         val savedKey = this.getPreferences(
             Context.MODE_PRIVATE
@@ -62,10 +64,8 @@ class MainActivity : AppCompatActivity() {
         }
         setContent {
             PocketBracketTheme {
-                val currentTab = remember { mutableStateOf(CurrentTab.TournamentsTimeline) }
                 val dialogComposable: MutableState<(@Composable BoxScope.() -> Unit)?> =
                     remember { mutableStateOf(null) }
-
                 Box {
                     Column(Modifier.background(MaterialTheme.colors.background)) {
                         when (currentTab.value) {
@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
                                 MyTournamentsScreen(setDialogComposable = { dialogComposable.value = it })
                             }
                             CurrentTab.MyProfile -> {
-                                MyProfileScreen()
+                                MyProfileScreen(setDialogComposable = { dialogComposable.value = it })
                             }
                         }
                         NavigationFooter(currentTab, dialogComposable.value == null)
@@ -98,6 +98,7 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("API_KEY", apiKey)
+        outState.putSerializable("CURRENT_TAB", currentTab.value)
     }
 
 }

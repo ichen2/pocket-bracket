@@ -1,6 +1,10 @@
 query GetUserDetails {
     currentUser {
         id
+        slug
+        player {
+            gamerTag
+        }
         images {
             url
         }

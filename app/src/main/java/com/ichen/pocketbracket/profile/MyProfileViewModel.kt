@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ichen.pocketbracket.models.UserDetails
 import com.ichen.pocketbracket.utils.Field
+import com.ichen.pocketbracket.utils.SITE_ENDPOINT
 import com.ichen.pocketbracket.utils.Status
 import kotlinx.coroutines.launch
 
@@ -21,13 +22,15 @@ class MyProfileViewModel : ViewModel() {
             repository.getUserDetails(context) { response ->
                 val parsedResponse = response?.data?.currentUser
                 if (
-                    parsedResponse != null
-                    && parsedResponse.id != null
+                    parsedResponse?.id != null
+                    && parsedResponse.slug != null
                     && parsedResponse.images != null
                 ) {
                     userDetails.value = Field(
                         UserDetails(
                             id = parsedResponse.id,
+                            tag = parsedResponse.player?.gamerTag,
+                            url = SITE_ENDPOINT + parsedResponse.slug,
                             name = parsedResponse.name,
                             imageUrls = parsedResponse.images.mapNotNull { image ->
                                 image!!.url
