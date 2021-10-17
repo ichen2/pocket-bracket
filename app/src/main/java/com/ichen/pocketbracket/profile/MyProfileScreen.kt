@@ -1,10 +1,14 @@
 package com.ichen.pocketbracket.profile
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -20,6 +24,7 @@ import coil.compose.rememberImagePainter
 import coil.size.OriginalSize
 import coil.size.Scale
 import com.ichen.pocketbracket.R
+import com.ichen.pocketbracket.auth.AuthActivity
 import com.ichen.pocketbracket.timeline.TournamentsTimelineViewModel
 import com.ichen.pocketbracket.utils.Status
 
@@ -83,6 +88,12 @@ fun ColumnScope.MyProfileScreen(viewModel: MyProfileViewModel = androidx.lifecyc
                     )
                     Text(userDetails.location, color = MaterialTheme.colors.onBackground)
                 }
+            }
+            Button(onClick = {
+                (context as Activity).getPreferences(Context.MODE_PRIVATE).edit().remove("API_KEY")
+                context.startActivity(Intent(context, AuthActivity::class.java))
+            }) {
+                Text("Log Out")
             }
         } else if (viewModel.userDetails.value.status == Status.ERROR) {
             Text("Error", color = MaterialTheme.colors.onBackground)
