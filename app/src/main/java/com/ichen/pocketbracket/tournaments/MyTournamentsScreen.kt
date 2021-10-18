@@ -18,10 +18,11 @@ import androidx.compose.ui.zIndex
 import com.ichen.pocketbracket.components.WebView
 import com.ichen.pocketbracket.timeline.TournamentsTimelineScreenLoading
 import com.ichen.pocketbracket.timeline.TournamentsTimelineViewModel
-import com.ichen.pocketbracket.timeline.components.TournamentCardView
+import com.ichen.pocketbracket.timeline.components.TournamentCard
 import com.ichen.pocketbracket.utils.SetComposableFunction
 import com.ichen.pocketbracket.utils.Status
 import com.ichen.pocketbracket.utils.Z_INDEX_BOT
+import com.ichen.pocketbracket.utils.Z_INDEX_TOP
 
 @Composable
 fun ColumnScope.MyTournamentsScreen(
@@ -38,7 +39,7 @@ fun ColumnScope.MyTournamentsScreen(
         }
     }
 
-    Box(Modifier.zIndex(Z_INDEX_TOP).fillMaxWidth().shadow(elevation = 20.dp).background(MaterialTheme.colors.surface).padding(16.dp), contentAlignment = Alignment.Center) {
+    Box(Modifier.zIndex(Z_INDEX_TOP).fillMaxWidth().shadow(elevation = 10.dp).background(MaterialTheme.colors.surface).padding(16.dp), contentAlignment = Alignment.Center) {
         Text("My Tournaments", style = MaterialTheme.typography.h4, color = MaterialTheme.colors.onSurface)
     }
     Box(
@@ -62,7 +63,7 @@ fun ColumnScope.MyTournamentsScreen(
                     if (index == viewModel.tournaments.value.data.size - 1) {
                         viewModel.getMoreEvents(context)
                     }
-                    TournamentCardView(tournament) { url ->
+                    TournamentCard(tournament) { url ->
                         setDialogComposable {
                             WebView(url) {
                                 setDialogComposable(null)

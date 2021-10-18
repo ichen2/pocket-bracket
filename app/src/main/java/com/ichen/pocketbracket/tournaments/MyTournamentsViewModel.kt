@@ -86,6 +86,7 @@ class MyTournamentsViewModel : ViewModel() {
                     Event(
                         id = event.id!!,
                         name = event.name!!,
+                        url = SITE_ENDPOINT + event.slug,
                         numEntrants = event.numEntrants,
                         startAt = convertBigDecimalToDate(tournament.startAt),
                         videogame = if (event.videogame?.id != null && videogamesMap.containsKey(

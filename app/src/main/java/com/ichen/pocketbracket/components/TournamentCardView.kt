@@ -43,7 +43,7 @@ import java.util.*
 import kotlin.math.min
 
 @Composable
-fun TournamentCardView(tournament: Tournament, onClick: (String) -> Unit) = Column(
+fun TournamentCard(tournament: Tournament, onClick: (String) -> Unit) = Column(
     Modifier
         .fillMaxWidth(1f)
         .background(MaterialTheme.colors.background)
@@ -120,7 +120,7 @@ fun TournamentCardView(tournament: Tournament, onClick: (String) -> Unit) = Colu
             tournament.events?.size ?: 0
         )) {
             if (i != 0) Spacer(Modifier.height(16.dp))
-            if (tournament.events?.getOrNull(i) != null) EventCardItemView(event = tournament.events[0])
+            if (tournament.events?.getOrNull(i) != null) EventCardItem(event = tournament.events[0], onClick)
         }
         if (tournament.events?.size ?: 0 > 2) {
             Spacer(Modifier.height(16.dp))
@@ -137,7 +137,7 @@ fun TournamentCardView(tournament: Tournament, onClick: (String) -> Unit) = Colu
 }
 
 @Composable
-fun TournamentCardViewLoading(brush: Brush) = Column(
+fun TournamentCardLoading(brush: Brush) = Column(
     modifier = Modifier
         .fillMaxWidth(1f)
         .background(brush = brush)
@@ -187,8 +187,8 @@ fun LoadingCardItem(height: Dp, padding: Dp = 16.dp) {
 }
 
 @Composable
-fun EventCardItemView(event: Event) {
-    Column(Modifier.fillMaxWidth()) {
+fun EventCardItem(event: Event, onClick: (String) -> Unit) {
+    Column(Modifier.fillMaxWidth().clickable { onClick(event.url) }) {
         Text(
             text = event.name,
             color = MaterialTheme.colors.primary,
@@ -221,14 +221,14 @@ fun EventCardItemView(event: Event) {
 
 @Preview
 @Composable
-fun TournamentCardViewPreview() = PocketBracketTheme {
-    TournamentCardView(testTournament, {})
+fun TournamentCardPreview() = PocketBracketTheme {
+    TournamentCard(testTournament, {})
 }
 
 @Preview
 @Composable
-fun TournamentCardViewLoadingPreview() = PocketBracketTheme {
+fun TournamentCardLoadingPreview() = PocketBracketTheme {
     ShimmerAnimation { brush ->
-        TournamentCardViewLoading(brush)
+        TournamentCardLoading(brush)
     }
 }

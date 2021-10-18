@@ -5,6 +5,7 @@ import java.util.*
 data class Event(
     val id: String,
     val name: String,
+    val url: String,
     val numEntrants: Int?,
     val startAt: Date?,
     val videogame: Videogame?
@@ -13,6 +14,7 @@ data class Event(
 val testEvent = Event(
     id = "0",
     name = "Test event",
+    url = "",
     numEntrants = 1,
     startAt = Date(0),
     videogame = videogamesList[0]

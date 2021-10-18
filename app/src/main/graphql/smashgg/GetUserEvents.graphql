@@ -18,6 +18,7 @@ query GetUserEvents(
                 tournament {
                     id
                     name
+                    slug
                     startAt
                     endAt
                     isOnline

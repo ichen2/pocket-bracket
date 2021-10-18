@@ -34,7 +34,7 @@ fun Date.toPrettyString(): String {
 }
 
 fun Date.isSameDay(other: Date): Boolean {
-    return this.year == other.year && this.month == other.month && this.day == other.day
+    return this.year == other.year && this.month == other.month && this.date == other.date
 }
 
 fun androidx.compose.ui.graphics.Color.toArgbInt() : Int {

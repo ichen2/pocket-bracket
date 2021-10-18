@@ -21,8 +21,8 @@ import com.ichen.pocketbracket.components.ShimmerAnimation
 import com.ichen.pocketbracket.components.WebView
 import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.timeline.components.TimelineHeader
-import com.ichen.pocketbracket.timeline.components.TournamentCardView
-import com.ichen.pocketbracket.timeline.components.TournamentCardViewLoading
+import com.ichen.pocketbracket.timeline.components.TournamentCard
+import com.ichen.pocketbracket.timeline.components.TournamentCardLoading
 import com.ichen.pocketbracket.utils.SetComposableFunction
 import com.ichen.pocketbracket.utils.Status
 import java.lang.Integer.max
@@ -102,7 +102,7 @@ fun ColumnScope.TournamentsTimelineScreen(
                     if (index == viewModel.tournaments.value.data.size - 1) viewModel.getMoreTournaments(
                         context
                     )
-                    TournamentCardView(tournament) { url ->
+                    TournamentCard(tournament) { url ->
                         setDialogComposable {
                             WebView(url) {
                                 setDialogComposable(null)
@@ -137,7 +137,7 @@ fun TournamentsTimelineScreenLoading(numItems: Int) = Column(
 ) {
     for (i in 0..max(numItems, 2)) {
         ShimmerAnimation { brush ->
-            TournamentCardViewLoading(brush = brush)
+            TournamentCardLoading(brush = brush)
         }
     }
 }

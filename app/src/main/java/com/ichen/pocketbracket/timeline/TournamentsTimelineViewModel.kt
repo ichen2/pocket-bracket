@@ -88,10 +88,12 @@ class TournamentsTimelineViewModel : ViewModel() {
                     events = node.events?.filter { event ->
                         event?.id != null
                         event?.name != null
+                        event?.slug != null
                     }?.map { event ->
                         Event(
                             id = event!!.id!!,
                             name = event.name!!,
+                            url = SITE_ENDPOINT + event.slug!!,
                             numEntrants = event.numEntrants,
                             startAt = convertBigDecimalToDate(node.startAt),
                             videogame = if (event.videogame?.id != null && videogamesMap.containsKey(
