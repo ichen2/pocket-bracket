@@ -24,30 +24,32 @@ class AuthViewModel : ViewModel() {
     )
 
     fun verifyApiKey(context: Context) {
-        apiKeyText.value = apiKeyText.value.withStatus(Status.LOADING)
-        val apolloClient = ApolloClient.builder()
-            .serverUrl(API_ENDPOINT)
-            .okHttpClient(
-                OkHttpClient.Builder()
-                    .addInterceptor(AuthorizationInterceptor(context, apiKeyText.value.data))
-                    .build()
-            )
-            .build()
-        viewModelScope.launch {
-            val response = try {
-                apolloClient.query(
-                    GetUserDetailsQuery()
-                ).await()
-            } catch (e: ApolloException) {
-                null
-            }
-            if (response != null) {
-                context.startActivity(Intent(context, MainActivity::class.java).apply {
-                    putExtra(API_KEY_STORAGE_KEY, apiKeyText.value.data)
-                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                })
-            } else {
-                apiKeyText.value = apiKeyText.value.withStatus(Status.ERROR)
+        if(apiKeyText.value.status != Status.LOADING) {
+            apiKeyText.value = apiKeyText.value.withStatus(Status.LOADING)
+            val apolloClient = ApolloClient.builder()
+                .serverUrl(API_ENDPOINT)
+                .okHttpClient(
+                    OkHttpClient.Builder()
+                        .addInterceptor(AuthorizationInterceptor(context, apiKeyText.value.data))
+                        .build()
+                )
+                .build()
+            viewModelScope.launch {
+                val response = try {
+                    apolloClient.query(
+                        GetUserDetailsQuery()
+                    ).await()
+                } catch (e: ApolloException) {
+                    null
+                }
+                if (response != null) {
+                    context.startActivity(Intent(context, MainActivity::class.java).apply {
+                        putExtra(API_KEY_STORAGE_KEY, apiKeyText.value.data)
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    })
+                } else {
+                    apiKeyText.value = apiKeyText.value.withStatus(Status.ERROR)
+                }
             }
         }
     }
