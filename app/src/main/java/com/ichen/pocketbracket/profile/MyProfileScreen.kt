@@ -50,7 +50,8 @@ fun ColumnScope.MyProfileScreen(
     Column(
         Modifier
             .weight(1f)
-            .background(MaterialTheme.colors.background),
+            .background(MaterialTheme.colors.background)
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -174,6 +175,19 @@ fun ColumnScope.MyProfileScreen(
             }
         } else if (viewModel.userDetails.value.status == Status.ERROR) {
             Text("Error loading user profile", color = MaterialTheme.colors.onBackground)
+            Row(Modifier.clickable {
+                apiKey = null
+                context.startActivity(Intent(context, AuthActivity::class.java))
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.Logout,
+                    contentDescription = "log out",
+                    modifier = Modifier.size(32.dp),
+                    tint = MaterialTheme.colors.onSurface
+                )
+                Spacer(Modifier.width(16.dp))
+                Text("Log Out", color = MaterialTheme.colors.onSurface)
+            }
         } else {
             MyProfileScreenLoading()
         }

@@ -86,6 +86,10 @@ class AuthorizationInterceptor(val context: Context, val apiKey: String) : Inter
     }
 }
 
+const val Z_INDEX_TOP = 1000f
+const val Z_INDEX_MID = 500f
+const val Z_INDEX_BOT = 0f
+
 const val API_ENDPOINT = "https://api.smash.gg/gql/alpha"
 const val SITE_ENDPOINT = "https://smash.gg/"
 const val SHARED_PREFERENCES_KEY = "POCKET_BRACKET"

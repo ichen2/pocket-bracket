@@ -42,6 +42,7 @@ import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.Task
 import com.ichen.pocketbracket.models.LocationRadius
 import com.ichen.pocketbracket.utils.METERS_IN_MILE
+import com.ichen.pocketbracket.utils.Z_INDEX_TOP
 import com.ichen.pocketbracket.utils.getScaledRadius
 import kotlin.math.roundToInt
 
@@ -265,13 +266,13 @@ fun MapView(
                         }
                     }
                     googleMap.setOnCameraIdleListener {
-                        // TODO: Look at this stuff!!
+                        // SUS
                         if (mapIsMoving.value) {
+                            mapIsMoving.value = false
                             locationRadius.value = LocationRadius(
                                 map.value!!.cameraPosition.target,
                                 locationRadius.value.radius
                             )
-                            mapIsMoving.value = false
                             circle.value!!.center = map.value?.cameraPosition?.target
                             if (circle.value!!.center != null) {
                                 circle.value!!.fillColor =
@@ -317,7 +318,7 @@ fun BoxScope.LocationMarker(mapIsMoving: Boolean) = Column(
     Box(
         Modifier
             .offset(y = offset + 3.dp)
-            .zIndex(1000f), contentAlignment = Alignment.TopCenter) {
+            .zIndex(Z_INDEX_TOP), contentAlignment = Alignment.TopCenter) {
         Box(
             Modifier
                 .width(2.dp)
