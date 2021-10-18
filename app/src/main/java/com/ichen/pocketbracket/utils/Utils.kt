@@ -37,10 +37,6 @@ fun Date.isSameDay(other: Date): Boolean {
     return this.year == other.year && this.month == other.month && this.date == other.date
 }
 
-fun androidx.compose.ui.graphics.Color.toArgbInt() : Int {
-    return this.toArgb()
-}
-
 fun combineDates(date1: Date, date2: Date): String {
     return if (date1.isSameDay(date2)) {
         date1.toPrettyString()
