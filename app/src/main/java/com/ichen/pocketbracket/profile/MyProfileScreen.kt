@@ -1,5 +1,7 @@
 package com.ichen.pocketbracket.profile
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.Orientation
@@ -27,12 +29,15 @@ import coil.compose.rememberImagePainter
 import coil.size.Scale
 import coil.transform.CircleCropTransformation
 import com.ichen.pocketbracket.R
+import com.ichen.pocketbracket.apiKey
 import com.ichen.pocketbracket.auth.AuthActivity
 import com.ichen.pocketbracket.components.ShimmerAnimation
 import com.ichen.pocketbracket.components.WebView
 import com.ichen.pocketbracket.profile.components.UserSetting
 import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
 import com.ichen.pocketbracket.ui.theme.medGrey
+import com.ichen.pocketbracket.utils.API_KEY_STORAGE_KEY
+import com.ichen.pocketbracket.utils.SHARED_PREFERENCES_KEY
 import com.ichen.pocketbracket.utils.SetComposableFunction
 import com.ichen.pocketbracket.utils.Status
 
@@ -71,7 +76,8 @@ fun ColumnScope.MyProfileScreen(
                 )
                 Column(
                     Modifier
-                        .padding(horizontal = 16.dp)) {
+                        .padding(horizontal = 16.dp)
+                ) {
                     Spacer(Modifier.height(100.dp))
                     Row {
                         Image(
@@ -125,9 +131,9 @@ fun ColumnScope.MyProfileScreen(
                     }
                     Spacer(Modifier.height(32.dp))
                     Column(
-                            Modifier
-                                .fillMaxWidth()
-                                .background(MaterialTheme.colors.surface)
+                        Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colors.surface)
                     ) {
                         Text(
                             "User Settings",
@@ -145,17 +151,16 @@ fun ColumnScope.MyProfileScreen(
                             }
                         }
                         UserSetting(Icons.Filled.Logout, "Log Out") {
-                            setDialogComposable {
-                                context.startActivity(Intent(context, AuthActivity::class.java))
-                            }
+                            apiKey = null
+                            context.startActivity(Intent(context, AuthActivity::class.java))
                         }
                     }
                     Spacer(Modifier.height(32.dp))
                     Column(
-                            Modifier
-                                .fillMaxWidth()
-                                .background(MaterialTheme.colors.surface)
-                                .padding(16.dp)
+                        Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colors.surface)
+                            .padding(16.dp)
                     ) {
                         Text(
                             "About",
@@ -180,7 +185,8 @@ fun MyProfileScreenLoading() = ShimmerAnimation { brush ->
         Modifier
             .fillMaxSize()
             .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colors.background)) {
+            .background(MaterialTheme.colors.background)
+    ) {
         Box(
             Modifier
                 .fillMaxWidth()

@@ -88,3 +88,6 @@ class AuthorizationInterceptor(val context: Context, val apiKey: String) : Inter
 
 const val API_ENDPOINT = "https://api.smash.gg/gql/alpha"
 const val SITE_ENDPOINT = "https://smash.gg/"
+const val SHARED_PREFERENCES_KEY = "POCKET_BRACKET"
+const val API_KEY_STORAGE_KEY = "API_KEY"
+const val CURRENT_TAB_STORAGE_KEY = "CURRENT_TAB"

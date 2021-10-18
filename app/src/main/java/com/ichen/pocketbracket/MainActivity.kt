@@ -3,6 +3,7 @@ package com.ichen.pocketbracket
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
@@ -30,8 +31,7 @@ import com.ichen.pocketbracket.timeline.TournamentsTimelineScreen
 import com.ichen.pocketbracket.tournaments.MyTournamentsScreen
 import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
 import com.ichen.pocketbracket.ui.theme.medWhite
-import com.ichen.pocketbracket.utils.Field
-import com.ichen.pocketbracket.utils.Status
+import com.ichen.pocketbracket.utils.*
 
 enum class CurrentTab {
     TournamentsTimeline,
@@ -39,33 +39,36 @@ enum class CurrentTab {
     MyProfile,
 }
 
-lateinit var apiKey: String
+var apiKey: String? = null
 
 class MainActivity : AppCompatActivity() {
     val currentTab = mutableStateOf(CurrentTab.TournamentsTimeline)
+
     @ExperimentalPermissionsApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val prevTab = savedInstanceState?.get("CURRENT_TAB")
-        if(prevTab != null && prevTab is CurrentTab) currentTab.value = prevTab
-        val prevKey = savedInstanceState?.getString("API_KEY")
-        val savedKey = this.getPreferences(
+        val prevTab = savedInstanceState?.get(CURRENT_TAB_STORAGE_KEY)
+        if (prevTab != null && prevTab is CurrentTab) currentTab.value = prevTab
+        val prevKey = savedInstanceState?.getString(API_KEY_STORAGE_KEY)
+        val savedKey = this.getSharedPreferences(
+            SHARED_PREFERENCES_KEY,
             Context.MODE_PRIVATE
-        ).getString("API_KEY", null)
-        val sentKey = intent.extras?.get("API_KEY")
-        val userIsAuthenticated = prevKey != null || savedKey != null || sentKey != null
-        if(sentKey != null && sentKey is String) {
+        ).getString(API_KEY_STORAGE_KEY, null)
+        val sentKey = intent.extras?.get(API_KEY_STORAGE_KEY)
+        val userIsAuthenticated =
+            prevKey != null || savedKey != null || (sentKey != null && sentKey is String)
+        if (sentKey != null && sentKey is String) {
             apiKey = sentKey
-        } else if(prevKey != null) {
+        } else if (prevKey != null) {
             apiKey = prevKey
-        } else if(savedKey != null) {
+        } else if (savedKey != null) {
             apiKey = savedKey
         } else {
             startActivity(Intent(this, AuthActivity::class.java))
         }
         setContent {
             PocketBracketTheme {
-                if(userIsAuthenticated) {
+                if (userIsAuthenticated) {
                     val dialogComposable: MutableState<(@Composable BoxScope.() -> Unit)?> =
                         remember { mutableStateOf(null) }
                     Box {
@@ -99,15 +102,24 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        if(::apiKey.isInitialized) getPreferences(Context.MODE_PRIVATE).edit().putString("API_KEY", apiKey).apply()
+        if (apiKey != null) {
+            getSharedPreferences(
+                SHARED_PREFERENCES_KEY,
+                Context.MODE_PRIVATE
+            ).edit().putString(API_KEY_STORAGE_KEY, apiKey).apply()
+        } else {
+            getSharedPreferences(
+                SHARED_PREFERENCES_KEY,
+                Context.MODE_PRIVATE
+            ).edit().remove(API_KEY_STORAGE_KEY).apply()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        if(::apiKey.isInitialized) outState.putString("API_KEY", apiKey)
-        outState.putSerializable("CURRENT_TAB", currentTab.value)
+        if (apiKey != null) outState.putString(API_KEY_STORAGE_KEY, apiKey)
+        outState.putSerializable(CURRENT_TAB_STORAGE_KEY, currentTab.value)
     }
-
 }
 
 @Composable

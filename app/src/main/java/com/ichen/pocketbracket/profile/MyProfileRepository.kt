@@ -32,7 +32,7 @@ class MyProfileRepository {
             .serverUrl(API_ENDPOINT)
             .okHttpClient(
                 OkHttpClient.Builder()
-                    .addInterceptor(AuthorizationInterceptor(context, apiKey))
+                    .addInterceptor(AuthorizationInterceptor(context, apiKey!!))
                     .build()
             )
             .build()
