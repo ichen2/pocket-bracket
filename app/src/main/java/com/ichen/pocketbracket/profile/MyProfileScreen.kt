@@ -1,9 +1,9 @@
 package com.ichen.pocketbracket.profile
 
 import android.content.Intent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -55,7 +55,7 @@ fun ColumnScope.MyProfileScreen(
         }
         if (viewModel.userDetails.value.status == Status.SUCCESS && viewModel.userDetails.value.data != null) {
             val userDetails = viewModel.userDetails.value.data
-            Box {
+            Box(Modifier.verticalScroll(rememberScrollState())) {
                 Image(
                     painter = if (userDetails?.imageUrls?.getOrNull(1) != null) rememberImagePainter(
                         data = userDetails.imageUrls[1],
@@ -69,7 +69,9 @@ fun ColumnScope.MyProfileScreen(
                         .height(128.dp)
                         .background(medGrey),
                 )
-                Column(Modifier.padding(horizontal = 16.dp)) {
+                Column(
+                    Modifier
+                        .padding(horizontal = 16.dp)) {
                     Spacer(Modifier.height(100.dp))
                     Row {
                         Image(
@@ -123,9 +125,9 @@ fun ColumnScope.MyProfileScreen(
                     }
                     Spacer(Modifier.height(32.dp))
                     Column(
-                        Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colors.surface)
+                            Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colors.surface)
                     ) {
                         Text(
                             "User Settings",
@@ -150,10 +152,10 @@ fun ColumnScope.MyProfileScreen(
                     }
                     Spacer(Modifier.height(32.dp))
                     Column(
-                        Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colors.surface)
-                            .padding(16.dp)
+                            Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colors.surface)
+                                .padding(16.dp)
                     ) {
                         Text(
                             "About",
@@ -174,7 +176,11 @@ fun ColumnScope.MyProfileScreen(
 
 @Composable
 fun MyProfileScreenLoading() = ShimmerAnimation { brush ->
-    Box(Modifier.fillMaxSize().clip(RoundedCornerShape(16.dp)).background(MaterialTheme.colors.background)) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .clip(RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colors.background)) {
         Box(
             Modifier
                 .fillMaxWidth()

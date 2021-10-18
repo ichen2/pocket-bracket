@@ -24,6 +24,7 @@ import com.ichen.pocketbracket.MainActivity
 import com.ichen.pocketbracket.components.WebView
 import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
 import com.ichen.pocketbracket.ui.theme.medGrey
+import com.ichen.pocketbracket.utils.SITE_ENDPOINT
 
 class AuthActivity : AppCompatActivity() {
 
@@ -113,13 +114,14 @@ class AuthActivity : AppCompatActivity() {
                         Button(modifier = Modifier.fillMaxWidth(), onClick = {
                             startActivity(Intent(context, MainActivity::class.java).apply {
                                 putExtra("API_KEY", apiKeyText.value)
+                                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                             })
                         }) {
-                            Text("Submit Auth Token")
+                            Text("Submit auth token")
                         }
                     }
                 } else {
-                    WebView("") {
+                    WebView(SITE_ENDPOINT) {
                         showWebView = false
                     }
                 }

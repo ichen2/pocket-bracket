@@ -28,6 +28,7 @@ fun WebView(url: String, close: () -> Unit) = Column(Modifier.fillMaxSize()) {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT,
             )
+            settings.javaScriptEnabled = true
             loadUrl(url)
         }
     })
