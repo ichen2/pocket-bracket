@@ -2,7 +2,7 @@ package com.ichen.pocketbracket.tournaments
 
 import android.content.Context
 import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.coroutines.toDeferred
+import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloException
 import com.ichen.pocketbracket.GetUserEventsQuery
 import com.ichen.pocketbracket.apiKey
@@ -11,6 +11,7 @@ import com.ichen.pocketbracket.utils.AuthorizationInterceptor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import okhttp3.OkHttpClient
 
 enum class MyTournamentsJobs {
@@ -38,9 +39,11 @@ class MyTournamentsRepository {
         coroutineScope {
             jobs[MyTournamentsJobs.GET_EVENTS] = launch {
                 val response = try {
-                    apolloClient.query(
-                        GetUserEventsQuery(page, perPage)
-                    ).toDeferred().await()
+                    withTimeoutOrNull(15000) {
+                        apolloClient.query(
+                            GetUserEventsQuery(page, perPage)
+                        ).await()
+                    }
                 } catch (e: ApolloException) {
                     // handle protocol errors
                     null

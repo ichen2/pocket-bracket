@@ -176,7 +176,7 @@ fun ColumnScope.MyProfileScreen(
                             val text  = "Pocket Bracket is powered by the smash.gg API. For support, bug reports, or feature suggestions please contact "
                             val annotatedText = "pocketbracket@gmail.com"
                             append(text + annotatedText)
-                            addStringAnnotation("URL", "emailto:$annotatedText", start = text.length, end = text.length + annotatedText.length)
+                            addStringAnnotation("URL", "mailto:$annotatedText", start = text.length, end = text.length + annotatedText.length)
                         }, color = MaterialTheme.colors.onSurface)
                     }
                 }

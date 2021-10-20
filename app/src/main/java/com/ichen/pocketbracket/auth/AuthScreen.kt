@@ -73,7 +73,7 @@ fun AuthScreen(
             )
             if (viewModel.apiKeyText.value.status == Status.ERROR) {
                 Text(
-                    text = "Invalid auth token",
+                    text = "Error validating auth token",
                     fontSize = 12.sp,
                     textAlign = TextAlign.Start,
                     color = MaterialTheme.colors.error

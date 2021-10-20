@@ -16,7 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.ichen.pocketbracket.components.WebView
-import com.ichen.pocketbracket.timeline.TournamentsTimelineScreenLoading
+import com.ichen.pocketbracket.timeline.TournamentsListLoading
 import com.ichen.pocketbracket.timeline.TournamentsTimelineViewModel
 import com.ichen.pocketbracket.timeline.components.TournamentCard
 import com.ichen.pocketbracket.utils.SetComposableFunction
@@ -50,10 +50,13 @@ fun ColumnScope.MyTournamentsScreen(
             .background(MaterialTheme.colors.background)
     ) {
         if (viewModel.tournaments.value.data.isEmpty()) {
-            if (viewModel.tournaments.value.status == Status.ERROR || viewModel.tournaments.value.status == Status.SUCCESS) {
-                Text("No Tournaments Founds", color = MaterialTheme.colors.onBackground)
+            if(viewModel.tournaments.value.status == Status.ERROR) {
+                Text("Error loading tournaments", color = MaterialTheme.colors.onBackground)
+            }
+            else if (viewModel.tournaments.value.status == Status.SUCCESS) {
+                Text("No tournaments found", color = MaterialTheme.colors.onBackground)
             } else {
-                TournamentsTimelineScreenLoading(viewModel.tournaments.value.data.size)
+                TournamentsListLoading(viewModel.tournaments.value.data.size)
             }
         } else {
             LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {

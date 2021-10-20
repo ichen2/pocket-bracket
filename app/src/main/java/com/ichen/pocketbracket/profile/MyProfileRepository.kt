@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.coroutines.toDeferred
 import com.apollographql.apollo.exception.ApolloException
 import com.ichen.pocketbracket.GetUserDetailsQuery
@@ -14,6 +15,7 @@ import com.ichen.pocketbracket.utils.AuthorizationInterceptor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import okhttp3.OkHttpClient
 
 enum class MyProfileJobs {
@@ -39,9 +41,11 @@ class MyProfileRepository {
         coroutineScope {
             jobs[MyProfileJobs.GET_USER_DETAILS] = launch {
                 val response = try {
-                    apolloClient.query(
-                        GetUserDetailsQuery()
-                    ).toDeferred().await()
+                    withTimeoutOrNull(15000) {
+                        apolloClient.query(
+                            GetUserDetailsQuery()
+                        ).await()
+                    }
                 } catch (e: ApolloException) {
                     // handle protocol errors
                     null

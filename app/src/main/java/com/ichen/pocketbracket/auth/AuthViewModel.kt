@@ -16,6 +16,8 @@ import com.ichen.pocketbracket.apiKey
 import com.ichen.pocketbracket.utils.*
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.withTimeoutOrNull
 import okhttp3.OkHttpClient
 
 class AuthViewModel : ViewModel() {
@@ -36,9 +38,11 @@ class AuthViewModel : ViewModel() {
                 .build()
             viewModelScope.launch {
                 val response = try {
-                    apolloClient.query(
-                        GetUserDetailsQuery()
-                    ).await()
+                    withTimeoutOrNull(10000) {
+                        apolloClient.query(
+                            GetUserDetailsQuery()
+                        ).await()
+                    }
                 } catch (e: ApolloException) {
                     null
                 }
