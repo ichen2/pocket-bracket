@@ -34,7 +34,10 @@ fun Date.toPrettyString(): String {
 }
 
 fun Date.isSameDay(other: Date): Boolean {
-    return this.year == other.year && this.month == other.month && this.date == other.date
+    val date = this
+    val c1 = Calendar.getInstance().apply { time = date }
+    val c2 = Calendar.getInstance().apply { time = other }
+    return c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR) && c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR)
 }
 
 fun combineDates(date1: Date, date2: Date): String {

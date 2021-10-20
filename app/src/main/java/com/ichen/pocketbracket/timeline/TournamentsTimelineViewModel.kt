@@ -63,7 +63,6 @@ class TournamentsTimelineViewModel : ViewModel() {
         if (nodes == null || nodes.isEmpty()) {
             return listOf()
         } else {
-            // SUS
             return nodes.filter { node ->
                 node?.id != null
                 node?.name != null
@@ -79,9 +78,9 @@ class TournamentsTimelineViewModel : ViewModel() {
                     isRegistrationOpen = node.isRegistrationOpen,
                     numAttendees = node.numAttendees,
                     state = when (node.state) {
-                        0 -> ActivityState.CREATED
-                        1 -> ActivityState.ACTIVE
-                        2 -> ActivityState.COMPLETED
+                        1 -> ActivityState.CREATED
+                        2 -> ActivityState.ACTIVE
+                        3 -> ActivityState.COMPLETED
                         else -> null
                     },
                     imageUrl = node.images?.getOrNull(0)?.url,

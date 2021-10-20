@@ -232,8 +232,7 @@ fun MapView(
     val circle: MutableState<Circle?> = remember { mutableStateOf(null) }
     val themeColors = MaterialTheme.colors
 
-
-    if (circle.value != null) circle.value!!.radius = locationRadius.value.radius * METERS_IN_MILE
+    circle.value?.radius = locationRadius.value.radius * METERS_IN_MILE
 
     Box(modifier = Modifier.fillMaxSize()) {
         AndroidView(
@@ -260,21 +259,22 @@ fun MapView(
                     googleMap.setOnCameraMoveStartedListener {
                         if (!mapIsMoving.value) {
                             mapIsMoving.value = true
-                            circle.value!!.fillColor =
+                            circle.value?.fillColor =
                                 themeColors.primary.copy(alpha = CIRCLE_UNSELECTED_TRANSPARENCY)
                                     .toArgb()
                         }
                     }
                     googleMap.setOnCameraIdleListener {
-                        // SUS
                         if (mapIsMoving.value) {
                             mapIsMoving.value = false
-                            locationRadius.value = LocationRadius(
-                                map.value!!.cameraPosition.target,
-                                locationRadius.value.radius
-                            )
-                            circle.value!!.center = map.value?.cameraPosition?.target
-                            if (circle.value!!.center != null) {
+                            if(map.value?.cameraPosition?.target != null) {
+                                locationRadius.value = LocationRadius(
+                                    map.value!!.cameraPosition.target,
+                                    locationRadius.value.radius
+                                )
+                                circle.value?.center = map.value!!.cameraPosition.target
+                            }
+                            if (circle.value?.center != null) {
                                 circle.value!!.fillColor =
                                     themeColors.primary.copy(alpha = CIRCLE_SELECTED_TRANSPARENCY)
                                         .toArgb()
@@ -295,9 +295,7 @@ fun MapView(
                     .fillMaxSize()
                     .alpha(.5f)
                     .background(Color.Black)
-            ) {
-
-            }
+            )
         }
     }
 }

@@ -43,6 +43,7 @@ var apiKey: String? = null
 
 class MainActivity : AppCompatActivity() {
     val currentTab = mutableStateOf(CurrentTab.TournamentsTimeline)
+    var apiKeySaved = false
 
     @ExperimentalPermissionsApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,8 +101,30 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        apiKeySaved = false
+    }
+
     override fun onPause() {
         super.onPause()
+        saveApiKeyToStorage()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if(!apiKeySaved) {
+            saveApiKeyToStorage()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (apiKey != null) outState.putString(API_KEY_STORAGE_KEY, apiKey)
+        outState.putSerializable(CURRENT_TAB_STORAGE_KEY, currentTab.value)
+    }
+
+    fun saveApiKeyToStorage() {
         if (apiKey != null) {
             getSharedPreferences(
                 SHARED_PREFERENCES_KEY,
@@ -113,12 +136,7 @@ class MainActivity : AppCompatActivity() {
                 Context.MODE_PRIVATE
             ).edit().remove(API_KEY_STORAGE_KEY).apply()
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        if (apiKey != null) outState.putString(API_KEY_STORAGE_KEY, apiKey)
-        outState.putSerializable(CURRENT_TAB_STORAGE_KEY, currentTab.value)
+        apiKeySaved = true
     }
 }
 
@@ -186,19 +204,4 @@ fun NavigationFooter(currentTab: MutableState<CurrentTab>, clickable: Boolean = 
 @Composable
 @Preview
 fun TestPreview() {
-    val field = remember { mutableStateOf(Field("Hello", Status.NOT_STARTED)) }
-    Column {
-        Text(field.value.data)
-        Text(field.value.status.toString())
-        Button(onClick = {
-            field.value = field.value.withData("World")
-        }) {
-            Text("Update value")
-        }
-        Button(onClick = {
-            field.value = field.value.withStatus(Status.SUCCESS)
-        }) {
-            Text("Update status")
-        }
-    }
 }

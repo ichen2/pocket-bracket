@@ -71,7 +71,7 @@ fun TimelineHeader(
             value = tournamentName.value,
             onValueChange = {
                 tournamentName.value = it
-                // SUS (maybe we could not get tournaments every time the user types something)
+                // TODO: Implement caching for tournament name queries
                 getTournaments()
             },
             modifier = Modifier
@@ -98,7 +98,7 @@ fun TimelineHeader(
                 "Games",
                 tournamentGames.value != null,
                 clickable
-            ) { // sheet with checkbox list of games
+            ) {
                 setDialogComposable {
                     ChooseGamesDialog(setDialogComposable, tournamentGames) {
                         getTournaments()
@@ -109,7 +109,7 @@ fun TimelineHeader(
                 "Location",
                 tournamentLocationRadius.value != null,
                 clickable
-            ) { // sheet with location selction
+            ) {
                 setDialogComposable {
                     LocationPicker(
                         onNegativeButtonClick = { setDialogComposable(null) },
@@ -124,7 +124,7 @@ fun TimelineHeader(
                 tournamentDateRange.value?.toString() ?: "Dates",
                 tournamentDateRange.value != null,
                 clickable
-            ) { // sheet with date selection
+            ) {
                 initializeDateRangePickerListeners(tournamentDateRange) {
                     getTournaments()
                 }
@@ -134,7 +134,7 @@ fun TimelineHeader(
                 tournamentType.value.toString(),
                 tournamentType.value != TournamentType.NO_FILTER,
                 clickable
-            ) { // dropdown with online, offline, both
+            ) {
                 tournamentType.value = getNextEnumValue(tournamentType.value)
                 getTournaments()
             }
@@ -142,7 +142,7 @@ fun TimelineHeader(
                 tournamentPrice.value.toString(),
                 tournamentPrice.value != TournamentPrice.NO_FILTER,
                 clickable
-            ) { // dropdown with online, offline, both
+            ) {
                 tournamentPrice.value = getNextEnumValue(tournamentPrice.value)
                 getTournaments()
             }
@@ -150,7 +150,7 @@ fun TimelineHeader(
                 tournamentRegistrationStatus.value.toString(),
                 tournamentRegistrationStatus.value != TournamentRegistrationStatus.NO_FILTER,
                 clickable
-            ) { // dropdown with online, offline, both
+            ) {
                 tournamentRegistrationStatus.value =
                     getNextEnumValue(tournamentRegistrationStatus.value)
                 getTournaments()

@@ -51,76 +51,83 @@ fun TournamentCard(tournament: Tournament, onClick: (String) -> Unit) = Column(
 
     val eventsListIsExpanded = remember { mutableStateOf(false) }
 
-    Box(Modifier.fillMaxWidth().clickable { onClick(tournament.url)}) {
-        if (tournament.imageUrl != null) {
-            Image(
-                painter = rememberImagePainter(data = tournament.imageUrl, builder = {
-                    size(OriginalSize)
-                    scale(Scale.FILL)
-                    placeholder(R.drawable.image_unavailable)
-                }),
-                contentDescription = "tournament image",
-                modifier = Modifier.fillMaxWidth(),
-                contentScale = ContentScale.FillWidth,
-            )
-        } else {
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .background(MaterialTheme.colors.secondaryVariant),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Warning,
-                    contentDescription = "image unavailable",
-                    modifier = Modifier.size(100.dp),
-                    tint = Color.Black
+    Column(Modifier.clickable { onClick(tournament.url) }) {
+        Box(Modifier.fillMaxWidth()) {
+            if (tournament.imageUrl != null) {
+                Image(
+                    painter = rememberImagePainter(data = tournament.imageUrl, builder = {
+                        size(OriginalSize)
+                        scale(Scale.FILL)
+                        placeholder(R.drawable.image_unavailable)
+                    }),
+                    contentDescription = "tournament image",
+                    modifier = Modifier.fillMaxWidth(),
+                    contentScale = ContentScale.FillWidth,
                 )
-                Spacer(Modifier.height(16.dp))
-                Text("Image unavailable", color = Color.Black)
+            } else {
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .background(MaterialTheme.colors.secondaryVariant),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Warning,
+                        contentDescription = "image unavailable",
+                        modifier = Modifier.size(100.dp),
+                        tint = Color.Black
+                    )
+                    Spacer(Modifier.height(16.dp))
+                    Text("Image unavailable", color = Color.Black)
+                }
+            }
+            Text(
+                tournament.state.toString(),
+                color = MaterialTheme.colors.onPrimary,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(MaterialTheme.colors.primary)
+                    .padding(4.dp)
+            )
+        }
+        Column(Modifier.padding(16.dp)) {
+            Text(
+                text = tournament.name,
+                color = MaterialTheme.colors.onSurface,
+                style = MaterialTheme.typography.h4
+            )
+            if (tournament.startAt != null && tournament.endAt != null) {
+                Text(
+                    text = combineDates(
+                        tournament.startAt,
+                        tournament.endAt
+                    ),
+                    color = MaterialTheme.colors.onSurface
+                )
+            }
+            if (tournament.isOnline != null) {
+                Text(
+                    text = if (tournament.isOnline) "Online" else "Offline",
+                    color = MaterialTheme.colors.onSurface
+                )
             }
         }
-        Text(
-            tournament.state.toString(),
-            color = MaterialTheme.colors.onPrimary,
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(16.dp)
-                .clip(RoundedCornerShape(4.dp))
-                .background(MaterialTheme.colors.primary)
-                .padding(4.dp)
-        )
     }
+    Spacer(Modifier.height(16.dp))
     Column(Modifier.padding(16.dp)) {
-        Text(
-            text = tournament.name,
-            color = MaterialTheme.colors.onSurface,
-            style = MaterialTheme.typography.h4
-        )
-        if (tournament.startAt != null && tournament.endAt != null) {
-            Text(
-                text = combineDates(
-                    tournament.startAt,
-                    tournament.endAt
-                ),
-                color = MaterialTheme.colors.onSurface
-            )
-        }
-        if (tournament.isOnline != null) {
-            Text(
-                text = if (tournament.isOnline) "Online" else "Offline",
-                color = MaterialTheme.colors.onSurface
-            )
-        }
-        Spacer(Modifier.height(16.dp))
         for (i in 0..min(
             if (eventsListIsExpanded.value) Int.MAX_VALUE else 1,
             tournament.events?.size ?: 0
         )) {
             if (i != 0) Spacer(Modifier.height(16.dp))
-            if (tournament.events?.getOrNull(i) != null) EventCardItem(event = tournament.events[0], onClick)
+            if (tournament.events?.getOrNull(i) != null) EventCardItem(
+                event = tournament.events[0],
+                onClick
+            )
         }
         if (tournament.events?.size ?: 0 > 2) {
             Spacer(Modifier.height(16.dp))
@@ -188,7 +195,10 @@ fun LoadingCardItem(height: Dp, padding: Dp = 16.dp) {
 
 @Composable
 fun EventCardItem(event: Event, onClick: (String) -> Unit) {
-    Column(Modifier.fillMaxWidth().clickable { onClick(event.url) }) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .clickable { onClick(event.url) }) {
         Text(
             text = event.name,
             color = MaterialTheme.colors.primary,
