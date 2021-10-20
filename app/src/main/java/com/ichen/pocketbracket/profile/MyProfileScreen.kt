@@ -23,6 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
@@ -169,7 +172,12 @@ fun ColumnScope.MyProfileScreen(
                             style = MaterialTheme.typography.h4
                         )
                         Spacer(Modifier.height(16.dp))
-                        Text("About section goes here", color = MaterialTheme.colors.onSurface)
+                        Text(text = buildAnnotatedString {
+                            val text  = "Pocket Bracket is powered by the smash.gg API. For support, bug reports, or feature suggestions please contact "
+                            val annotatedText = "pocketbracket@gmail.com"
+                            append(text + annotatedText)
+                            addStringAnnotation("URL", "emailto:$annotatedText", start = text.length, end = text.length + annotatedText.length)
+                        }, color = MaterialTheme.colors.onSurface)
                     }
                 }
             }
