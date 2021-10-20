@@ -9,6 +9,7 @@ import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -22,9 +23,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -172,17 +175,46 @@ fun ColumnScope.MyProfileScreen(
                             style = MaterialTheme.typography.h4
                         )
                         Spacer(Modifier.height(16.dp))
-                        Text(text = buildAnnotatedString {
-                            val text  = "Pocket Bracket is powered by the smash.gg API. For support, bug reports, or feature suggestions please contact "
+                        val annotatedString = buildAnnotatedString {
+                            val text =
+                                "Pocket Bracket is powered by the smash.gg API. For support, bug reports, or feature suggestions please contact "
                             val annotatedText = "pocketbracket@gmail.com"
                             append(text + annotatedText)
-                            addStringAnnotation("URL", "mailto:$annotatedText", start = text.length, end = text.length + annotatedText.length)
-                        }, color = MaterialTheme.colors.onSurface)
+                            addStringAnnotation(
+                                "URL",
+                                "mailto:$annotatedText",
+                                start = text.length,
+                                end = text.length + annotatedText.length
+                            )
+                            addStyle(
+                                style = SpanStyle(
+                                    color = MaterialTheme.colors.onSurface,
+                                    fontSize = MaterialTheme.typography.body1.fontSize,
+                                    textDecoration = TextDecoration.None
+                                ), start = 0, end = text.length
+                            )
+                            addStyle(
+                                style = SpanStyle(
+                                    color = MaterialTheme.colors.primary,
+                                    fontSize = MaterialTheme.typography.body1.fontSize,
+                                    textDecoration = TextDecoration.Underline
+                                ), start = text.length, end = text.length + annotatedText.length
+                            )
+                        }
+                        val uriHandler = LocalUriHandler.current
+                        ClickableText(text = annotatedString, onClick = {
+                            annotatedString
+                                .getStringAnnotations("URL", it, it)
+                                .firstOrNull()?.let { stringAnnotation ->
+                                    uriHandler.openUri(stringAnnotation.item)
+                                }
+                        })
                     }
                 }
             }
         } else if (viewModel.userDetails.value.status == Status.ERROR) {
             Text("Error loading user profile", color = MaterialTheme.colors.onBackground)
+            Spacer(Modifier.height(16.dp))
             Row(Modifier.clickable {
                 apiKey = null
                 context.startActivity(Intent(context, AuthActivity::class.java))
@@ -200,6 +232,7 @@ fun ColumnScope.MyProfileScreen(
             MyProfileScreenLoading()
         }
     }
+
 
 @Composable
 fun MyProfileScreenLoading() = ShimmerAnimation { brush ->
