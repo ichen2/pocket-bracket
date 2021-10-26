@@ -117,28 +117,29 @@ fun TournamentCard(tournament: Tournament, onClick: (String) -> Unit) = Column(
             }
         }
     }
-    Spacer(Modifier.height(16.dp))
-    Column(Modifier.padding(16.dp)) {
-        for (i in 0..min(
-            if (eventsListIsExpanded.value) Int.MAX_VALUE else 1,
-            tournament.events?.size ?: 0
-        )) {
-            if (i != 0) Spacer(Modifier.height(16.dp))
-            if (tournament.events?.getOrNull(i) != null) EventCardItem(
-                event = tournament.events[0],
-                onClick
-            )
-        }
-        if (tournament.events?.size ?: 0 > 2) {
-            Spacer(Modifier.height(16.dp))
-            Text(
-                modifier = Modifier.clickable {
-                    eventsListIsExpanded.value = !eventsListIsExpanded.value
-                },
-                text = "Show ${if (eventsListIsExpanded.value) "less" else "${tournament.events!!.size - 2} more"}",
-                color = MaterialTheme.colors.primary,
-                style = MaterialTheme.typography.body1
-            )
+    if (tournament.events?.size ?: 0 > 0) {
+        Column(Modifier.padding(16.dp)) {
+            for (i in 0..min(
+                if (eventsListIsExpanded.value) Int.MAX_VALUE else 1,
+                tournament.events?.size ?: 0
+            )) {
+                if (i != 0) Spacer(Modifier.height(16.dp))
+                if (tournament.events?.getOrNull(i) != null) EventCardItem(
+                    event = tournament.events[0],
+                    onClick
+                )
+            }
+            if (tournament.events?.size ?: 0 > 2) {
+                Spacer(Modifier.height(16.dp))
+                Text(
+                    modifier = Modifier.clickable {
+                        eventsListIsExpanded.value = !eventsListIsExpanded.value
+                    },
+                    text = "Show ${if (eventsListIsExpanded.value) "less" else "${tournament.events!!.size - 2} more"}",
+                    color = MaterialTheme.colors.primary,
+                    style = MaterialTheme.typography.body1
+                )
+            }
         }
     }
 }

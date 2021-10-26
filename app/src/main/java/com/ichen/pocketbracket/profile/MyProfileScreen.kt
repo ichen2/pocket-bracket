@@ -42,6 +42,7 @@ import com.ichen.pocketbracket.components.WebView
 import com.ichen.pocketbracket.profile.components.UserSetting
 import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
 import com.ichen.pocketbracket.ui.theme.medGrey
+import com.ichen.pocketbracket.ui.theme.medOrange
 import com.ichen.pocketbracket.utils.API_KEY_STORAGE_KEY
 import com.ichen.pocketbracket.utils.SHARED_PREFERENCES_KEY
 import com.ichen.pocketbracket.utils.SetComposableFunction
@@ -59,7 +60,7 @@ fun ColumnScope.MyProfileScreen(
             .background(MaterialTheme.colors.background)
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Top
     ) {
         val context = LocalContext.current
         LaunchedEffect(key1 = viewModel) {
@@ -67,7 +68,7 @@ fun ColumnScope.MyProfileScreen(
         }
         if (viewModel.userDetails.value.status == Status.SUCCESS && viewModel.userDetails.value.data != null) {
             val userDetails = viewModel.userDetails.value.data
-            Box(Modifier.verticalScroll(rememberScrollState())) {
+            Box(Modifier.verticalScroll(rememberScrollState()), contentAlignment = Alignment.TopCenter) {
                 Image(
                     painter = if (userDetails?.imageUrls?.getOrNull(1) != null) rememberImagePainter(
                         data = userDetails.imageUrls[1],
