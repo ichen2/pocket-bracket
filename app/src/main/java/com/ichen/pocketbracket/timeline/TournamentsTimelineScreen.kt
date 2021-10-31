@@ -61,7 +61,7 @@ fun ColumnScope.TournamentsTimelineScreen(
     }
 
     DisposableEffect(key1 = viewModel) {
-        if(viewModel.tournaments.value.status != Status.SUCCESS) viewModel.getTournaments(context = context)
+        if (viewModel.tournaments.value.status != Status.SUCCESS) viewModel.getTournaments(context = context)
         onDispose {
             viewModel.cleanup()
         }
@@ -90,8 +90,7 @@ fun ColumnScope.TournamentsTimelineScreen(
         if (viewModel.tournaments.value.data.isEmpty()) {
             if (viewModel.tournaments.value.status == Status.ERROR) {
                 Text("Error loading tournaments", color = MaterialTheme.colors.onBackground)
-            }
-            else if (viewModel.tournaments.value.status == Status.SUCCESS) {
+            } else if (viewModel.tournaments.value.status == Status.SUCCESS) {
                 Text("No tournaments found", color = MaterialTheme.colors.onBackground)
             } else {
                 TournamentsListLoading(viewModel.tournaments.value.data.size)
@@ -105,7 +104,7 @@ fun ColumnScope.TournamentsTimelineScreen(
                     if (index == viewModel.tournaments.value.data.size - 1) viewModel.getMoreTournaments(
                         context
                     )
-                    TournamentCard(tournament) { url ->
+                    TournamentCard(tournament, clickable) { url ->
                         setDialogComposable {
                             WebView(url) {
                                 setDialogComposable(null)

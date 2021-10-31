@@ -43,7 +43,7 @@ import java.util.*
 import kotlin.math.min
 
 @Composable
-fun TournamentCard(tournament: Tournament, onClick: (String) -> Unit) = Column(
+fun TournamentCard(tournament: Tournament, clickable: Boolean, onClick: (String) -> Unit) = Column(
     Modifier
         .fillMaxWidth(1f)
         .background(MaterialTheme.colors.background)
@@ -51,7 +51,7 @@ fun TournamentCard(tournament: Tournament, onClick: (String) -> Unit) = Column(
 
     val eventsListIsExpanded = remember { mutableStateOf(false) }
 
-    Column(Modifier.clickable { onClick(tournament.url) }) {
+    Column(Modifier.clickable(enabled = clickable) { onClick(tournament.url) }) {
         Box(Modifier.fillMaxWidth()) {
             if (tournament.imageUrl != null) {
                 Image(
@@ -126,13 +126,14 @@ fun TournamentCard(tournament: Tournament, onClick: (String) -> Unit) = Column(
                 if (i != 0) Spacer(Modifier.height(16.dp))
                 if (tournament.events?.getOrNull(i) != null) EventCardItem(
                     event = tournament.events[0],
-                    onClick
+                    clickable = clickable,
+                    onClick = onClick
                 )
             }
             if (tournament.events?.size ?: 0 > 2) {
                 Spacer(Modifier.height(16.dp))
                 Text(
-                    modifier = Modifier.clickable {
+                    modifier = Modifier.clickable(enabled = clickable) {
                         eventsListIsExpanded.value = !eventsListIsExpanded.value
                     },
                     text = "Show ${if (eventsListIsExpanded.value) "less" else "${tournament.events!!.size - 2} more"}",
@@ -195,11 +196,11 @@ fun LoadingCardItem(height: Dp, padding: Dp = 16.dp) {
 }
 
 @Composable
-fun EventCardItem(event: Event, onClick: (String) -> Unit) {
+fun EventCardItem(event: Event, clickable: Boolean, onClick: (String) -> Unit) {
     Column(
         Modifier
             .fillMaxWidth()
-            .clickable { onClick(event.url) }) {
+            .clickable(enabled = clickable) { onClick(event.url) }) {
         Text(
             text = event.name,
             color = MaterialTheme.colors.primary,
@@ -233,7 +234,7 @@ fun EventCardItem(event: Event, onClick: (String) -> Unit) {
 @Preview
 @Composable
 fun TournamentCardPreview() = PocketBracketTheme {
-    TournamentCard(testTournament, {})
+    TournamentCard(testTournament, true, {})
 }
 
 @Preview

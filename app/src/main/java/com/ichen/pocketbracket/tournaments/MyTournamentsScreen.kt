@@ -66,7 +66,7 @@ fun ColumnScope.MyTournamentsScreen(
                     if (index == viewModel.tournaments.value.data.size - 1) {
                         viewModel.getMoreEvents(context)
                     }
-                    TournamentCard(tournament) { url ->
+                    TournamentCard(tournament, true) { url ->
                         setDialogComposable {
                             WebView(url) {
                                 setDialogComposable(null)

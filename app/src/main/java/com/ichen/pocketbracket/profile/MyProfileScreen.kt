@@ -22,6 +22,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
@@ -32,6 +33,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
+import coil.size.OriginalSize
 import coil.size.Scale
 import coil.transform.CircleCropTransformation
 import com.ichen.pocketbracket.R
@@ -70,10 +72,11 @@ fun ColumnScope.MyProfileScreen(
             val userDetails = viewModel.userDetails.value.data
             Box(Modifier.verticalScroll(rememberScrollState()), contentAlignment = Alignment.TopCenter) {
                 Image(
+                    contentScale = ContentScale.FillWidth,
                     painter = if (userDetails?.imageUrls?.getOrNull(1) != null) rememberImagePainter(
                         data = userDetails.imageUrls[1],
                         builder = {
-                            scale(Scale.FILL)
+                            size(OriginalSize)
                             placeholder(R.drawable.image_unavailable)
                         }) else painterResource(id = R.drawable.image_unavailable),
                     contentDescription = "profile image",

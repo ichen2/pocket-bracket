@@ -43,7 +43,6 @@ var apiKey: String? = null
 
 class MainActivity : AppCompatActivity() {
     val currentTab = mutableStateOf(CurrentTab.TournamentsTimeline)
-    var apiKeySaved = false
 
     @ExperimentalPermissionsApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,6 +65,9 @@ class MainActivity : AppCompatActivity() {
             apiKey = savedKey
         } else {
             startActivity(Intent(this, AuthActivity::class.java))
+        }
+        if(apiKey != null) {
+            saveApiKeyToStorage()
         }
         setContent {
             PocketBracketTheme {
@@ -101,30 +103,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        apiKeySaved = false
-    }
-
-    override fun onPause() {
-        super.onPause()
-        saveApiKeyToStorage()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        if(!apiKeySaved) {
-            saveApiKeyToStorage()
-        }
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (apiKey != null) outState.putString(API_KEY_STORAGE_KEY, apiKey)
         outState.putSerializable(CURRENT_TAB_STORAGE_KEY, currentTab.value)
     }
 
-    fun saveApiKeyToStorage() {
+    private fun saveApiKeyToStorage() {
         if (apiKey != null) {
             getSharedPreferences(
                 SHARED_PREFERENCES_KEY,
@@ -136,7 +121,6 @@ class MainActivity : AppCompatActivity() {
                 Context.MODE_PRIVATE
             ).edit().remove(API_KEY_STORAGE_KEY).apply()
         }
-        apiKeySaved = true
     }
 }
 

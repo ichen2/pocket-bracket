@@ -13,6 +13,8 @@ private val DarkColorPalette = darkColors(
     secondaryVariant = lightBlack,
     surface = medBlack,
     background = darkBlack,
+    error = medRed,
+    onError = lightWhite,
 )
 
 private val LightColorPalette = lightColors(
@@ -22,7 +24,8 @@ private val LightColorPalette = lightColors(
     secondaryVariant = medWhite,
     surface = lightWhite,
     background = lightWhite,
-
+    error = medRed,
+    onError = lightWhite,
     /* Other default colors to override
     background = Color.White,
     surface = Color.White,

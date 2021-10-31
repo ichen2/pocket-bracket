@@ -68,6 +68,7 @@ fun TimelineHeader(
 
     Column(Modifier.padding(vertical = 16.dp)) {
         TextField(
+            enabled = clickable,
             value = tournamentName.value,
             onValueChange = {
                 tournamentName.value = it
