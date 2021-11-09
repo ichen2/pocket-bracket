@@ -1,12 +1,14 @@
 package com.ichen.pocketbracket.tournaments
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
@@ -39,8 +41,12 @@ fun ColumnScope.MyTournamentsScreen(
         }
     }
 
-    Box(Modifier.zIndex(Z_INDEX_TOP).fillMaxWidth().shadow(elevation = 10.dp).background(MaterialTheme.colors.surface).padding(16.dp), contentAlignment = Alignment.Center) {
-        Text("My Tournaments", style = MaterialTheme.typography.h4, color = MaterialTheme.colors.onSurface)
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colors.primarySurface)
+            .padding(16.dp), contentAlignment = Alignment.Center) {
+        Text("My Tournaments", style = MaterialTheme.typography.h4, color = if(isSystemInDarkTheme()) MaterialTheme.colors.onSurface else MaterialTheme.colors.onPrimary)
     }
     Box(
         contentAlignment = Alignment.Center,

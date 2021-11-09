@@ -3,11 +3,8 @@ package com.ichen.pocketbracket.timeline.components
 import android.content.Context
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -16,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -46,7 +44,7 @@ fun TimelineHeader(
     viewModel: TournamentsTimelineViewModel,
 ) = Surface(
     color = MaterialTheme.colors.primarySurface,
-    contentColor = MaterialTheme.colors.onPrimary,
+    contentColor = if(isSystemInDarkTheme()) MaterialTheme.colors.onSurface else MaterialTheme.colors.onPrimary,
     modifier = Modifier.fillMaxWidth(1f)
 ) {
 
@@ -158,6 +156,7 @@ fun TimelineHeader(
             }
             Text(
                 text = "Clear",
+                fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
                     .clip(CircleShape)
                     .background(MaterialTheme.colors.error)

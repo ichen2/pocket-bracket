@@ -10,12 +10,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun FilterPill(text: String, enabled: Boolean, clickable: Boolean, onClick: () -> Unit) {
     Text(
         text = text,
+        fontWeight = FontWeight.SemiBold,
         modifier = Modifier
             .clip(CircleShape)
             .background(if (enabled) MaterialTheme.colors.secondary else MaterialTheme.colors.background)

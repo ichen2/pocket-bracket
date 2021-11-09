@@ -30,7 +30,7 @@ fun UserSetting(icon: ImageVector, name: String, onClick: () -> Unit) {
             icon,
             contentDescription = name,
             modifier = Modifier.size(32.dp),
-            tint = MaterialTheme.colors.onSurface
+            tint = MaterialTheme.colors.primary
         )
         Spacer(Modifier.width(16.dp))
         Text(name, color = MaterialTheme.colors.onSurface)
