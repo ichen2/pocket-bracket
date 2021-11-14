@@ -16,6 +16,7 @@
         android:theme="@style/Theme.PocketBracket">
         <activity
             android:name=".auth.AuthActivity"
+            android:screenOrientation="portrait"
             android:exported="true"
             android:label="@string/title_activity_auth"
             android:theme="@style/Theme.PocketBracket.NoActionBar" />
@@ -26,6 +27,7 @@
 
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.PocketBracket.NoActionBar">

@@ -43,6 +43,8 @@ var apiKey: String? = null
 
 class MainActivity : AppCompatActivity() {
     val currentTab = mutableStateOf(CurrentTab.TournamentsTimeline)
+    val dialogComposable: MutableState<(@Composable BoxScope.() -> Unit)?> =
+        mutableStateOf(null)
 
     @ExperimentalPermissionsApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,14 +68,13 @@ class MainActivity : AppCompatActivity() {
         } else {
             startActivity(Intent(this, AuthActivity::class.java))
         }
-        if(apiKey != null) {
+        if (apiKey != null) {
             saveApiKeyToStorage()
         }
         setContent {
             PocketBracketTheme {
                 if (userIsAuthenticated) {
-                    val dialogComposable: MutableState<(@Composable BoxScope.() -> Unit)?> =
-                        remember { mutableStateOf(null) }
+
                     Box {
                         Column(Modifier.background(MaterialTheme.colors.background)) {
                             when (currentTab.value) {
@@ -108,6 +109,15 @@ class MainActivity : AppCompatActivity() {
         if (apiKey != null) outState.putString(API_KEY_STORAGE_KEY, apiKey)
         outState.putSerializable(CURRENT_TAB_STORAGE_KEY, currentTab.value)
     }
+
+    override fun onBackPressed() {
+        if (dialogComposable.value != null) {
+            dialogComposable.value = null
+        } else {
+            super.onBackPressed()
+        }
+    }
+
 
     private fun saveApiKeyToStorage() {
         if (apiKey != null) {
