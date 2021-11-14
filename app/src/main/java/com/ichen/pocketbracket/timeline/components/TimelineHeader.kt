@@ -68,17 +68,19 @@ fun TimelineHeader(
         TextField(
             enabled = clickable,
             value = tournamentName.value,
-            onValueChange = {
-                tournamentName.value = it
+            onValueChange = { value ->
+                tournamentName.value = value
                 // TODO: Implement caching for tournament name queries
                 getTournaments()
             },
+            placeholder = { Text("Tournament Name", color = MaterialTheme.colors.onSurface.copy(alpha = .5f)) },
             modifier = Modifier
                 .fillMaxWidth(1f)
                 .clip(MaterialTheme.shapes.small)
                 .padding(horizontal = 16.dp),
             colors = TextFieldDefaults.textFieldColors(
-                cursorColor = MaterialTheme.colors.onPrimary,
+                textColor = MaterialTheme.colors.onSurface,
+                cursorColor = MaterialTheme.colors.onSurface,
                 focusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
                 errorIndicatorColor = Color.Transparent,
