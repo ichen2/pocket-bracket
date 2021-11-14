@@ -125,7 +125,7 @@ fun TournamentCard(tournament: Tournament, clickable: Boolean, onClick: (String)
             )) {
                 if (i != 0) Spacer(Modifier.height(16.dp))
                 if (tournament.events?.getOrNull(i) != null) EventCardItem(
-                    event = tournament.events[0],
+                    event = tournament.events[i],
                     clickable = clickable,
                     onClick = onClick
                 )
