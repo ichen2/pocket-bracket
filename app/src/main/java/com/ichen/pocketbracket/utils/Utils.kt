@@ -18,6 +18,7 @@ import java.util.*
 import kotlin.math.roundToInt
 
 const val METERS_IN_MILE = 1609.34
+const val SECONDS_IN_DAY = 86400
 
 fun LocationRadius.getCenterAsString() : String {
     return "(${center.latitude.roundToInt()}\u00B0, ${center.longitude.roundToInt()}\u00B0)"
@@ -27,7 +28,6 @@ fun getScaledRadius(sliderValue: Float) : Double {
     val scale = Math.log(RADIUS_MAX)-Math.log(RADIUS_MIN)
     return Math.exp(Math.log(RADIUS_MIN) + scale * (sliderValue))
 }
-
 
 fun Date.toPrettyString(): String {
     return SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(this)
@@ -73,6 +73,17 @@ data class Field<T>(
 
 fun convertBigDecimalToDate(date: Any?) : Date? {
     return if(date != null && date is BigDecimal) Date((date).toLong() * 1000) else null
+}
+
+fun BigDecimal.toDate(): Date {
+    return Date((this).toLong() * 1000)
+}
+
+fun Date.addDays(numDays: Int): Date {
+    val calendar = Calendar.getInstance()
+    calendar.time = this
+    calendar.add(Calendar.DATE, numDays)
+    return calendar.time
 }
 
 class AuthorizationInterceptor(val context: Context, val apiKey: String) : Interceptor {

@@ -18,6 +18,7 @@ import com.ichen.pocketbracket.type.TournamentLocationFilter
 import com.ichen.pocketbracket.utils.API_ENDPOINT
 import com.ichen.pocketbracket.utils.AuthorizationInterceptor
 import com.ichen.pocketbracket.utils.Field
+import com.ichen.pocketbracket.utils.addDays
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -25,6 +26,7 @@ import kotlinx.coroutines.withTimeoutOrNull
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import java.time.LocalDateTime
+import java.util.*
 
 enum class TournamentsTimelineJobs {
     GET_TOURNAMENTS
@@ -74,7 +76,8 @@ class TournamentsTimelineRepository {
                                     else -> Input.absent()
                                 },
                                 afterDate = if (filter.dates != null) Input.optional(filter.dates.start.time / 1000) else Input.absent(),
-                                beforeDate = if (filter.dates != null) Input.optional((filter.dates.end.time + 86399999) / 1000) else Input.absent(),
+                                beforeDate = if (filter.dates != null) Input.optional((filter.dates.end.time + 86399999) / 1000) else Input.optional(
+                                    Date().addDays(365).time / 1000),
                                 videogameIds = if (filter.games != null) Input.optional(filter.games.map { videogame ->
                                     videogame.id.toString()
                                 }) else Input.absent()

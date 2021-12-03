@@ -1,5 +1,6 @@
 package com.ichen.pocketbracket.models
 
+import com.ichen.pocketbracket.utils.SECONDS_IN_DAY
 import java.util.*
 
 data class Tournament(
@@ -15,6 +16,16 @@ data class Tournament(
     val imageUrl: String?,
     val events: List<Event>?,
 )
+
+fun Tournament.getRating(filter: TournamentFilter): Float {
+    var rating: Float = 0f
+    if (numAttendees != null) rating += numAttendees / 500
+    if (startAt != null && filter.dates?.start?.time != null) {
+        val dateRangeInDays = (filter.dates.end.time - filter.dates.start.time) / SECONDS_IN_DAY
+        rating += (dateRangeInDays - ((startAt.time - filter.dates.start.time) / (SECONDS_IN_DAY * 1000))) / dateRangeInDays
+    }
+    return rating
+}
 
 val testTournament: Tournament = Tournament(
     id = 0,

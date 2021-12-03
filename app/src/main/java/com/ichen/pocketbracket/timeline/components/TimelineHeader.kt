@@ -44,7 +44,7 @@ fun TimelineHeader(
     viewModel: TournamentsTimelineViewModel,
 ) = Surface(
     color = MaterialTheme.colors.primarySurface,
-    contentColor = if(isSystemInDarkTheme()) MaterialTheme.colors.onSurface else MaterialTheme.colors.onPrimary,
+    contentColor = if (isSystemInDarkTheme()) MaterialTheme.colors.onSurface else MaterialTheme.colors.onPrimary,
     modifier = Modifier.fillMaxWidth(1f)
 ) {
 
@@ -73,7 +73,12 @@ fun TimelineHeader(
                 // TODO: Implement caching for tournament name queries
                 getTournaments()
             },
-            placeholder = { Text("Tournament Name", color = MaterialTheme.colors.onSurface.copy(alpha = .5f)) },
+            placeholder = {
+                Text(
+                    "Tournament Name",
+                    color = MaterialTheme.colors.onSurface.copy(alpha = .5f)
+                )
+            },
             modifier = Modifier
                 .fillMaxWidth(1f)
                 .clip(MaterialTheme.shapes.small)
@@ -126,9 +131,10 @@ fun TimelineHeader(
                 tournamentDateRange.value != null,
                 clickable
             ) {
-                initializeDateRangePickerListeners(tournamentDateRange) {
-                    getTournaments()
-                }
+                initializeDateRangePickerListeners(
+                    tournamentDateRange,
+                    { getTournaments() },
+                    { getTournaments() })
                 showDateRangePicker(context)
             }
             FilterPill(
@@ -170,7 +176,11 @@ fun TimelineHeader(
     }
 }
 
-private fun initializeDateRangePickerListeners(tournamentDateRange: MutableState<DateRange?>, onPositiveButtonClick: () -> Unit) {
+private fun initializeDateRangePickerListeners(
+    tournamentDateRange: MutableState<DateRange?>,
+    onPositiveButtonClick: () -> Unit,
+    onNegativeButtonClick: () -> Unit,
+) {
     dateRangePicker.addOnPositiveButtonClickListener { _ ->
         val startDate = dateRangePicker.selection?.first
         val endDate = dateRangePicker.selection?.second
@@ -182,9 +192,11 @@ private fun initializeDateRangePickerListeners(tournamentDateRange: MutableState
     }
     dateRangePicker.addOnNegativeButtonClickListener {
         tournamentDateRange.value = null
+        onNegativeButtonClick()
     }
     dateRangePicker.addOnCancelListener {
         tournamentDateRange.value = null
+        onNegativeButtonClick()
     }
 }
 

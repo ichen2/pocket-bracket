@@ -23,9 +23,13 @@ import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.timeline.components.TimelineHeader
 import com.ichen.pocketbracket.timeline.components.TournamentCard
 import com.ichen.pocketbracket.timeline.components.TournamentCardLoading
+import com.ichen.pocketbracket.utils.SECONDS_IN_DAY
 import com.ichen.pocketbracket.utils.SetComposableFunction
 import com.ichen.pocketbracket.utils.Status
 import java.lang.Integer.max
+import java.util.*
+
+val today = Date()
 
 @ExperimentalPermissionsApi
 @Composable
@@ -44,11 +48,11 @@ fun ColumnScope.TournamentsTimelineScreen(
     val tournamentName = remember { mutableStateOf("") }
     val tournamentGames: MutableState<List<Videogame>?> = remember { mutableStateOf(null) }
     val tournamentLocationRadius: MutableState<LocationRadius?> = remember { mutableStateOf(null) }
-    val tournamentDateRange: MutableState<DateRange?> = remember { mutableStateOf(null) }
+    val tournamentDateRange: MutableState<DateRange?> = remember { mutableStateOf(DateRange(today, Date(today.time + SECONDS_IN_DAY * 14 * 1000))) }
     val tournamentType = remember { mutableStateOf(TournamentType.NO_FILTER) }
     val tournamentPrice = remember { mutableStateOf(TournamentPrice.NO_FILTER) }
     val tournamentRegistrationStatus =
-        remember { mutableStateOf(TournamentRegistrationStatus.NO_FILTER) }
+        remember { mutableStateOf(TournamentRegistrationStatus.OPEN) }
     val clearFilters = {
         tournamentName.value = ""
         tournamentGames.value = null
@@ -60,8 +64,25 @@ fun ColumnScope.TournamentsTimelineScreen(
         viewModel.getTournaments(context = context)
     }
 
+    fun getTournaments() = run {
+        viewModel.getTournaments(
+            TournamentFilter(
+                name = tournamentName.value,
+                games = tournamentGames.value,
+                location = tournamentLocationRadius.value,
+                dates = tournamentDateRange.value,
+                type = tournamentType.value,
+                price = tournamentPrice.value,
+                registration = tournamentRegistrationStatus.value
+            ),
+            context
+        )
+    }
+
     DisposableEffect(key1 = viewModel) {
-        if (viewModel.tournaments.value.status != Status.SUCCESS) viewModel.getTournaments(context = context)
+        if (viewModel.tournaments.value.status != Status.SUCCESS) {
+            getTournaments()
+        }
         onDispose {
             viewModel.cleanup()
         }
