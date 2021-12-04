@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 fun FilterPill(text: String, enabled: Boolean, clickable: Boolean, onClick: () -> Unit) {
     Text(
         text = text,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = if(enabled) FontWeight.Bold else FontWeight.Normal,
         modifier = Modifier
             .clip(CircleShape)
             .background(if (enabled) MaterialTheme.colors.secondary else MaterialTheme.colors.background)

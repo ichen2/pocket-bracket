@@ -64,6 +64,8 @@ fun TimelineHeader(
         )
     }
 
+    val textColor = if(isSystemInDarkTheme()) MaterialTheme.colors.onSurface else MaterialTheme.colors.onPrimary
+
     Column(Modifier.padding(vertical = 16.dp)) {
         TextField(
             enabled = clickable,
@@ -76,7 +78,7 @@ fun TimelineHeader(
             placeholder = {
                 Text(
                     "Tournament Name",
-                    color = MaterialTheme.colors.onSurface.copy(alpha = .5f)
+                    color =  textColor.copy(alpha = .5f)
                 )
             },
             modifier = Modifier
@@ -84,8 +86,8 @@ fun TimelineHeader(
                 .clip(MaterialTheme.shapes.small)
                 .padding(horizontal = 16.dp),
             colors = TextFieldDefaults.textFieldColors(
-                textColor = MaterialTheme.colors.onSurface,
-                cursorColor = MaterialTheme.colors.onSurface,
+                textColor = textColor,
+                cursorColor = textColor,
                 focusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
                 errorIndicatorColor = Color.Transparent,
