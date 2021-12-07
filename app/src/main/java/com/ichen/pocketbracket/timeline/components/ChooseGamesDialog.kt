@@ -72,14 +72,13 @@ fun ChooseGamesDialog(
         }
         videogamesList.forEachIndexed { index, videogame ->
             val toggleCheckbox = { checkedGames[index].value = !checkedGames[index].value }
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable { toggleCheckbox() }) {
                 Checkbox(
                     checkedGames[index].value,
                     onCheckedChange = { toggleCheckbox() })
                 Spacer(Modifier.width(16.dp))
                 Text(
                     text = videogame.displayName,
-                    modifier = Modifier.clickable { toggleCheckbox() },
                     color = MaterialTheme.colors.onSurface,
                     style = MaterialTheme.typography.h4
                 )

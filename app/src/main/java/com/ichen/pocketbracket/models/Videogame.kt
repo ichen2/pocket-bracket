@@ -14,6 +14,7 @@ enum class VideogameName {
     GG_STRIVE,
     VALORANT,
     CS_GO,
+    LEAGUE_OF_LEGENDS,
 }
 
 data class Videogame(val name: VideogameName, val id: Int, val displayName: String)
@@ -29,6 +30,7 @@ val videogamesList = listOf(
     Videogame(VideogameName.GG_STRIVE, 33945, "Guilty Gear Strive"),
     Videogame(VideogameName.VALORANT, 34223, "Valorant"),
     Videogame(VideogameName.CS_GO, 12, "CS:GO"),
+    Videogame(VideogameName.LEAGUE_OF_LEGENDS, 10, "League of Legends"),
     Videogame(VideogameName.SMASH_P_PLUS, 33602, "Project+"),
 )
 val videogamesMap : Map<Int, Videogame> = videogamesList.associateBy { videogame -> (videogame.id)}
