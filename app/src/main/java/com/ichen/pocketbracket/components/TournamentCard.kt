@@ -1,33 +1,24 @@
 package com.ichen.pocketbracket.timeline.components
 
-import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import coil.size.OriginalSize
 import coil.size.Scale
@@ -36,7 +27,7 @@ import com.ichen.pocketbracket.components.ShimmerAnimation
 import com.ichen.pocketbracket.models.Event
 import com.ichen.pocketbracket.models.Tournament
 import com.ichen.pocketbracket.models.testTournament
-import com.ichen.pocketbracket.ui.theme.*
+import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
 import com.ichen.pocketbracket.utils.combineDates
 import java.text.SimpleDateFormat
 import java.util.*
@@ -65,23 +56,16 @@ fun TournamentCard(tournament: Tournament, clickable: Boolean, onClick: (String)
                     contentScale = ContentScale.FillWidth,
                 )
             } else {
-                Column(
-                    Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .background(MaterialTheme.colors.secondaryVariant),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Warning,
-                        contentDescription = "image unavailable",
-                        modifier = Modifier.size(100.dp),
-                        tint = Color.Black
-                    )
-                    Spacer(Modifier.height(16.dp))
-                    Text("Image unavailable", color = Color.Black)
-                }
+                Image(
+                    painter = rememberImagePainter(data = R.drawable.image_unavailable, builder = {
+                        size(OriginalSize)
+                        scale(Scale.FILL)
+                    }),
+                    contentDescription = "image unavailable",
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    contentScale = ContentScale.FillWidth
+                )
             }
             Text(
                 tournament.state.toString(),
