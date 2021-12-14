@@ -68,9 +68,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             startActivity(Intent(this, AuthActivity::class.java))
         }
-        if (apiKey != null) {
-            saveApiKeyToStorage()
-        }
+        saveApiKeyToStorage()
         setContent {
             PocketBracketTheme {
                 if (userIsAuthenticated) {
@@ -104,6 +102,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        saveApiKeyToStorage()
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (apiKey != null) outState.putString(API_KEY_STORAGE_KEY, apiKey)
@@ -120,6 +123,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun saveApiKeyToStorage() {
+        println("Saving api key to storage!!!")
         if (apiKey != null) {
             getSharedPreferences(
                 SHARED_PREFERENCES_KEY,
