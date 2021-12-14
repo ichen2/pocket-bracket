@@ -45,7 +45,6 @@ class AuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PocketBracketTheme {
-                val context = LocalContext.current
                 var showWebView by remember { mutableStateOf(false) }
                 if (!showWebView) {
                     AuthScreen(showWebView = {
