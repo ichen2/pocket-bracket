@@ -64,7 +64,8 @@ fun TimelineHeader(
         )
     }
 
-    val textColor = if(isSystemInDarkTheme()) MaterialTheme.colors.onSurface else MaterialTheme.colors.onPrimary
+    val textColor =
+        if (isSystemInDarkTheme()) MaterialTheme.colors.onSurface else MaterialTheme.colors.onPrimary
 
     Column(Modifier.padding(vertical = 16.dp)) {
         TextField(
@@ -78,7 +79,7 @@ fun TimelineHeader(
             placeholder = {
                 Text(
                     "Tournament Name",
-                    color =  textColor.copy(alpha = .5f)
+                    color = textColor.copy(alpha = .5f)
                 )
             },
             modifier = Modifier
@@ -118,14 +119,19 @@ fun TimelineHeader(
                 tournamentLocationRadius.value != null,
                 clickable
             ) {
-                setDialogComposable {
-                    LocationPicker(
-                        onNegativeButtonClick = { setDialogComposable(null) },
-                        onPositiveButtonClick = { locationRadius ->
-                            tournamentLocationRadius.value = locationRadius
-                            setDialogComposable(null)
-                            getTournaments()
-                        })
+                if (tournamentLocationRadius.value == null) {
+                    setDialogComposable {
+                        LocationPicker(
+                            onNegativeButtonClick = { setDialogComposable(null) },
+                            onPositiveButtonClick = { locationRadius ->
+                                tournamentLocationRadius.value = locationRadius
+                                setDialogComposable(null)
+                                getTournaments()
+                            })
+                    }
+                } else {
+                    tournamentLocationRadius.value = null
+                    getTournaments()
                 }
             }
             FilterPill(
@@ -133,11 +139,16 @@ fun TimelineHeader(
                 tournamentDateRange.value != null,
                 clickable
             ) {
-                initializeDateRangePickerListeners(
-                    tournamentDateRange,
-                    { getTournaments() },
-                    { getTournaments() })
-                showDateRangePicker(context)
+                if (tournamentDateRange.value == null) {
+                    initializeDateRangePickerListeners(
+                        tournamentDateRange,
+                        { getTournaments() },
+                        { getTournaments() })
+                    showDateRangePicker(context)
+                } else {
+                    tournamentDateRange.value = null
+                    getTournaments()
+                }
             }
             FilterPill(
                 tournamentType.value.toString(),
