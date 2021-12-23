@@ -108,7 +108,7 @@ class TournamentsTimelineViewModel : ViewModel() {
                                 )
                             ) videogamesMap[event.videogame.id.toInt()] else null
                         )
-                    }
+                    }?.toMutableList()
                 )
             }
         }

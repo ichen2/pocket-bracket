@@ -25,7 +25,7 @@ data class Tournament(
     val numAttendees: Int? = null,
     val state: ActivityState? = null,
     val imageUrl: String? = null,
-    val events: List<Event>? = null,
+    val events: MutableList<Event>? = null,
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
@@ -39,15 +39,20 @@ data class Tournament(
         parcel.readString(),
         parcel.readString().toString(),
         parcel.readString().toString(),
-        null, // TODO: startAt
-        null, // TODO: endAt
+        Date(parcel.readLong()), // TODO: startAt
+        Date(parcel.readLong()), // TODO: endAt
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
         parcel.readValue(Int::class.java.classLoader) as? Int,
-        null, // TODO: state
+        ActivityState.valueOf(parcel.readString() ?: "INVALID"), // TODO: state
         parcel.readString(),
-        listOf() // TODO: events
+        mutableListOf()
     ) {
+        val listOfEvents = listOf<Event>()
+        parcel.readList(listOfEvents, Event::class.java.classLoader)
+        listOfEvents.forEach { event ->
+            events?.add(event)
+        }
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -62,10 +67,14 @@ data class Tournament(
         parcel.writeString(venueName)
         parcel.writeString(name)
         parcel.writeString(url)
+        parcel.writeLong(startAt?.time ?: -1)
+        parcel.writeLong(endAt?.time ?: -1)
         parcel.writeValue(isOnline)
         parcel.writeValue(isRegistrationOpen)
         parcel.writeValue(numAttendees)
+        parcel.writeString(state?.name)
         parcel.writeString(imageUrl)
+        parcel.writeList(events)
     }
 
     override fun describeContents(): Int {
@@ -112,5 +121,5 @@ val testTournament: Tournament = Tournament(
     numAttendees = 1,
     state = ActivityState.ACTIVE,
     imageUrl = "https://smashgg-images.s3.amazonaws.com/images/tournament/1035/image-10e39229043ff962dd367a516b0bc090.png",
-    events = listOf(testEvent, testEvent),
+    events = mutableListOf(testEvent, testEvent),
 )

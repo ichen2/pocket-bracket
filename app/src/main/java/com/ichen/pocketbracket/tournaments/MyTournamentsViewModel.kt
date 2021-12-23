@@ -82,7 +82,7 @@ class MyTournamentsViewModel : ViewModel() {
                     else -> null
                 },
                 imageUrl = tournament.images?.getOrNull(0)?.url,
-                events = listOf(
+                events = mutableListOf(
                     Event(
                         id = event.id!!,
                         name = event.name!!,
