@@ -91,7 +91,8 @@ class TournamentsTimelineViewModel : ViewModel() {
                         3 -> ActivityState.COMPLETED
                         else -> null
                     },
-                    imageUrl = node.images?.getOrNull(0)?.url,
+                    primaryImageUrl = node.images?.getOrNull(0)?.url,
+                    secondaryImageUrl = node.images?.getOrNull(1)?.url,
                     events = node.events?.filter { event ->
                         event?.id != null
                         event?.name != null

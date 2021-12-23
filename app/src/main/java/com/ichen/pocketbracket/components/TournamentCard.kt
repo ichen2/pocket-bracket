@@ -44,9 +44,9 @@ fun TournamentCard(tournament: Tournament, clickable: Boolean, onClick: (String)
 
     Column(Modifier.clickable(enabled = clickable) { onClick(tournament.url) }) {
         Box(Modifier.fillMaxWidth()) {
-            if (tournament.imageUrl != null) {
+            if (tournament.primaryImageUrl != null) {
                 Image(
-                    painter = rememberImagePainter(data = tournament.imageUrl, builder = {
+                    painter = rememberImagePainter(data = tournament.primaryImageUrl, builder = {
                         size(OriginalSize)
                         scale(Scale.FILL)
                         placeholder(R.drawable.image_unavailable)

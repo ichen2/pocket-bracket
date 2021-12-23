@@ -24,9 +24,11 @@ data class Tournament(
     val isRegistrationOpen: Boolean? = null,
     val numAttendees: Int? = null,
     val state: ActivityState? = null,
-    val imageUrl: String? = null,
+    val primaryImageUrl: String? = null,
+    val secondaryImageUrl: String? = null,
     val events: MutableList<Event>? = null,
 ) : Parcelable {
+    // TODO: write unit tests!!
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
         parcel.readString(),
@@ -46,9 +48,10 @@ data class Tournament(
         parcel.readValue(Int::class.java.classLoader) as? Int,
         ActivityState.valueOf(parcel.readString() ?: "INVALID"),
         parcel.readString(),
+        parcel.readString(),
         mutableListOf()
     ) {
-        val listOfEvents = listOf<Event>()
+        val listOfEvents = mutableListOf<Event>()
         parcel.readList(listOfEvents, Event::class.java.classLoader)
         events?.addAll(listOfEvents)
     }
@@ -71,7 +74,8 @@ data class Tournament(
         parcel.writeValue(isRegistrationOpen)
         parcel.writeValue(numAttendees)
         parcel.writeString(state?.name)
-        parcel.writeString(imageUrl)
+        parcel.writeString(primaryImageUrl)
+        parcel.writeString(secondaryImageUrl)
         parcel.writeList(events)
     }
 
@@ -118,6 +122,6 @@ val testTournament: Tournament = Tournament(
     name = "Test tournament",
     numAttendees = 1,
     state = ActivityState.ACTIVE,
-    imageUrl = "https://smashgg-images.s3.amazonaws.com/images/tournament/1035/image-10e39229043ff962dd367a516b0bc090.png",
+    primaryImageUrl = "https://smashgg-images.s3.amazonaws.com/images/tournament/1035/image-10e39229043ff962dd367a516b0bc090.png",
     events = mutableListOf(testEvent, testEvent),
 )

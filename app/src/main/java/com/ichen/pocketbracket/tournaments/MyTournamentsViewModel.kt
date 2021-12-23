@@ -81,7 +81,8 @@ class MyTournamentsViewModel : ViewModel() {
                     3 -> ActivityState.COMPLETED
                     else -> null
                 },
-                imageUrl = tournament.images?.getOrNull(0)?.url,
+                primaryImageUrl = tournament.images?.getOrNull(0)?.url,
+                secondaryImageUrl = tournament.images?.getOrNull(1)?.url,
                 events = mutableListOf(
                     Event(
                         id = event.id!!,
