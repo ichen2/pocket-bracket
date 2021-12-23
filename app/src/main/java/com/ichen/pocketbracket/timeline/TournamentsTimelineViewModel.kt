@@ -31,7 +31,7 @@ class TournamentsTimelineViewModel : ViewModel() {
         tournaments.value = Field(listOf(), Status.LOADING)
         viewModelScope.launch {
             repository.getTournaments(filter, context) { response ->
-                val parsedResponse = parseResponse(response)
+                val parsedResponse = parseGetTournamentsResponse(response)
                 //val sortedTournaments = if(parsedResponse == null) null else sortTournaments(parsedResponse, filter)
                 tournaments.value = Field(
                     parsedResponse ?: listOf(),
@@ -48,7 +48,7 @@ class TournamentsTimelineViewModel : ViewModel() {
             tournaments.value = tournaments.value.withStatus(Status.LOADING)
             viewModelScope.launch {
                 repository.getTournaments(filter, context) { response ->
-                    val parsedResponse = parseResponse(response)
+                    val parsedResponse = parseGetTournamentsResponse(response)
                     //val sortedTournaments = if(parsedResponse == null) null else sortTournaments(parsedResponse, filter)
                     tournaments.value = Field(
                         tournaments.value.data + (parsedResponse ?: listOf()),
@@ -66,7 +66,7 @@ class TournamentsTimelineViewModel : ViewModel() {
         }
     }
 
-    private fun parseResponse(response: Response<GetTournamentsQuery.Data>?): List<Tournament>? {
+    private fun parseGetTournamentsResponse(response: Response<GetTournamentsQuery.Data>?): List<Tournament>? {
         val nodes = response?.data?.tournaments?.nodes
         if (nodes == null || nodes.isEmpty()) {
             return listOf()

@@ -31,7 +31,7 @@ class MyTournamentsViewModel : ViewModel() {
         tournaments.value = Field(listOf(), Status.LOADING)
         viewModelScope.launch {
             repository.getUserEvents(page, EVENTS_PER_PAGE, context) { response ->
-                val parsedResponse = parseResponse(response)
+                val parsedResponse = parseGetUserEventsResponse(response)
                 tournaments.value = Field(
                     parsedResponse ?: listOf(),
                     if (parsedResponse == null) Status.ERROR else Status.SUCCESS
@@ -47,7 +47,7 @@ class MyTournamentsViewModel : ViewModel() {
             tournaments.value = tournaments.value.withStatus(Status.LOADING)
             viewModelScope.launch {
                 repository.getUserEvents(page, EVENTS_PER_PAGE, context) { response ->
-                    val parsedResponse = parseResponse(response)
+                    val parsedResponse = parseGetUserEventsResponse(response)
                     tournaments.value = Field(
                         tournaments.value.data + (parsedResponse ?: listOf()),
                         if (parsedResponse == null) Status.ERROR else Status.SUCCESS
@@ -58,7 +58,7 @@ class MyTournamentsViewModel : ViewModel() {
         }
     }
 
-    private fun parseResponse(response: com.apollographql.apollo.api.Response<GetUserEventsQuery.Data>?): List<Tournament>? {
+    private fun parseGetUserEventsResponse(response: com.apollographql.apollo.api.Response<GetUserEventsQuery.Data>?): List<Tournament>? {
         val nodes = response?.data?.currentUser?.events?.nodes ?: return null
         return nodes.filter { event ->
             event?.tournament?.id != null
