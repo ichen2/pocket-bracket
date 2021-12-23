@@ -1,5 +1,7 @@
 package com.ichen.pocketbracket.models
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.google.android.gms.maps.model.LatLng
 import com.ichen.pocketbracket.utils.SECONDS_IN_DAY
 import java.util.*
@@ -24,7 +26,62 @@ data class Tournament(
     val state: ActivityState? = null,
     val imageUrl: String? = null,
     val events: List<Event>? = null,
-)
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readInt(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readParcelable(LatLng::class.java.classLoader),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        null, // TODO: startAt
+        null, // TODO: endAt
+        parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
+        parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
+        parcel.readValue(Int::class.java.classLoader) as? Int,
+        null, // TODO: state
+        parcel.readString(),
+        listOf() // TODO: events
+    ) {
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(id)
+        parcel.writeString(addrState)
+        parcel.writeString(city)
+        parcel.writeString(countryCode)
+        parcel.writeParcelable(location, flags)
+        parcel.writeString(primaryContact)
+        parcel.writeString(slug)
+        parcel.writeString(venueAddress)
+        parcel.writeString(venueName)
+        parcel.writeString(name)
+        parcel.writeString(url)
+        parcel.writeValue(isOnline)
+        parcel.writeValue(isRegistrationOpen)
+        parcel.writeValue(numAttendees)
+        parcel.writeString(imageUrl)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Tournament> {
+        override fun createFromParcel(parcel: Parcel): Tournament {
+            return Tournament(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Tournament?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
 
 fun Tournament.getRating(filter: TournamentFilter): Float {
     var rating: Float = 0f

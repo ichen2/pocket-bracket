@@ -1,5 +1,7 @@
 package com.ichen.pocketbracket.tournaments
 
+import android.content.Intent
+import android.os.Parcelable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -17,14 +19,13 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.core.content.ContextCompat.startActivity
 import com.ichen.pocketbracket.components.WebView
+import com.ichen.pocketbracket.details.TournamentDetailsActivity
 import com.ichen.pocketbracket.timeline.TournamentsListLoading
 import com.ichen.pocketbracket.timeline.TournamentsTimelineViewModel
 import com.ichen.pocketbracket.timeline.components.TournamentCard
-import com.ichen.pocketbracket.utils.SetComposableFunction
-import com.ichen.pocketbracket.utils.Status
-import com.ichen.pocketbracket.utils.Z_INDEX_BOT
-import com.ichen.pocketbracket.utils.Z_INDEX_TOP
+import com.ichen.pocketbracket.utils.*
 
 @Composable
 fun ColumnScope.MyTournamentsScreen(
@@ -73,11 +74,14 @@ fun ColumnScope.MyTournamentsScreen(
                         viewModel.getMoreEvents(context)
                     }
                     TournamentCard(tournament, true) { url ->
+                        openTournamentDetailsScreen(context, tournament)
+                        /*
                         setDialogComposable {
                             WebView(url) {
                                 setDialogComposable(null)
                             }
                         }
+                        */
                     }
                 }
                 if (viewModel.tournaments.value.status == Status.LOADING) {

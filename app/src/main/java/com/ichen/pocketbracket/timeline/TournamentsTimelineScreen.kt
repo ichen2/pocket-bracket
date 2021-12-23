@@ -26,6 +26,7 @@ import com.ichen.pocketbracket.timeline.components.TournamentCardLoading
 import com.ichen.pocketbracket.utils.SECONDS_IN_DAY
 import com.ichen.pocketbracket.utils.SetComposableFunction
 import com.ichen.pocketbracket.utils.Status
+import com.ichen.pocketbracket.utils.openTournamentDetailsScreen
 import java.lang.Integer.max
 import java.util.*
 
@@ -126,11 +127,14 @@ fun ColumnScope.TournamentsTimelineScreen(
                         context
                     )
                     TournamentCard(tournament, clickable) { url ->
+                        openTournamentDetailsScreen(context, tournament)
+                        /*
                         setDialogComposable {
                             WebView(url) {
                                 setDialogComposable(null)
                             }
                         }
+                        */
                     }
                 }
                 if (viewModel.tournaments.value.status == Status.LOADING) {

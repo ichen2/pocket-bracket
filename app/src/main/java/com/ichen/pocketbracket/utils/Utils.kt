@@ -1,13 +1,16 @@
 package com.ichen.pocketbracket.utils
 
 import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.toArgb
+import androidx.core.content.ContextCompat
 import com.apollographql.apollo.api.Response
 import com.google.android.gms.maps.model.LatLng
 import com.ichen.pocketbracket.BuildConfig
 import com.ichen.pocketbracket.GetTournamentsQuery
+import com.ichen.pocketbracket.details.TournamentDetailsActivity
 import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.timeline.components.RADIUS_MAX
 import com.ichen.pocketbracket.timeline.components.RADIUS_MIN
@@ -19,6 +22,12 @@ import kotlin.math.roundToInt
 
 const val METERS_IN_MILE = 1609.34
 const val SECONDS_IN_DAY = 86400
+
+fun openTournamentDetailsScreen(context: Context, tournament: Tournament) {
+    val intent = Intent(context, TournamentDetailsActivity::class.java)
+    intent.putExtra("tournament", tournament)
+    ContextCompat.startActivity(context, intent, null)
+}
 
 fun LocationRadius.getCenterAsString() : String {
     return "(${center.latitude.roundToInt()}\u00B0, ${center.longitude.roundToInt()}\u00B0)"

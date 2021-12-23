@@ -16,7 +16,9 @@
         android:theme="@style/Theme.PocketBracket">
         <activity
             android:name=".details.TournamentDetailsActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.PocketBracket.NoActionBar"/>
         <activity
             android:name=".auth.AuthActivity"
             android:exported="true"
