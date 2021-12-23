@@ -19,8 +19,7 @@ data class Event(
         parcel.readValue(Int::class.java.classLoader) as? Int,
         Date(parcel.readLong()),
         videogamesMap.getOrDefault(parcel.readInt(), videogamesMap[1])
-    ) {
-    }
+    )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(id)

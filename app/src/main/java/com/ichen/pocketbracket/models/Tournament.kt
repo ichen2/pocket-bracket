@@ -39,20 +39,18 @@ data class Tournament(
         parcel.readString(),
         parcel.readString().toString(),
         parcel.readString().toString(),
-        Date(parcel.readLong()), // TODO: startAt
-        Date(parcel.readLong()), // TODO: endAt
+        Date(parcel.readLong()),
+        Date(parcel.readLong()),
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
         parcel.readValue(Int::class.java.classLoader) as? Int,
-        ActivityState.valueOf(parcel.readString() ?: "INVALID"), // TODO: state
+        ActivityState.valueOf(parcel.readString() ?: "INVALID"),
         parcel.readString(),
         mutableListOf()
     ) {
         val listOfEvents = listOf<Event>()
         parcel.readList(listOfEvents, Event::class.java.classLoader)
-        listOfEvents.forEach { event ->
-            events?.add(event)
-        }
+        events?.addAll(listOfEvents)
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -93,7 +91,7 @@ data class Tournament(
 }
 
 fun Tournament.getRating(filter: TournamentFilter): Float {
-    var rating: Float = 0f
+    var rating = 0f
     if (numAttendees != null) rating += numAttendees / 500
     if (startAt != null && filter.dates?.start?.time != null) {
         val dateRangeInDays = (filter.dates.end.time - filter.dates.start.time) / SECONDS_IN_DAY
