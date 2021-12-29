@@ -12,6 +12,7 @@ import com.ichen.pocketbracket.utils.Field
 import com.ichen.pocketbracket.utils.SITE_ENDPOINT
 import com.ichen.pocketbracket.utils.Status
 import com.ichen.pocketbracket.utils.convertBigDecimalToDate
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class TournamentsTimelineViewModel : ViewModel() {
@@ -19,6 +20,7 @@ class TournamentsTimelineViewModel : ViewModel() {
     private val repository = TournamentsTimelineRepository()
     private var hasMoreTournaments = true
     private var filter = TournamentFilter()
+    private var currentJob: Job? = null
     val tournaments: MutableState<Field<List<Tournament>>> = mutableStateOf(
         Field(
             listOf(),
@@ -27,9 +29,10 @@ class TournamentsTimelineViewModel : ViewModel() {
     )
 
     fun getTournaments(filter: TournamentFilter = TournamentFilter(), context: Context) {
+        currentJob?.cancel()
         this.filter = filter
         tournaments.value = Field(listOf(), Status.LOADING)
-        viewModelScope.launch {
+        currentJob = viewModelScope.launch {
             repository.getTournaments(filter, context) { response ->
                 val parsedResponse = parseGetTournamentsResponse(response)
                 //val sortedTournaments = if(parsedResponse == null) null else sortTournaments(parsedResponse, filter)
@@ -43,10 +46,11 @@ class TournamentsTimelineViewModel : ViewModel() {
     }
 
     fun getMoreTournaments(context: Context) {
+        currentJob?.cancel()
         if(hasMoreTournaments) {
             this.filter.page++
             tournaments.value = tournaments.value.withStatus(Status.LOADING)
-            viewModelScope.launch {
+            currentJob = viewModelScope.launch {
                 repository.getTournaments(filter, context) { response ->
                     val parsedResponse = parseGetTournamentsResponse(response)
                     //val sortedTournaments = if(parsedResponse == null) null else sortTournaments(parsedResponse, filter)
@@ -109,7 +113,13 @@ class TournamentsTimelineViewModel : ViewModel() {
                                 )
                             ) videogamesMap[event.videogame.id.toInt()] else null
                         )
-                    }?.toMutableList()
+                    }?.toMutableList(),
+                    addrState = node.addrState,
+                    countryCode = node.countryCode,
+                    // TODO: location
+                    primaryContact = node.primaryContact,
+                    venueAddress = node.venueAddress,
+                    venueName = node.venueName
                 )
             }
         }

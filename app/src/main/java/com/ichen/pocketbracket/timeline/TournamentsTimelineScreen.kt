@@ -128,13 +128,6 @@ fun ColumnScope.TournamentsTimelineScreen(
                     )
                     TournamentCard(tournament, clickable) { url ->
                         openTournamentDetailsScreen(context, tournament)
-                        /*
-                        setDialogComposable {
-                            WebView(url) {
-                                setDialogComposable(null)
-                            }
-                        }
-                        */
                     }
                 }
                 if (viewModel.tournaments.value.status == Status.LOADING) {

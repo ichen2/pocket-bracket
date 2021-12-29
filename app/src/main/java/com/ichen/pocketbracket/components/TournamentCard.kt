@@ -44,6 +44,14 @@ fun TournamentCard(tournament: Tournament, clickable: Boolean, onClick: (String)
 
     Column(Modifier.clickable(enabled = clickable) { onClick(tournament.url) }) {
         Box(Modifier.fillMaxWidth()) {
+            if(tournament.secondaryImageUrl != null) {
+                // this is kinda jank but it seems to cache the banner image so that it loads faster in the details screen
+                Image(
+                    painter = rememberImagePainter(data = tournament.secondaryImageUrl),
+                    contentDescription = "banner image",
+                    modifier = Modifier.size(0.dp),
+                )
+            }
             if (tournament.primaryImageUrl != null) {
                 Image(
                     painter = rememberImagePainter(data = tournament.primaryImageUrl, builder = {

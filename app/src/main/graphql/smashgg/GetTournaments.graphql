@@ -48,6 +48,13 @@ query GetTournaments(
                     displayName
                 }
             }
+            addrState
+            countryCode
+            lat
+            lng
+            primaryContact
+            venueAddress
+            venueName
         }
     }
 }

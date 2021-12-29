@@ -72,7 +72,6 @@ class MainActivity : AppCompatActivity() {
         setContent {
             PocketBracketTheme {
                 if (userIsAuthenticated) {
-
                     Box {
                         Column(Modifier.background(MaterialTheme.colors.background)) {
                             when (currentTab.value) {
