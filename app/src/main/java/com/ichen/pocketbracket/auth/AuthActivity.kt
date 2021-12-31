@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsWithImePadding
-import com.ichen.pocketbracket.MainActivity
+import com.ichen.pocketbracket.HomeActivity
 import com.ichen.pocketbracket.components.WebView
 import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
 import com.ichen.pocketbracket.ui.theme.medGrey

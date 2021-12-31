@@ -11,7 +11,7 @@ import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.coroutines.toDeferred
 import com.apollographql.apollo.exception.ApolloException
 import com.ichen.pocketbracket.GetUserDetailsQuery
-import com.ichen.pocketbracket.MainActivity
+import com.ichen.pocketbracket.HomeActivity
 import com.ichen.pocketbracket.apiKey
 import com.ichen.pocketbracket.utils.*
 import kotlinx.coroutines.coroutineScope
@@ -47,7 +47,7 @@ class AuthViewModel : ViewModel() {
                     null
                 }
                 if (response != null) {
-                    context.startActivity(Intent(context, MainActivity::class.java).apply {
+                    context.startActivity(Intent(context, HomeActivity::class.java).apply {
                         putExtra(API_KEY_STORAGE_KEY, apiKeyText.value.data)
                         addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                     })

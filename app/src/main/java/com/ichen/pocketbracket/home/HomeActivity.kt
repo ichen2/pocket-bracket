@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.ichen.pocketbracket.auth.AuthActivity
+import com.ichen.pocketbracket.home.components.NavigationFooter
 import com.ichen.pocketbracket.profile.MyProfileScreen
 import com.ichen.pocketbracket.timeline.TournamentsTimelineScreen
 import com.ichen.pocketbracket.tournaments.MyTournamentsScreen
@@ -41,7 +42,7 @@ enum class CurrentTab {
 
 var apiKey: String? = null
 
-class MainActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
     val currentTab = mutableStateOf(CurrentTab.TournamentsTimeline)
     val dialogComposable: MutableState<(@Composable BoxScope.() -> Unit)?> =
         mutableStateOf(null)
@@ -136,66 +137,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
-
-@Composable
-fun NavigationFooter(currentTab: MutableState<CurrentTab>, clickable: Boolean = true) =
-    Column(Modifier.shadow(20.dp)) {
-        Row(
-            Modifier
-                .background(MaterialTheme.colors.surface)
-                .fillMaxWidth()
-        ) {
-            Box(
-                Modifier
-                    .weight(1f)
-                    .clickable(enabled = clickable) {
-                        currentTab.value = CurrentTab.TournamentsTimeline
-                    }, contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    Icons.Filled.Search,
-                    contentDescription = "search",
-                    tint = MaterialTheme.colors.primary,
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .size(32.dp)
-                )
-            }
-            Box(
-                Modifier
-                    .weight(1f)
-                    .clickable(enabled = clickable) {
-                        currentTab.value = CurrentTab.MyTournaments
-                    }, contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    Icons.Filled.EmojiEvents,
-                    contentDescription = "search",
-                    tint = MaterialTheme.colors.primary,
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .size(32.dp)
-                )
-            }
-            Box(
-                Modifier
-                    .weight(1f)
-                    .clickable(enabled = clickable) {
-                        currentTab.value = CurrentTab.MyProfile
-                    }, contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    Icons.Filled.Person,
-                    contentDescription = "profile",
-                    tint = MaterialTheme.colors.primary,
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .size(32.dp)
-                )
-            }
-        }
-
-    }
 
 @ExperimentalPermissionsApi
 @Composable
