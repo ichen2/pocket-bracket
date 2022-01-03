@@ -28,6 +28,7 @@ class TournamentsTimelineViewModel : ViewModel() {
         )
     )
 
+    // TODO: why are these two seperate functions?? they do the same thing
     fun getTournaments(filter: TournamentFilter = TournamentFilter(), context: Context) {
         currentJob?.cancel()
         this.filter = filter
@@ -40,7 +41,7 @@ class TournamentsTimelineViewModel : ViewModel() {
                     parsedResponse ?: listOf(),
                     if (parsedResponse == null) Status.ERROR else Status.SUCCESS
                 )
-                hasMoreTournaments = parsedResponse?.size ?: 0 > 0
+                hasMoreTournaments = parsedResponse?.size ?: 0 > 0 // this could probably be simplified to hasMoreTournaments = parsedResponse.size == filter.perPage ??
             }
         }
     }
@@ -126,8 +127,6 @@ class TournamentsTimelineViewModel : ViewModel() {
     }
 
     fun cleanup() {
-        repository.jobs.forEach { pair ->
-            pair.value?.cancel()
-        }
+        currentJob?.cancel()
     }
 }

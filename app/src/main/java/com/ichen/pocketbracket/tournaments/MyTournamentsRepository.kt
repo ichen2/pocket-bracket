@@ -20,7 +20,7 @@ enum class MyTournamentsJobs {
 
 class MyTournamentsRepository {
 
-    val jobs : MutableMap<MyTournamentsJobs, Job?> = mutableMapOf(MyTournamentsJobs.GET_EVENTS to null)
+    var currentJob: Job? = null
 
     suspend fun getUserEvents(
         page: Int,
@@ -37,7 +37,7 @@ class MyTournamentsRepository {
             )
             .build()
         coroutineScope {
-            jobs[MyTournamentsJobs.GET_EVENTS] = launch {
+            currentJob = launch {
                 val response = try {
                     withTimeoutOrNull(15000) {
                         apolloClient.query(

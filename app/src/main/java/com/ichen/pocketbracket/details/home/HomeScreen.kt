@@ -14,8 +14,8 @@ import com.ichen.pocketbracket.details.components.Header
 import com.ichen.pocketbracket.models.Tournament
 
 @Composable
-fun LazyItemScope.HomeScreen(tournament: Tournament, currentTab: MutableState<CurrentTab>) {
+fun LazyItemScope.HomeScreen() {
     Column {
-        Banner(tournament)
+        Banner(tournament!!)
     }
 }

@@ -1,0 +1,20 @@
+query GetParticipants(
+    $id: ID!
+) {
+    tournament(id:$id) {
+        participants(query:{}) {
+            nodes {
+                id
+                connectedAccounts
+                images {
+                    url
+                }
+                prefix
+                events {
+                    name
+                }
+                gamerTag
+            }
+        }
+    }
+}

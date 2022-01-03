@@ -1,5 +1,6 @@
 package com.ichen.pocketbracket.details
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,8 @@ import com.ichen.pocketbracket.details.components.Header
 import com.ichen.pocketbracket.details.components.Sidebar
 import com.ichen.pocketbracket.models.Tournament
 import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
+import com.ichen.pocketbracket.utils.API_KEY_STORAGE_KEY
+import com.ichen.pocketbracket.utils.SHARED_PREFERENCES_KEY
 
 enum class CurrentTab {
     Home,
@@ -26,39 +29,46 @@ enum class CurrentTab {
     Events,
 }
 
+var apiKey: String? = null
+var tournament: Tournament? = null
+
 class TournamentDetailsActivity : AppCompatActivity() {
     private var showSidebar by mutableStateOf(false)
     private var currentTab = mutableStateOf(CurrentTab.Home)
     @ExperimentalFoundationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val tournament = intent.getParcelableExtra<Tournament>("tournament")
+        tournament = intent.getParcelableExtra("tournament")
+        apiKey = this.getSharedPreferences(
+            SHARED_PREFERENCES_KEY,
+            Context.MODE_PRIVATE
+        ).getString(API_KEY_STORAGE_KEY, null)
         setContent {
             PocketBracketTheme {
-                if (tournament != null) {
+                if (tournament != null && apiKey != null) {
                     Box(
                         Modifier
                             .background(MaterialTheme.colors.background)
                             .fillMaxSize()
                     ) {
                         LazyColumn {
-                            stickyHeader { Header(tournament, !showSidebar) { showSidebar = !showSidebar } }
+                            stickyHeader { Header(tournament!!, !showSidebar) { showSidebar = !showSidebar } }
                             item {
                                 when (currentTab.value) {
                                     CurrentTab.Home -> {
-                                        HomeScreen(tournament = tournament, currentTab = currentTab)
+                                        HomeScreen()
                                     }
                                     CurrentTab.Attendees -> {
-                                        AttendeesScreen(tournament = tournament)
+                                        AttendeesScreen()
                                     }
                                     CurrentTab.Events -> {
-                                        EventsScreen(tournament = tournament)
+                                        EventsScreen()
                                     }
                                 }
                             }
                         }
                         if (showSidebar) {
-                            Sidebar(tournament, currentTab, { onBackPressed() }) { showSidebar = !showSidebar }
+                            Sidebar(tournament!!, currentTab, { onBackPressed() }) { showSidebar = !showSidebar }
                         }
                     }
                 } else {

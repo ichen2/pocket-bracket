@@ -1,14 +1,12 @@
-package com.ichen.pocketbracket.profile
+package com.ichen.pocketbracket.details.attendees
+
 
 import android.content.Context
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.await
-import com.apollographql.apollo.coroutines.toDeferred
 import com.apollographql.apollo.exception.ApolloException
-import com.ichen.pocketbracket.GetUserDetailsQuery
-import com.ichen.pocketbracket.GetUserEventsQuery
+import com.ichen.pocketbracket.GetParticipantsQuery
+import com.ichen.pocketbracket.GetTournamentsQuery
 import com.ichen.pocketbracket.apiKey
 import com.ichen.pocketbracket.utils.API_ENDPOINT
 import com.ichen.pocketbracket.utils.AuthorizationInterceptor
@@ -18,17 +16,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import okhttp3.OkHttpClient
 
-enum class MyProfileJobs {
-    GET_USER_DETAILS
-}
-
-class MyProfileRepository {
+class AttendeesRepository {
     var currentJob: Job? = null
 
-    suspend fun getUserDetails(
-        context: Context,
-        onResponse: (com.apollographql.apollo.api.Response<GetUserDetailsQuery.Data>?) -> Unit
-    ) {
+    suspend fun getAttendees(tournamentId: String, context: Context, onResponse: (com.apollographql.apollo.api.Response<GetParticipantsQuery.Data>?) -> Unit) {
         val apolloClient = ApolloClient.builder()
             .serverUrl(API_ENDPOINT)
             .okHttpClient(
@@ -42,11 +33,10 @@ class MyProfileRepository {
                 val response = try {
                     withTimeoutOrNull(15000) {
                         apolloClient.query(
-                            GetUserDetailsQuery()
+                            GetParticipantsQuery(id = tournamentId)
                         ).await()
                     }
                 } catch (e: ApolloException) {
-                    // handle protocol errors
                     null
                 }
                 onResponse(response)

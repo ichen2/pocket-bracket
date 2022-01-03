@@ -169,7 +169,7 @@ fun Sidebar(
         Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .background(color = Color.Black.copy(.8f))
+            .background(color = Color.Black.copy(.5f))
             .clickable { toggle() }) {}
 }
 

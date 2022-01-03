@@ -100,8 +100,6 @@ class MyTournamentsViewModel : ViewModel() {
         }
     }
     fun cleanup() {
-        repository.jobs.forEach { pair ->
-            pair.value?.cancel()
-        }
+        repository.currentJob?.cancel()
     }
 }

@@ -34,8 +34,7 @@ enum class TournamentsTimelineJobs {
 
 class TournamentsTimelineRepository {
 
-    val jobs: MutableMap<TournamentsTimelineJobs, Job?> =
-        mutableMapOf(TournamentsTimelineJobs.GET_TOURNAMENTS to null)
+    var currentJob: Job? = null
 
     suspend fun getTournaments(
         filter: TournamentFilter,
@@ -51,7 +50,7 @@ class TournamentsTimelineRepository {
             )
             .build()
         coroutineScope {
-            jobs[TournamentsTimelineJobs.GET_TOURNAMENTS] = launch {
+            currentJob = launch {
                 val response = try {
                     withTimeoutOrNull(15000) {
                         apolloClient.query(
