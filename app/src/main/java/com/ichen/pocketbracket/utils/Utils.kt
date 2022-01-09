@@ -10,6 +10,7 @@ import com.apollographql.apollo.api.Response
 import com.google.android.gms.maps.model.LatLng
 import com.ichen.pocketbracket.BuildConfig
 import com.ichen.pocketbracket.GetTournamentsQuery
+import com.ichen.pocketbracket.browser.BrowserActivity
 import com.ichen.pocketbracket.details.TournamentDetailsActivity
 import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.timeline.components.RADIUS_MAX
@@ -26,6 +27,12 @@ const val SECONDS_IN_DAY = 86400
 fun openTournamentDetailsScreen(context: Context, tournament: Tournament) {
     val intent = Intent(context, TournamentDetailsActivity::class.java)
     intent.putExtra("tournament", tournament)
+    ContextCompat.startActivity(context, intent, null)
+}
+
+fun openBrowser(context: Context, url: String) {
+    val intent = Intent(context, BrowserActivity::class.java)
+    intent.putExtra("url", url)
     ContextCompat.startActivity(context, intent, null)
 }
 
