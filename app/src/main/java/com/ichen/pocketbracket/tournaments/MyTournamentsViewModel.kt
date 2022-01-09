@@ -95,7 +95,8 @@ class MyTournamentsViewModel : ViewModel() {
                             )
                         ) videogamesMap[event.videogame.id.toInt()] else null
                     )
-                )
+                ),
+                slug = tournament.slug
             )
         }
     }

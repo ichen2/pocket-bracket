@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
@@ -23,9 +24,7 @@ import com.ichen.pocketbracket.R
 import com.ichen.pocketbracket.details.CurrentTab
 import com.ichen.pocketbracket.models.DateRange
 import com.ichen.pocketbracket.models.Tournament
-import com.ichen.pocketbracket.utils.Status
-import com.ichen.pocketbracket.utils.mergeAddress
-import com.ichen.pocketbracket.utils.toPrettyString
+import com.ichen.pocketbracket.utils.*
 
 @Composable
 fun Sidebar(
@@ -34,6 +33,7 @@ fun Sidebar(
     goBack: () -> Unit,
     toggle: () -> Unit
 ) = Row(Modifier.fillMaxSize()) {
+    val context = LocalContext.current
     Column(
         Modifier
             .width(64.dp)
@@ -90,8 +90,7 @@ fun Sidebar(
             Button(modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp)
-                .padding(4.dp), onClick = {
-            }) {
+                .padding(4.dp), onClick = { openBrowser(context, "${SITE_ENDPOINT}/${tournament.slug}/register")}) {
                 Text("Register")
             }
             Spacer(Modifier.height(16.dp))
@@ -155,7 +154,7 @@ fun Sidebar(
             Spacer(Modifier.height(16.dp))
             if (tournament.events?.isNotEmpty() == true) {
                 tournament.events.forEach { event ->
-                    Column(Modifier.padding(8.dp)) {
+                    Column(Modifier.fillMaxWidth().clickable{ openBrowser(context, event.url) }.padding(8.dp)) {
                         Text(event.name, color = MaterialTheme.colors.onSurface)
                         if (event.startAt != null) {
                             Text(event.startAt.toPrettyString(), color = MaterialTheme.colors.onSurface)

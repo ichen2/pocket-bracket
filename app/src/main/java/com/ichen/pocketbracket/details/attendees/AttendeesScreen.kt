@@ -20,7 +20,7 @@ import com.ichen.pocketbracket.utils.Status
 import com.ichen.pocketbracket.utils.openTournamentDetailsScreen
 
 @Composable
-fun LazyItemScope.AttendeesScreen(viewModel: AttendeesViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun LazyItemScope.AttendeesScreen(tournamentSlug: String, viewModel: AttendeesViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
     val context = LocalContext.current
     DisposableEffect(key1 = viewModel) { // TODO: make sure this effect is right
         if (viewModel.attendees.value.status != Status.SUCCESS) {
@@ -41,7 +41,7 @@ fun LazyItemScope.AttendeesScreen(viewModel: AttendeesViewModel = androidx.lifec
         }
     } else {
         viewModel.attendees.value.data.forEach { attendee ->
-            AttendeeProfile(attendee)
+            AttendeeProfile(attendee, tournamentSlug)
         }
     }
 }

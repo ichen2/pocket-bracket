@@ -110,7 +110,8 @@ class TournamentsTimelineViewModel : ViewModel() {
                     // TODO: location
                     primaryContact = node.primaryContact,
                     venueAddress = node.venueAddress,
-                    venueName = node.venueName
+                    venueName = node.venueName,
+                    slug = node.slug
                 )
             }
         }
