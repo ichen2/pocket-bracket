@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +16,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.ichen.pocketbracket.details.components.Header
 import com.ichen.pocketbracket.details.components.Sidebar
@@ -51,7 +53,7 @@ class TournamentDetailsActivity : AppCompatActivity() {
                             .background(MaterialTheme.colors.background)
                             .fillMaxSize()
                     ) {
-                        LazyColumn {
+                        LazyColumn(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                             stickyHeader { Header(tournament!!, !showSidebar) { showSidebar = !showSidebar } }
                             item {
                                 when (currentTab.value) {
@@ -62,7 +64,7 @@ class TournamentDetailsActivity : AppCompatActivity() {
                                         AttendeesScreen()
                                     }
                                     CurrentTab.Events -> {
-                                        EventsScreen()
+                                        EventsScreen(tournament?.events)
                                     }
                                 }
                             }
