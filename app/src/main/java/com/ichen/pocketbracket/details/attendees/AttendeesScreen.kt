@@ -11,6 +11,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import com.ichen.pocketbracket.details.attendees.AttendeesViewModel
+import com.ichen.pocketbracket.details.components.AttendeeProfile
 import com.ichen.pocketbracket.models.Tournament
 import com.ichen.pocketbracket.timeline.TournamentsListLoading
 import com.ichen.pocketbracket.timeline.TournamentsTimelineViewModel
@@ -31,16 +32,16 @@ fun LazyItemScope.AttendeesScreen(viewModel: AttendeesViewModel = androidx.lifec
     }
     if (viewModel.attendees.value.data.isEmpty()) {
         if (viewModel.attendees.value.status == Status.ERROR) {
-            Text("Error loading tournaments", color = MaterialTheme.colors.onBackground)
+            Text("Error loading attendees", color = MaterialTheme.colors.onBackground)
         } else if (viewModel.attendees.value.status == Status.SUCCESS) {
-            Text("No tournaments found", color = MaterialTheme.colors.onBackground)
+            Text("No attendees found", color = MaterialTheme.colors.onBackground)
         } else {
             // TODO: Create actual loading indicator
             Text("Loading...", color = MaterialTheme.colors.onBackground)
         }
     } else {
         viewModel.attendees.value.data.forEach { attendee ->
-            Text(attendee.tag, color = MaterialTheme.colors.onBackground)
+            AttendeeProfile(attendee)
         }
     }
 }

@@ -2,16 +2,36 @@ package com.ichen.pocketbracket.models
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.ichen.pocketbracket.GetParticipantsQuery
+import com.ichen.pocketbracket.GetTournamentsQuery
+import com.ichen.pocketbracket.utils.SITE_ENDPOINT
+import com.ichen.pocketbracket.utils.convertBigDecimalToDate
 import java.util.*
 
 data class Event(
     val id: String,
     val name: String,
     val url: String,
-    val numEntrants: Int?,
-    val startAt: Date?,
-    val videogame: Videogame?
+    val numEntrants: Int? = null,
+    val startAt: Date? = null,
+    val videogame: Videogame? = null,
 ) : Parcelable {
+    constructor(event: GetTournamentsQuery.Event) : this(
+        id = event.id!!,
+        name = event.name!!,
+        url = SITE_ENDPOINT + event.slug!!,
+        numEntrants = event.numEntrants,
+        startAt = convertBigDecimalToDate(event.startAt),
+        videogame = if (event.videogame?.id != null && videogamesMap.containsKey(
+                event.videogame.id.toInt()
+            )
+        ) videogamesMap[event.videogame.id.toInt()] else null
+    )
+    constructor(event: GetParticipantsQuery.Event) : this(
+        id = event.id!!,
+        name = event.name!!,
+        url = SITE_ENDPOINT + event.slug!!,
+    )
     constructor(parcel: Parcel) : this(
         parcel.readString().toString(),
         parcel.readString().toString(),

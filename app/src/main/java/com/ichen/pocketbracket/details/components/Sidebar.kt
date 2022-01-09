@@ -42,8 +42,8 @@ fun Sidebar(
             .padding(vertical = 8.dp), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
-            Icons.Filled.Home,
-            contentDescription = "go home",
+            Icons.Filled.ChevronLeft,
+            contentDescription = "go back",
             modifier = Modifier
                 .size(48.dp)
                 .clickable { goBack() },

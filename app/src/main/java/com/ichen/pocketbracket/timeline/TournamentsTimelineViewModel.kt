@@ -98,23 +98,13 @@ class TournamentsTimelineViewModel : ViewModel() {
                     },
                     primaryImageUrl = node.images?.getOrNull(0)?.url,
                     secondaryImageUrl = node.images?.getOrNull(1)?.url,
-                    events = node.events?.filter { event ->
-                        event?.id != null
-                        event?.name != null
-                        event?.slug != null
-                    }?.map { event ->
-                        Event(
-                            id = event!!.id!!,
-                            name = event.name!!,
-                            url = SITE_ENDPOINT + event.slug!!,
-                            numEntrants = event.numEntrants,
-                            startAt = convertBigDecimalToDate(node.startAt),
-                            videogame = if (event.videogame?.id != null && videogamesMap.containsKey(
-                                    event.videogame.id.toInt()
-                                )
-                            ) videogamesMap[event.videogame.id.toInt()] else null
-                        )
-                    }?.toMutableList(),
+                    events = (node.events?.filter { event ->
+                        event?.id != null &&
+                        event.name != null &&
+                        event.slug != null
+                    } as List<GetTournamentsQuery.Event>).map { event ->
+                        Event(event)
+                    }.toMutableList(),
                     addrState = node.addrState,
                     countryCode = node.countryCode,
                     // TODO: location

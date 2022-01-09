@@ -11,7 +11,14 @@ query GetParticipants(
                 }
                 prefix
                 events {
+                    id
                     name
+                    slug
+                }
+                user {
+                    images {
+                        url
+                    }
                 }
                 gamerTag
             }

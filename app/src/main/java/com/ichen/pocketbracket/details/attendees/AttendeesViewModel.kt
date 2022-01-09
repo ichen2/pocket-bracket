@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo.api.Response
 import com.ichen.pocketbracket.GetParticipantsQuery
+import com.ichen.pocketbracket.GetTournamentsQuery
 import com.ichen.pocketbracket.details.tournament
 import com.ichen.pocketbracket.models.Attendee
+import com.ichen.pocketbracket.models.Event
 import com.ichen.pocketbracket.utils.Field
 import com.ichen.pocketbracket.utils.Status
 import kotlinx.coroutines.Job
@@ -37,7 +39,7 @@ class AttendeesViewModel : ViewModel() {
         }
     }
 
-    fun parseGetParticipantsResponse(response: Response<GetParticipantsQuery.Data>?): List<Attendee>? {
+    private fun parseGetParticipantsResponse(response: Response<GetParticipantsQuery.Data>?): List<Attendee>? {
         val nodes = response?.data?.tournament?.participants?.nodes ?: return null
         return nodes.filter { node ->
             node?.id != null
@@ -45,7 +47,16 @@ class AttendeesViewModel : ViewModel() {
         }.map { node ->
             Attendee(
                 id = node!!.id!!,
-                tag = node.gamerTag!!
+                prefix = node.prefix,
+                tag = node.gamerTag!!,
+                imageUrl = node.images?.getOrNull(0)?.url ?: node.user?.images?.getOrNull(0)?.url, // if user set a custom avatar for this tournament, use it,
+                events = (node.events?.filter { event ->
+                    event?.id != null &&
+                    event.name != null &&
+                    event.slug != null
+                } as List<GetParticipantsQuery.Event>).map { event ->
+                    Event(event)
+                }
             )
         }
     }
