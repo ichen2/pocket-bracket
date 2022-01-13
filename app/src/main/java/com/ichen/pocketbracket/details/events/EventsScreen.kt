@@ -1,6 +1,7 @@
 package com.ichen.pocketbracket.details
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -10,7 +11,7 @@ import com.ichen.pocketbracket.models.Event
 import com.ichen.pocketbracket.models.Tournament
 
 @Composable
-fun LazyItemScope.EventsScreen(events: List<Event>?) = Column {
+fun ColumnScope.EventsScreen(events: List<Event>?) = Column {
     if(events != null) {
         events.sortedBy { event -> event.startAt }.forEach { event ->
             EventItem(event)

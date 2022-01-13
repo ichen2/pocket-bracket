@@ -19,7 +19,7 @@ import okhttp3.OkHttpClient
 class AttendeesRepository {
     var currentJob: Job? = null
 
-    suspend fun getAttendees(tournamentId: String, context: Context, onResponse: (com.apollographql.apollo.api.Response<GetParticipantsQuery.Data>?) -> Unit) {
+    suspend fun getAttendees(tournamentId: String, page: Int, context: Context, onResponse: (com.apollographql.apollo.api.Response<GetParticipantsQuery.Data>?) -> Unit) {
         val apolloClient = ApolloClient.builder()
             .serverUrl(API_ENDPOINT)
             .okHttpClient(
@@ -33,7 +33,7 @@ class AttendeesRepository {
                 val response = try {
                     withTimeoutOrNull(15000) {
                         apolloClient.query(
-                            GetParticipantsQuery(id = tournamentId)
+                            GetParticipantsQuery(id = tournamentId, perPage = 50, page = page)
                         ).await()
                     }
                 } catch (e: ApolloException) {

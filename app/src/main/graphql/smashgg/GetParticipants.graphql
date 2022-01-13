@@ -1,8 +1,13 @@
 query GetParticipants(
-    $id: ID!
+    $id: ID!,
+    $perPage: Int!,
+    $page: Int!
 ) {
     tournament(id:$id) {
-        participants(query:{}) {
+        participants(query:{
+            perPage: $perPage
+            page: $page
+        }) {
             nodes {
                 id
                 connectedAccounts

@@ -1,15 +1,18 @@
 package com.ichen.pocketbracket.details
 
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import com.ichen.pocketbracket.details.attendees.AttendeesViewModel
 import com.ichen.pocketbracket.details.components.AttendeeProfile
 import com.ichen.pocketbracket.models.Tournament
@@ -20,7 +23,10 @@ import com.ichen.pocketbracket.utils.Status
 import com.ichen.pocketbracket.utils.openTournamentDetailsScreen
 
 @Composable
-fun LazyItemScope.AttendeesScreen(tournamentSlug: String, viewModel: AttendeesViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun ColumnScope.AttendeesScreen(
+    tournamentSlug: String,
+    viewModel: AttendeesViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
     val context = LocalContext.current
     DisposableEffect(key1 = viewModel) { // TODO: make sure this effect is right
         if (viewModel.attendees.value.status != Status.SUCCESS) {
@@ -40,8 +46,29 @@ fun LazyItemScope.AttendeesScreen(tournamentSlug: String, viewModel: AttendeesVi
             Text("Loading...", color = MaterialTheme.colors.onBackground)
         }
     } else {
-        viewModel.attendees.value.data.forEach { attendee ->
-            AttendeeProfile(attendee, tournamentSlug)
+        LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
+            itemsIndexed(
+                items = viewModel.attendees.value.data,
+                key = { _, attendee -> attendee.id }) { index, attendee ->
+                AttendeeProfile(attendee, tournamentSlug)
+                if (index == viewModel.attendees.value.data.size - 1) viewModel.getAttendees(
+                    context
+                )
+            }
+            if (viewModel.attendees.value.status == Status.LOADING) {
+                item {
+                    CircularProgressIndicator(
+                        strokeWidth = 4.dp
+                    )
+                }
+            } else if (viewModel.attendees.value.status == Status.ERROR) {
+                item {
+                    Text(
+                        "Could not load additional tournaments",
+                        color = MaterialTheme.colors.onBackground
+                    )
+                }
+            }
         }
     }
 }

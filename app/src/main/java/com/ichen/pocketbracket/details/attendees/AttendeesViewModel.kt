@@ -18,6 +18,8 @@ import kotlinx.coroutines.launch
 
 class AttendeesViewModel : ViewModel() {
     private val repository = AttendeesRepository()
+    private var page = 0
+    private var hasMoreAttendees = true
     private var currentJob: Job? = null
     val attendees: MutableState<Field<List<Attendee>>> = mutableStateOf(
         Field(
@@ -27,14 +29,20 @@ class AttendeesViewModel : ViewModel() {
     )
 
     fun getAttendees(context: Context) {
-        attendees.value = Field(listOf(), Status.LOADING)
-        currentJob = viewModelScope.launch {
-            repository.getAttendees(tournament!!.id.toString(), context) { response ->
-                val parsedResponse = parseGetParticipantsResponse(response)
-                attendees.value = Field(
-                    parsedResponse ?: listOf(),
-                    if (parsedResponse == null) Status.ERROR else Status.SUCCESS
-                )
+        // TODO: All of this is really sus
+        //currentJob?.cancel()
+        if(hasMoreAttendees) {
+            page++
+            attendees.value = Field(attendees.value.data, Status.LOADING)
+            currentJob = viewModelScope.launch {
+                repository.getAttendees(tournament!!.id.toString(), page, context) { response ->
+                    val parsedResponse = parseGetParticipantsResponse(response)
+                    attendees.value = Field(
+                        attendees.value.data + (parsedResponse ?: listOf()),
+                        if (parsedResponse == null) Status.ERROR else Status.SUCCESS
+                    )
+                    hasMoreAttendees = parsedResponse?.size ?: 0 > 0
+                }
             }
         }
     }

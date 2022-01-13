@@ -53,9 +53,8 @@ class TournamentDetailsActivity : AppCompatActivity() {
                             .background(MaterialTheme.colors.background)
                             .fillMaxSize()
                     ) {
-                        LazyColumn(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-                            stickyHeader { Header(tournament!!, !showSidebar) { showSidebar = !showSidebar } }
-                            item {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                            Header(tournament!!, !showSidebar) { showSidebar = !showSidebar }
                                 when (currentTab.value) {
                                     CurrentTab.Home -> {
                                         HomeScreen()
@@ -67,7 +66,6 @@ class TournamentDetailsActivity : AppCompatActivity() {
                                         EventsScreen(tournament?.events)
                                     }
                                 }
-                            }
                         }
                         if (showSidebar) {
                             Sidebar(tournament!!, currentTab, { onBackPressed() }) { showSidebar = !showSidebar }
