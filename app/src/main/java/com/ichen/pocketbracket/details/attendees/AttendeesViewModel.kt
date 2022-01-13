@@ -30,6 +30,7 @@ class AttendeesViewModel : ViewModel() {
 
     fun getAttendees(context: Context) {
         // TODO: All of this is really sus
+        // also it might be easier to load all attendees on initialization so i can add client side searching??
         //currentJob?.cancel()
         if(hasMoreAttendees) {
             page++

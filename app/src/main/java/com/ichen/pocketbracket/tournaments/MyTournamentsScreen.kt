@@ -22,9 +22,9 @@ import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat.startActivity
 import com.ichen.pocketbracket.components.WebView
 import com.ichen.pocketbracket.details.TournamentDetailsActivity
-import com.ichen.pocketbracket.timeline.TournamentsListLoading
 import com.ichen.pocketbracket.timeline.TournamentsTimelineViewModel
 import com.ichen.pocketbracket.timeline.components.TournamentCard
+import com.ichen.pocketbracket.timeline.components.TournamentsListLoading
 import com.ichen.pocketbracket.utils.*
 
 @Composable

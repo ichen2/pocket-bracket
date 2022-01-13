@@ -15,8 +15,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.ichen.pocketbracket.details.attendees.AttendeesViewModel
 import com.ichen.pocketbracket.details.components.AttendeeProfile
+import com.ichen.pocketbracket.details.components.AttendeesListLoading
 import com.ichen.pocketbracket.models.Tournament
-import com.ichen.pocketbracket.timeline.TournamentsListLoading
 import com.ichen.pocketbracket.timeline.TournamentsTimelineViewModel
 import com.ichen.pocketbracket.timeline.components.TournamentCard
 import com.ichen.pocketbracket.utils.Status
@@ -37,13 +37,16 @@ fun ColumnScope.AttendeesScreen(
         }
     }
     if (viewModel.attendees.value.data.isEmpty()) {
-        if (viewModel.attendees.value.status == Status.ERROR) {
-            Text("Error loading attendees", color = MaterialTheme.colors.onBackground)
-        } else if (viewModel.attendees.value.status == Status.SUCCESS) {
-            Text("No attendees found", color = MaterialTheme.colors.onBackground)
-        } else {
-            // TODO: Create actual loading indicator
-            Text("Loading...", color = MaterialTheme.colors.onBackground)
+        when (viewModel.attendees.value.status) {
+            Status.ERROR -> {
+                Text("Error loading attendees", color = MaterialTheme.colors.onBackground)
+            }
+            Status.SUCCESS -> {
+                Text("No attendees found", color = MaterialTheme.colors.onBackground)
+            }
+            else -> {
+                AttendeesListLoading()
+            }
         }
     } else {
         LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {

@@ -23,6 +23,7 @@ import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.timeline.components.TimelineHeader
 import com.ichen.pocketbracket.timeline.components.TournamentCard
 import com.ichen.pocketbracket.timeline.components.TournamentCardLoading
+import com.ichen.pocketbracket.timeline.components.TournamentsListLoading
 import com.ichen.pocketbracket.utils.SECONDS_IN_DAY
 import com.ichen.pocketbracket.utils.SetComposableFunction
 import com.ichen.pocketbracket.utils.Status
@@ -115,7 +116,7 @@ fun ColumnScope.TournamentsTimelineScreen(
             } else if (viewModel.tournaments.value.status == Status.SUCCESS) {
                 Text("No tournaments found", color = MaterialTheme.colors.onBackground)
             } else {
-                TournamentsListLoading(viewModel.tournaments.value.data.size)
+                TournamentsListLoading()
             }
         } else {
             LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -145,19 +146,6 @@ fun ColumnScope.TournamentsTimelineScreen(
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun TournamentsListLoading(numItems: Int) = Column(
-    Modifier.verticalScroll(
-        rememberScrollState()
-    )
-) {
-    for (i in 0..max(numItems, 2)) {
-        ShimmerAnimation { brush ->
-            TournamentCardLoading(brush = brush)
         }
     }
 }

@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -65,4 +66,13 @@ fun AttendeeProfile(attendee: Attendee, tournamentSlug: String) {
             style = MaterialTheme.typography.h5
         )
     }
+}
+
+@Composable
+fun AttendeeProfileLoading(brush: Brush) = Row(modifier = Modifier
+    .fillMaxWidth()
+    .background(brush = brush).padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
+    Box(Modifier.size(32.dp).clip(CircleShape).background(MaterialTheme.colors.background))
+    Spacer(Modifier.width(8.dp))
+    Box(Modifier.width(200.dp).height(16.dp).background(MaterialTheme.colors.background))
 }
