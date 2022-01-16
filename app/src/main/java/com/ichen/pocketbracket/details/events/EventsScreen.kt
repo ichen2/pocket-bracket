@@ -11,10 +11,10 @@ import com.ichen.pocketbracket.models.Event
 import com.ichen.pocketbracket.models.Tournament
 
 @Composable
-fun ColumnScope.EventsScreen(events: List<Event>?) = Column {
-    if(events != null) {
+fun ColumnScope.EventsScreen(events: List<Event>?, tournamentSlug: String) = Column {
+    if(!events.isNullOrEmpty()) {
         events.sortedBy { event -> event.startAt }.forEach { event ->
-            EventItem(event)
+            EventItem(event, tournamentSlug)
         }
     } else {
         Text("No events found", color = MaterialTheme.colors.onBackground)

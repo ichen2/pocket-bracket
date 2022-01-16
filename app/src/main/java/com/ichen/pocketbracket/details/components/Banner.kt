@@ -7,6 +7,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ContactSupport
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.LocationOn
@@ -30,34 +31,38 @@ import com.ichen.pocketbracket.utils.mergeAddress
 
 @Composable
 fun Banner(tournament: Tournament) {
-    Image(
-        painter = rememberImagePainter(data = tournament.secondaryImageUrl, builder = {
-            size(OriginalSize)
-            scale(Scale.FILL)
-            placeholder(R.drawable.image_unavailable)
-            crossfade(true)
-        }),
-        contentDescription = "banner image",
-        modifier = Modifier.fillMaxWidth(),
-        contentScale = ContentScale.FillWidth,
-    )
+    if(tournament.secondaryImageUrl != null) {
+        Image(
+            painter = rememberImagePainter(data = tournament.secondaryImageUrl, builder = {
+                size(OriginalSize)
+                scale(Scale.FILL)
+                placeholder(R.drawable.image_unavailable)
+                crossfade(true)
+            }),
+            contentDescription = "banner image",
+            modifier = Modifier.fillMaxWidth(),
+            contentScale = ContentScale.FillWidth,
+        )
+    }
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        Image(
-            painter = rememberImagePainter(data = tournament.primaryImageUrl, builder = {
-                size(OriginalSize)
-                scale(Scale.FIT)
-                placeholder(R.drawable.image_unavailable)
-                crossfade(true)
-            }),
-            contentDescription = "tournament image",
-            modifier = Modifier.size(100.dp),
-            contentScale = ContentScale.Crop
-        )
-        Spacer(Modifier.width(16.dp))
+        if(tournament.primaryImageUrl != null) {
+            Image(
+                painter = rememberImagePainter(data = tournament.primaryImageUrl, builder = {
+                    size(OriginalSize)
+                    scale(Scale.FIT)
+                    placeholder(R.drawable.image_unavailable)
+                    crossfade(true)
+                }),
+                contentDescription = "tournament image",
+                modifier = Modifier.size(100.dp),
+                contentScale = ContentScale.Crop
+            )
+            Spacer(Modifier.width(16.dp))
+        }
         Column {
             Text(text = tournament.name, style = MaterialTheme.typography.h4, color = MaterialTheme.colors.onSurface)
             if (tournament.startAt != null && tournament.endAt != null) {
@@ -103,7 +108,7 @@ fun Banner(tournament: Tournament) {
                     append(annotatedText)
                     addStringAnnotation(
                         "URL",
-                        "mailto:$annotatedText",
+                        if(annotatedText.contains("@")) "mailto:$annotatedText" else annotatedText,
                         start = 0,
                         end = annotatedText.length
                     )
@@ -118,7 +123,7 @@ fun Banner(tournament: Tournament) {
                 val uriHandler = LocalUriHandler.current
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector = Icons.Filled.Email,
+                        imageVector = if(tournament.primaryContact.contains("@")) Icons.Filled.Email else Icons.Filled.ContactSupport,
                         contentDescription = "email icon",
                         modifier = Modifier.size(16.dp),
                         tint = MaterialTheme.colors.primary

@@ -63,7 +63,7 @@ class TournamentDetailsActivity : AppCompatActivity() {
                                         AttendeesScreen(tournament?.slug ?: "") // pass empty string if no slug so browser will redirect to 404
                                     }
                                     CurrentTab.Events -> {
-                                        EventsScreen(tournament?.events)
+                                        EventsScreen(tournament?.events, tournament?.slug ?: "")
                                     }
                                 }
                         }

@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
@@ -162,7 +163,7 @@ fun Sidebar(
                             .fillMaxWidth()
                             .clickable { openBrowser(context, event.url) }
                             .padding(8.dp)) {
-                        Text(event.name, color = MaterialTheme.colors.onSurface)
+                        Text(event.name, style = MaterialTheme.typography.h5, color = MaterialTheme.colors.onSurface)
                         if (event.startAt != null) {
                             Text(
                                 event.startAt.toPrettyString(),
