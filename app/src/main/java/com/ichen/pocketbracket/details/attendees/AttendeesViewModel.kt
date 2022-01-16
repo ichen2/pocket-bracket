@@ -29,8 +29,7 @@ class AttendeesViewModel : ViewModel() {
     )
 
     fun getAttendees(context: Context) {
-        // TODO: All of this is really sus
-        // also it might be easier to load all attendees on initialization so i can add client side searching??
+        // TODO: All of this is kinda sus
         //currentJob?.cancel()
         if(hasMoreAttendees) {
             page++
@@ -39,12 +38,15 @@ class AttendeesViewModel : ViewModel() {
                 repository.getAttendees(tournament!!.id.toString(), page, context) { response ->
                     val parsedResponse = parseGetParticipantsResponse(response)
                     attendees.value = Field(
-                        attendees.value.data + (parsedResponse ?: listOf()),
+                        (attendees.value.data + (parsedResponse ?: listOf())).distinctBy { attendee -> attendee.id },
                         if (parsedResponse == null) Status.ERROR else Status.SUCCESS
                     )
                     hasMoreAttendees = parsedResponse?.size ?: 0 > 0
+                    if(attendees.value.status != Status.ERROR) getAttendees(context)
                 }
             }
+        } else {
+            attendees.value = Field(attendees.value.data, Status.SUCCESS)
         }
     }
 
@@ -63,7 +65,7 @@ class AttendeesViewModel : ViewModel() {
                     event?.id != null &&
                     event.name != null &&
                     event.slug != null
-                } as List<GetParticipantsQuery.Event>).map { event ->
+                } as List<GetParticipantsQuery.Event>?)?.map { event ->
                     Event(event)
                 }
             )

@@ -102,9 +102,9 @@ class TournamentsTimelineViewModel : ViewModel() {
                         event?.id != null &&
                         event.name != null &&
                         event.slug != null
-                    } as List<GetTournamentsQuery.Event>).map { event ->
+                    } as List<GetTournamentsQuery.Event>?)?.map { event ->
                         Event(event)
-                    }.toMutableList(),
+                    }?.toMutableList(),
                     addrState = node.addrState,
                     countryCode = node.countryCode,
                     // TODO: location

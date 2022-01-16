@@ -90,7 +90,10 @@ fun Sidebar(
             Button(modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp)
-                .padding(4.dp), onClick = { openBrowser(context, "${SITE_ENDPOINT}/${tournament.slug}/register")}) {
+                .padding(4.dp),
+                onClick = { openBrowser(context, "${SITE_ENDPOINT}/${tournament.slug}/register") },
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
+            ) {
                 Text("Register")
             }
             Spacer(Modifier.height(16.dp))
@@ -154,10 +157,17 @@ fun Sidebar(
             Spacer(Modifier.height(16.dp))
             if (tournament.events?.isNotEmpty() == true) {
                 tournament.events.forEach { event ->
-                    Column(Modifier.fillMaxWidth().clickable{ openBrowser(context, event.url) }.padding(8.dp)) {
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable { openBrowser(context, event.url) }
+                            .padding(8.dp)) {
                         Text(event.name, color = MaterialTheme.colors.onSurface)
                         if (event.startAt != null) {
-                            Text(event.startAt.toPrettyString(), color = MaterialTheme.colors.onSurface)
+                            Text(
+                                event.startAt.toPrettyString(),
+                                color = MaterialTheme.colors.onSurface
+                            )
                         }
                     }
                 }
