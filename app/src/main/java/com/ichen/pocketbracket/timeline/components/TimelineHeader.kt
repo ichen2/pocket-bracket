@@ -195,11 +195,24 @@ private fun initializeDateRangePickerListeners(
     onNegativeButtonClick: () -> Unit,
 ) {
     dateRangePicker.addOnPositiveButtonClickListener { _ ->
+        val timezone = TimeZone.getDefault()
         val startDate = dateRangePicker.selection?.first
         val endDate = dateRangePicker.selection?.second
         tournamentDateRange.value = if (startDate != null && endDate != null) DateRange(
-            Date(startDate),
-            Date(endDate)
+            /*
+            the times picked by the dateRangePicker are in UTC.
+            by subtracting the offset from the current timezone to UTC,
+            we can convert these times from UTC to the same time in local time.
+            ex:
+            In central time, timezone.rawOffset is -6 hours, or  -21600000 milliseconds
+            If the user picks a startDate of 12am January 1st 2020, that time is 1577836800000
+            However, in central time that is 6pm December 31st
+            So, to convert the first UTC time to central time, we can add -timezone.rawOffset
+            The result is 1577836800000 + 21600000 = 1577858400000,
+            which is 12am January 1st 2020 in central time
+            */
+            Date(startDate - timezone.rawOffset),
+            Date(endDate - timezone.rawOffset)
         ) else null
         onPositiveButtonClick()
     }

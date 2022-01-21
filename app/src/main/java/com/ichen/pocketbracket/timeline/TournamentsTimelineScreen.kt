@@ -54,7 +54,7 @@ fun ColumnScope.TournamentsTimelineScreen(
     val tournamentType = remember { mutableStateOf(TournamentType.NO_FILTER) }
     val tournamentPrice = remember { mutableStateOf(TournamentPrice.NO_FILTER) }
     val tournamentRegistrationStatus =
-        remember { mutableStateOf(TournamentRegistrationStatus.OPEN) }
+        remember { mutableStateOf(TournamentRegistrationStatus.NO_FILTER) }
     val clearFilters = {
         tournamentName.value = ""
         tournamentGames.value = null

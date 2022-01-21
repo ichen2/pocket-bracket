@@ -46,7 +46,9 @@ fun getScaledRadius(sliderValue: Float) : Double {
 }
 
 fun Date.toPrettyString(): String {
-    return SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(this)
+    val sdf = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+    sdf.timeZone = TimeZone.getDefault()
+    return sdf.format(this)
 }
 
 fun Date.isSameDay(other: Date): Boolean {
@@ -99,6 +101,13 @@ fun Date.addDays(numDays: Int): Date {
     val calendar = Calendar.getInstance()
     calendar.time = this
     calendar.add(Calendar.DATE, numDays)
+    return calendar.time
+}
+
+fun Date.addHours(numHours: Int): Date {
+    val calendar = Calendar.getInstance()
+    calendar.time = this
+    calendar.add(Calendar.HOUR, numHours)
     return calendar.time
 }
 
