@@ -14,7 +14,7 @@ Pocket Bracket lets users search for, view, and register for esports tournaments
 
 #### Feature Roadmap
 
-###### Native Tournament, Bracket, and Attendee Views - Currently in progress
+###### Native Tournament, Bracket, and Attendee Views - In progress
 
 Currently, the app uses webviews to display pages for tournaments, brackets, and attendees. The information in these webviews should be displayed in native app screens instead.
 
