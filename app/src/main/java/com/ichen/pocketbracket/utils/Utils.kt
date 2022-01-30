@@ -46,7 +46,7 @@ fun getScaledRadius(sliderValue: Float) : Double {
 }
 
 fun Date.toPrettyString(): String {
-    val sdf = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+    val sdf = SimpleDateFormat("MM/dd/yy", Locale.getDefault())
     sdf.timeZone = TimeZone.getDefault()
     return sdf.format(this)
 }
