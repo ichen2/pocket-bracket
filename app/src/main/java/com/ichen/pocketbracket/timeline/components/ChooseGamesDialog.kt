@@ -29,6 +29,9 @@ fun ChooseGamesDialog(
     Modifier
         .fillMaxSize(1f)
         .background(Color.Black.copy(.5f))
+        .clickable {
+            setDialogComposable(null)
+        }
 ) {
 
     val checkedGames = videogamesList.map { videogame ->
