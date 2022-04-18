@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat.startActivity
+import com.ichen.pocketbracket.components.ErrorSplash
 import com.ichen.pocketbracket.components.WebView
 import com.ichen.pocketbracket.details.TournamentDetailsActivity
 import com.ichen.pocketbracket.timeline.TournamentsTimelineViewModel
@@ -58,7 +59,7 @@ fun ColumnScope.MyTournamentsScreen(
     ) {
         if (viewModel.tournaments.value.data.isEmpty()) {
             if(viewModel.tournaments.value.status == Status.ERROR) {
-                Text("Error loading tournaments", color = MaterialTheme.colors.onBackground)
+                ErrorSplash("Error fetching your tournaments from smash.gg")
             }
             else if (viewModel.tournaments.value.status == Status.SUCCESS) {
                 Text("No tournaments found", color = MaterialTheme.colors.onBackground)
@@ -66,7 +67,7 @@ fun ColumnScope.MyTournamentsScreen(
                 TournamentsListLoading(viewModel.tournaments.value.data.size)
             }
         } else {
-            LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
+            LazyColumn(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Top, modifier = Modifier.fillMaxSize()) {
                 itemsIndexed(
                     items = viewModel.tournaments.value.data,
                     key = { _, tournament -> tournament.events?.getOrNull(0)?.id  ?: -1}) { index, tournament ->

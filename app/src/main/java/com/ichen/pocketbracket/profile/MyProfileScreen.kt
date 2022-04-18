@@ -39,6 +39,7 @@ import coil.transform.CircleCropTransformation
 import com.ichen.pocketbracket.R
 import com.ichen.pocketbracket.apiKey
 import com.ichen.pocketbracket.auth.AuthActivity
+import com.ichen.pocketbracket.components.ErrorSplash
 import com.ichen.pocketbracket.components.ShimmerAnimation
 import com.ichen.pocketbracket.components.WebView
 import com.ichen.pocketbracket.profile.components.UserSetting
@@ -217,8 +218,7 @@ fun ColumnScope.MyProfileScreen(
                 }
             }
         } else if (viewModel.userDetails.value.status == Status.ERROR) {
-            Text("Error loading user profile", color = MaterialTheme.colors.onBackground)
-            Spacer(Modifier.height(16.dp))
+            ErrorSplash("Error fetching your profile from smash.gg")
             Row(Modifier.clickable {
                 apiKey = null
                 context.startActivity(Intent(context, AuthActivity::class.java))

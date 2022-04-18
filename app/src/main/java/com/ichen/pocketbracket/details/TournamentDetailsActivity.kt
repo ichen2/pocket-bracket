@@ -18,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.ichen.pocketbracket.components.ErrorSplash
 import com.ichen.pocketbracket.details.components.Header
 import com.ichen.pocketbracket.details.components.Sidebar
 import com.ichen.pocketbracket.models.Tournament
@@ -72,7 +73,7 @@ class TournamentDetailsActivity : AppCompatActivity() {
                         }
                     }
                 } else {
-                    ErrorScreen()
+                    ErrorSplash("Error fetching tournament details from smash.gg")
                 }
             }
         }

@@ -15,18 +15,18 @@ import kotlinx.coroutines.launch
 
 const val EVENTS_PER_PAGE = 10
 
-class MyTournamentsViewModel : ViewModel() {
+open class MyTournamentsViewModel : ViewModel() {
     private val repository = MyTournamentsRepository()
     var hasMoreEvents = true
     private var page = 1
-    val tournaments: MutableState<Field<List<Tournament>>> = mutableStateOf(
+    open val tournaments: MutableState<Field<List<Tournament>>> = mutableStateOf(
         Field(
             listOf(),
             Status.NOT_STARTED
         )
     )
 
-    fun getEvents(context: Context) {
+    open fun getEvents(context: Context) {
         page = 1
         tournaments.value = Field(listOf(), Status.LOADING)
         viewModelScope.launch {
@@ -41,7 +41,7 @@ class MyTournamentsViewModel : ViewModel() {
         }
     }
 
-    fun getMoreEvents(context: Context) {
+    open fun getMoreEvents(context: Context) {
         if(hasMoreEvents) {
             page++
             tournaments.value = tournaments.value.withStatus(Status.LOADING)
@@ -100,7 +100,19 @@ class MyTournamentsViewModel : ViewModel() {
             )
         }
     }
-    fun cleanup() {
+    open fun cleanup() {
         repository.currentJob?.cancel()
     }
+}
+
+class TestMyTournamentsViewModel : MyTournamentsViewModel() {
+    override val tournaments: MutableState<Field<List<Tournament>>> = mutableStateOf(
+        Field(
+            listOf(testTournament1, testTournament2),
+            Status.SUCCESS
+        )
+    )
+    override fun getEvents(context: Context) {}
+    override fun getMoreEvents(context: Context) {}
+    override fun cleanup() {}
 }

@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.android.gms.maps.model.LatLng
 import com.ichen.pocketbracket.utils.SECONDS_IN_DAY
+import com.ichen.pocketbracket.utils.addDays
 import java.util.*
 
 data class Tournament(
@@ -104,7 +105,7 @@ fun Tournament.getRating(filter: TournamentFilter): Float {
     return rating
 }
 
-val testTournament: Tournament = Tournament(
+val testTournament1: Tournament = Tournament(
     id = 0,
     addrState = "CA",
     city = "Los Angeles",
@@ -114,14 +115,36 @@ val testTournament: Tournament = Tournament(
     slug = "test-tournament",
     venueAddress = "Los Angeles, CA, USA",
     venueName = "Test Tournament Venue",
-    startAt = Date(0),
+    startAt = Date(),
     url = "",
-    endAt = Date(1),
+    endAt = Date().addDays(2),
     isOnline = true,
     isRegistrationOpen = true,
-    name = "Test tournament",
+    name = "Some Smash Tourney",
     numAttendees = 1,
     state = ActivityState.ACTIVE,
-    primaryImageUrl = "https://smashgg-images.s3.amazonaws.com/images/tournament/1035/image-10e39229043ff962dd367a516b0bc090.png",
-    events = mutableListOf(testEvent, testEvent),
+    primaryImageUrl = "https://i.ibb.co/SdTYfYc/placeholder-tournament-splash.png",
+    events = mutableListOf(testEvent1),
+)
+
+val testTournament2: Tournament = Tournament(
+    id = 1,
+    addrState = "CA",
+    city = "Los Angeles",
+    countryCode = "US",
+    location = LatLng(34.0522342, -118.2436849),
+    primaryContact = "pocketbracket@gmail.com",
+    slug = "test-tournament",
+    venueAddress = "Los Angeles, CA, USA",
+    venueName = "Test Tournament Venue",
+    startAt = Date().addDays(2),
+    url = "",
+    endAt = Date().addDays(4),
+    isOnline = true,
+    isRegistrationOpen = true,
+    name = "Some Smash Tourney",
+    numAttendees = 1,
+    state = ActivityState.ACTIVE,
+    primaryImageUrl = "https://i.ibb.co/YhsdHRq/placeholder-tournament-splash.png",
+    events = mutableListOf(testEvent2),
 )

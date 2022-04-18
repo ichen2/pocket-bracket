@@ -26,7 +26,7 @@ import com.ichen.pocketbracket.R
 import com.ichen.pocketbracket.components.ShimmerAnimation
 import com.ichen.pocketbracket.models.Event
 import com.ichen.pocketbracket.models.Tournament
-import com.ichen.pocketbracket.models.testTournament
+import com.ichen.pocketbracket.models.testTournament1
 import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
 import com.ichen.pocketbracket.utils.combineDates
 import java.text.SimpleDateFormat
@@ -226,7 +226,7 @@ fun EventCardItem(event: Event, clickable: Boolean, onClick: (String) -> Unit) {
 @Preview
 @Composable
 fun TournamentCardPreview() = PocketBracketTheme {
-    TournamentCard(testTournament, true, {})
+    TournamentCard(testTournament1, true, {})
 }
 
 @Preview

@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.ichen.pocketbracket.components.ErrorSplash
 import com.ichen.pocketbracket.components.ShimmerAnimation
 import com.ichen.pocketbracket.components.WebView
 import com.ichen.pocketbracket.models.*
@@ -44,7 +45,7 @@ fun ColumnScope.TournamentsTimelineScreen(
         .weight(1f)
         .fillMaxWidth(1f),
     horizontalAlignment = Alignment.CenterHorizontally,
-    verticalArrangement = Arrangement.Center,
+    verticalArrangement = Arrangement.Top,
 ) {
     val context = LocalContext.current
     val tournamentName = remember { mutableStateOf("") }
@@ -112,14 +113,14 @@ fun ColumnScope.TournamentsTimelineScreen(
     ) {
         if (viewModel.tournaments.value.data.isEmpty()) {
             if (viewModel.tournaments.value.status == Status.ERROR) {
-                Text("Error loading tournaments", color = MaterialTheme.colors.onBackground)
+                ErrorSplash("Error fetching tournaments from smash.gg")
             } else if (viewModel.tournaments.value.status == Status.SUCCESS) {
                 Text("No tournaments found", color = MaterialTheme.colors.onBackground)
             } else {
                 TournamentsListLoading()
             }
         } else {
-            LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
+            LazyColumn(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Top, modifier = Modifier.fillMaxSize()) {
                 itemsIndexed(
                     items = viewModel.tournaments.value.data,
                     key = { _, tournament -> tournament.id }) { index, tournament ->

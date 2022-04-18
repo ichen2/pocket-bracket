@@ -65,11 +65,19 @@ data class Event(
     }
 }
 
-val testEvent = Event(
+val testEvent1 = Event(
     id = "0",
-    name = "Test event",
+    name = "Melee Singles",
     url = "",
-    numEntrants = 1,
-    startAt = Date(0),
+    numEntrants = 12,
+    startAt = Date(),
+    videogame = videogamesList[0]
+)
+val testEvent2 = Event(
+    id = "1",
+    name = "Ultimate Singles",
+    url = "",
+    numEntrants = 12,
+    startAt = Date(),
     videogame = videogamesList[0]
 )

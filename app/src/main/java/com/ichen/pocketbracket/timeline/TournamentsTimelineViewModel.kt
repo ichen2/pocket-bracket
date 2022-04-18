@@ -15,13 +15,13 @@ import com.ichen.pocketbracket.utils.convertBigDecimalToDate
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class TournamentsTimelineViewModel : ViewModel() {
+open class TournamentsTimelineViewModel : ViewModel() {
 
     private val repository = TournamentsTimelineRepository()
     private var hasMoreTournaments = true
     private var filter = TournamentFilter()
     private var currentJob: Job? = null
-    val tournaments: MutableState<Field<List<Tournament>>> = mutableStateOf(
+    open val tournaments: MutableState<Field<List<Tournament>>> = mutableStateOf(
         Field(
             listOf(),
             Status.NOT_STARTED
@@ -29,7 +29,7 @@ class TournamentsTimelineViewModel : ViewModel() {
     )
 
     // TODO: why are these two seperate functions?? they do the same thing
-    fun getTournaments(filter: TournamentFilter = TournamentFilter(), context: Context) {
+    open fun getTournaments(filter: TournamentFilter = TournamentFilter(), context: Context) {
         currentJob?.cancel()
         this.filter = filter
         tournaments.value = Field(listOf(), Status.LOADING)
@@ -46,7 +46,7 @@ class TournamentsTimelineViewModel : ViewModel() {
         }
     }
 
-    fun getMoreTournaments(context: Context) {
+    open fun getMoreTournaments(context: Context) {
         currentJob?.cancel()
         if(hasMoreTournaments) {
             this.filter.page++
@@ -117,7 +117,19 @@ class TournamentsTimelineViewModel : ViewModel() {
         }
     }
 
-    fun cleanup() {
+    open fun cleanup() {
         currentJob?.cancel()
     }
+}
+
+class TestTournamentsTimelineViewModel : TournamentsTimelineViewModel() {
+    override val tournaments: MutableState<Field<List<Tournament>>> = mutableStateOf(
+        Field(
+            listOf(testTournament1, testTournament2),
+            Status.SUCCESS
+        )
+    )
+    override fun getTournaments(filter: TournamentFilter, context: Context) {}
+    override fun getMoreTournaments(context: Context) {}
+    override fun cleanup() {}
 }
