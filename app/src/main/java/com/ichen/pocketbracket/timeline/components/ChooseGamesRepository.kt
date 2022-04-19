@@ -40,8 +40,8 @@ class ChooseGamesRepository {
                     withTimeoutOrNull(15000) {
                         apolloClient.query(
                             GetVideogamesQuery(
-                                page = 0,
-                                perPage = 10,
+                                page = filter.page,
+                                perPage = filter.perPage,
                                 name = Input.optional(filter.name)
                             )
                         ).await()
