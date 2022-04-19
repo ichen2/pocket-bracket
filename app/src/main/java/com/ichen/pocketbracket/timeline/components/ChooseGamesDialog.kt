@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Checkbox
 import androidx.compose.material.Icon
@@ -64,7 +65,7 @@ fun ChooseGamesDialog(
         )
     }
     LazyColumn(modifier = Modifier.fillMaxHeight()) {
-        items(items = videogamesList, key = { videogame -> videogame.id }) { videogame ->
+        itemsIndexed(items = videogamesList, key = { _, videogame -> videogame.id }) { index, videogame ->
             val isSelected = checkedGames.contains(videogame.id)
             val toggleSelect = {
                 if (checkedGames.contains(videogame.id)) checkedGames =
@@ -73,19 +74,24 @@ fun ChooseGamesDialog(
                     }.toSet()
                 else checkedGames = (checkedGames + videogame.id).toSet()
             }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { toggleSelect() }
-                    .background(if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.background)
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = videogame.displayName,
-                    color = if (isSelected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onBackground,
-                    style = MaterialTheme.typography.body1
-                )
+            Column {
+                if(index != 0 && !isSelected) {
+                    Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp).height(1.dp).background(Color.Gray)) {}
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { toggleSelect() }
+                        .background(if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.background)
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        text = videogame.displayName,
+                        color = if (isSelected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onBackground,
+                        style = MaterialTheme.typography.body1
+                    )
+                }
             }
         }
     }
