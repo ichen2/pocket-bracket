@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -13,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
@@ -148,6 +150,40 @@ fun AuthScreen(
                 ) {
                     Text(text = "Open smash.gg")
                 }
+                val annotatedString = buildAnnotatedString {
+                    val text =
+                        "Still having trouble? Contact "
+                    val annotatedText = "pocketbracket@gmail.com"
+                    append(text + annotatedText)
+                    addStringAnnotation(
+                        "URL",
+                        "mailto:$annotatedText",
+                        start = text.length,
+                        end = text.length + annotatedText.length
+                    )
+                    addStyle(
+                        style = SpanStyle(
+                            color = MaterialTheme.colors.onSurface,
+                            fontSize = MaterialTheme.typography.body1.fontSize,
+                            textDecoration = TextDecoration.None
+                        ), start = 0, end = text.length
+                    )
+                    addStyle(
+                        style = SpanStyle(
+                            color = MaterialTheme.colors.primary,
+                            fontSize = MaterialTheme.typography.body1.fontSize,
+                            textDecoration = TextDecoration.Underline
+                        ), start = text.length, end = text.length + annotatedText.length
+                    )
+                }
+                val uriHandler = LocalUriHandler.current
+                ClickableText(text = annotatedString, onClick = {
+                    annotatedString
+                        .getStringAnnotations("URL", it, it)
+                        .firstOrNull()?.let { stringAnnotation ->
+                            uriHandler.openUri(stringAnnotation.item)
+                        }
+                })
             }
         } else {
             Text(

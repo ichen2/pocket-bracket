@@ -108,10 +108,20 @@ fun TimelineHeader(
                 tournamentGames.value != null,
                 clickable
             ) {
-                setDialogComposable {
-                    ChooseGamesDialog(setDialogComposable, tournamentGames) {
-                        getTournaments()
+                if(tournamentGames.value == null) {
+                    setDialogComposable {
+                        ChooseGamesDialog(
+                            setDialogComposable,
+                            tournamentGames.value ?: listOf(),
+                            { videogames ->
+                                tournamentGames.value = videogames
+                                getTournaments()
+                            },
+                            { setDialogComposable(null) })
                     }
+                } else {
+                    tournamentGames.value = null
+                    getTournaments()
                 }
             }
             FilterPill(
