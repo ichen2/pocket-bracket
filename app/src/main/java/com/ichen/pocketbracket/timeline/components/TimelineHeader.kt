@@ -1,6 +1,7 @@
 package com.ichen.pocketbracket.timeline.components
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.*
@@ -19,7 +20,9 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.timeline.TournamentsTimelineViewModel
+import com.ichen.pocketbracket.utils.Field
 import com.ichen.pocketbracket.utils.SetComposableFunction
+import com.ichen.pocketbracket.utils.Status
 import com.ichen.pocketbracket.utils.getNextEnumValue
 import java.util.*
 
@@ -105,23 +108,18 @@ fun TimelineHeader(
         ) {
             FilterPill(
                 "Games",
-                tournamentGames.value != null,
+                tournamentGames.value?.size ?: 0 > 0,
                 clickable
             ) {
-                if(tournamentGames.value == null) {
-                    setDialogComposable {
-                        ChooseGamesDialog(
-                            setDialogComposable,
-                            tournamentGames.value ?: listOf(),
-                            { videogames ->
-                                tournamentGames.value = videogames
-                                getTournaments()
-                            },
-                            { setDialogComposable(null) })
-                    }
-                } else {
-                    tournamentGames.value = null
-                    getTournaments()
+                setDialogComposable {
+                    ChooseGamesDialog(
+                        onPositiveButtonClick = { videogames ->
+                            tournamentGames.value = videogames
+                            setDialogComposable(null)
+                            getTournaments()
+                        },
+                        onNegativeButtonClick = { setDialogComposable(null) },
+                    )
                 }
             }
             FilterPill(

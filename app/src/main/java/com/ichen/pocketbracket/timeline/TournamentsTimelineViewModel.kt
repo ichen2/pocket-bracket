@@ -1,12 +1,14 @@
 package com.ichen.pocketbracket.timeline
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo.api.Response
 import com.ichen.pocketbracket.GetTournamentsQuery
+import com.ichen.pocketbracket.GetVideogamesQuery
 import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.utils.Field
 import com.ichen.pocketbracket.utils.SITE_ENDPOINT
@@ -19,7 +21,7 @@ open class TournamentsTimelineViewModel : ViewModel() {
 
     private val repository = TournamentsTimelineRepository()
     private var hasMoreTournaments = true
-    private var filter = TournamentFilter()
+    private var tournamentFilter = TournamentFilter()
     private var currentJob: Job? = null
     open val tournaments: MutableState<Field<List<Tournament>>> = mutableStateOf(
         Field(
@@ -29,19 +31,19 @@ open class TournamentsTimelineViewModel : ViewModel() {
     )
 
     // TODO: why are these two seperate functions?? they do the same thing
-    open fun getTournaments(filter: TournamentFilter = TournamentFilter(), context: Context) {
+    open fun getTournaments(tournamentFilter: TournamentFilter = TournamentFilter(), context: Context) {
         currentJob?.cancel()
-        this.filter = filter
+        this.tournamentFilter = tournamentFilter
         tournaments.value = Field(listOf(), Status.LOADING)
         currentJob = viewModelScope.launch {
-            repository.getTournaments(filter, context) { response ->
+            repository.getTournaments(tournamentFilter, context) { response ->
                 val parsedResponse = parseGetTournamentsResponse(response)
-                //val sortedTournaments = if(parsedResponse == null) null else sortTournaments(parsedResponse, filter)
+                //val sortedTournaments = if(parsedResponse == null) null else sortTournaments(parsedResponse, tournamentFilter)
                 tournaments.value = Field(
                     parsedResponse ?: listOf(),
                     if (parsedResponse == null) Status.ERROR else Status.SUCCESS
                 )
-                hasMoreTournaments = parsedResponse?.size ?: 0 > 0 // this could probably be simplified to hasMoreTournaments = parsedResponse.size == filter.perPage ??
+                hasMoreTournaments = parsedResponse?.size ?: 0 > 0 // this could probably be simplified to hasMoreTournaments = parsedResponse.size == tournamentFilter.perPage ??
             }
         }
     }
@@ -49,12 +51,12 @@ open class TournamentsTimelineViewModel : ViewModel() {
     open fun getMoreTournaments(context: Context) {
         currentJob?.cancel()
         if(hasMoreTournaments) {
-            this.filter.page++
+            this.tournamentFilter.page++
             tournaments.value = tournaments.value.withStatus(Status.LOADING)
             currentJob = viewModelScope.launch {
-                repository.getTournaments(filter, context) { response ->
+                repository.getTournaments(tournamentFilter, context) { response ->
                     val parsedResponse = parseGetTournamentsResponse(response)
-                    //val sortedTournaments = if(parsedResponse == null) null else sortTournaments(parsedResponse, filter)
+                    //val sortedTournaments = if(parsedResponse == null) null else sortTournaments(parsedResponse, tournamentFilter)
                     tournaments.value = Field(
                         tournaments.value.data + (parsedResponse ?: listOf()),
                         if (parsedResponse == null) Status.ERROR else Status.SUCCESS
@@ -65,9 +67,9 @@ open class TournamentsTimelineViewModel : ViewModel() {
         }
     }
 
-    private fun sortTournaments(tournaments: List<Tournament>, filter: TournamentFilter): List<Tournament> {
+    private fun sortTournaments(tournaments: List<Tournament>, tournamentFilter: TournamentFilter): List<Tournament> {
         return tournaments.sortedWith { t1: Tournament, t2: Tournament ->
-            if(t1.getRating(filter) > t2.getRating(filter)) 1 else -1
+            if(t1.getRating(tournamentFilter) > t2.getRating(tournamentFilter)) 1 else -1
         }
     }
 
@@ -129,7 +131,7 @@ class TestTournamentsTimelineViewModel : TournamentsTimelineViewModel() {
             Status.SUCCESS
         )
     )
-    override fun getTournaments(filter: TournamentFilter, context: Context) {}
+    override fun getTournaments(tournamentFilter: TournamentFilter, context: Context) {}
     override fun getMoreTournaments(context: Context) {}
     override fun cleanup() {}
 }

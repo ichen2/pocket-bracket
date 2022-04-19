@@ -1,6 +1,7 @@
 package com.ichen.pocketbracket.timeline
 
 import android.content.Context
+import android.util.Log
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Input
 import com.apollographql.apollo.coroutines.await
@@ -8,11 +9,9 @@ import com.apollographql.apollo.coroutines.toDeferred
 import com.apollographql.apollo.exception.ApolloException
 import com.ichen.pocketbracket.BuildConfig
 import com.ichen.pocketbracket.GetTournamentsQuery
+import com.ichen.pocketbracket.GetVideogamesQuery
 import com.ichen.pocketbracket.apiKey
-import com.ichen.pocketbracket.models.Tournament
-import com.ichen.pocketbracket.models.TournamentFilter
-import com.ichen.pocketbracket.models.TournamentRegistrationStatus
-import com.ichen.pocketbracket.models.TournamentType
+import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.tournaments.MyTournamentsJobs
 import com.ichen.pocketbracket.type.TournamentLocationFilter
 import com.ichen.pocketbracket.utils.*
@@ -72,7 +71,11 @@ class TournamentsTimelineRepository {
                                     else -> Input.absent()
                                 },
                                 afterDate = if (filter.dates != null) Input.optional(filter.dates.start.time / 1000) else Input.absent(),
-                                beforeDate = if (filter.dates != null) Input.optional(filter.dates.end.addHours(1).time / 1000) else Input.optional(
+                                beforeDate = if (filter.dates != null) Input.optional(
+                                    filter.dates.end.addHours(
+                                        1
+                                    ).time / 1000
+                                ) else Input.optional(
                                     Date().addDays(365).time / 1000
                                 ),
                                 videogameIds = if (filter.games != null) Input.optional(filter.games.map { videogame ->
