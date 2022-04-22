@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -16,6 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.ichen.pocketbracket.models.Videogame
@@ -23,6 +25,8 @@ import com.ichen.pocketbracket.models.videogamesList
 import com.ichen.pocketbracket.utils.SetComposableFunction
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import com.ichen.pocketbracket.components.ErrorSplash
+import com.ichen.pocketbracket.details.components.AttendeesListLoading
 import com.ichen.pocketbracket.models.VideogameFilter
 import com.ichen.pocketbracket.utils.Status
 
@@ -48,6 +52,7 @@ fun ChooseGamesDialog(
             context
         )
     }
+
     var checkedGames by remember { mutableStateOf(setOf<Int>()) }
     var videogameName by remember { mutableStateOf("") }
 
@@ -62,8 +67,11 @@ fun ChooseGamesDialog(
         }
     }
 
-    Column(Modifier.background(MaterialTheme.colors.primary)
-        .padding(16.dp)) {
+    Column(
+        Modifier
+            .background(MaterialTheme.colors.primary)
+            .padding(16.dp)
+    ) {
         Row(
             Modifier
                 .fillMaxWidth()
@@ -72,10 +80,16 @@ fun ChooseGamesDialog(
                 Icons.Filled.Close,
                 "close",
                 tint = MaterialTheme.colors.onPrimary,
-                modifier = Modifier.clickable { viewModel.cleanup()
+                modifier = Modifier.clickable {
+                    viewModel.cleanup()
                     onNegativeButtonClick()
                 })
-            Text(modifier = Modifier.weight(1f), textAlign = TextAlign.Center, text = "Choose your game(s)", color = MaterialTheme.colors.onPrimary)
+            Text(
+                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.Center,
+                text = "Choose your game(s)",
+                color = MaterialTheme.colors.onPrimary
+            )
             Text(
                 "Save",
                 Modifier.clickable {
@@ -115,20 +129,42 @@ fun ChooseGamesDialog(
             )
         )
     }
-    Row(Modifier.fillMaxWidth().clickable { checkedGames = setOf() }.background(MaterialTheme.colors.error).padding(horizontal = 16.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clickable { checkedGames = setOf() }
+            .background(MaterialTheme.colors.error)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
         Text(text = "Unselect all", color = MaterialTheme.colors.onError)
     }
-    LazyColumn(modifier = Modifier.fillMaxHeight()) {
-        itemsIndexed(items = viewModel.videogames.value.data, key = { _, videogame -> videogame.id }) { index, videogame ->
-            val isSelected = checkedGames.contains(videogame.id)
-            val toggleSelect = {
-                if (checkedGames.contains(videogame.id)) checkedGames =
-                    checkedGames.filter { checkedGameId ->
-                        checkedGameId != videogame.id
-                    }.toSet()
-                else checkedGames = (checkedGames + videogame.id).toSet()
+    if (viewModel.videogames.value.data.isEmpty()) {
+        when (viewModel.videogames.value.status) {
+            Status.ERROR -> {
+                Text("Error loading video games", color = MaterialTheme.colors.onBackground)
             }
-            Column {
+            Status.SUCCESS -> {
+                ErrorSplash("No video games found")
+            }
+            else -> {
+                VideoGamesListLoading(numItems = 10)
+            }
+        }
+    } else {
+        LazyColumn(modifier = Modifier.fillMaxHeight()) {
+            itemsIndexed(
+                items = viewModel.videogames.value.data,
+                key = { _, videogame -> videogame.id }) { index, videogame ->
+                val isSelected = checkedGames.contains(videogame.id)
+                val toggleSelect = {
+                    if (checkedGames.contains(videogame.id)) checkedGames =
+                        checkedGames.filter { checkedGameId ->
+                            checkedGameId != videogame.id
+                        }.toSet()
+                    else checkedGames = (checkedGames + videogame.id).toSet()
+                }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -146,4 +182,11 @@ fun ChooseGamesDialog(
             }
         }
     }
+}
+
+@Composable
+fun VideogameLoading(brush: Brush) = Row(modifier = Modifier
+    .fillMaxWidth()
+    .background(brush = brush).padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+    Box(Modifier.fillMaxWidth().height(16.dp).background(MaterialTheme.colors.background))
 }

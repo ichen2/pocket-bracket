@@ -111,15 +111,20 @@ fun TimelineHeader(
                 tournamentGames.value?.size ?: 0 > 0,
                 clickable
             ) {
-                setDialogComposable {
-                    ChooseGamesDialog(
-                        onPositiveButtonClick = { videogames ->
-                            tournamentGames.value = videogames
-                            setDialogComposable(null)
-                            getTournaments()
-                        },
-                        onNegativeButtonClick = { setDialogComposable(null) },
-                    )
+                if(tournamentGames.value == null) {
+                    setDialogComposable {
+                        ChooseGamesDialog(
+                            onPositiveButtonClick = { videogames ->
+                                tournamentGames.value = videogames
+                                setDialogComposable(null)
+                                getTournaments()
+                            },
+                            onNegativeButtonClick = { setDialogComposable(null) },
+                        )
+                    }
+                } else {
+                    tournamentGames.value = null
+                    getTournaments()
                 }
             }
             FilterPill(
