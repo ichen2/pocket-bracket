@@ -125,9 +125,9 @@ fun TournamentCard(tournament: Tournament, clickable: Boolean, onClick: (String)
             if (tournament.events?.size ?: 0 > 2) {
                 Spacer(Modifier.height(16.dp))
                 Text(
-                    modifier = Modifier.clickable(enabled = clickable) {
+                    modifier = Modifier.fillMaxWidth().clickable(enabled = clickable, onClick = {
                         eventsListIsExpanded.value = !eventsListIsExpanded.value
-                    },
+                    }).padding(16.dp) ,
                     text = "Show ${if (eventsListIsExpanded.value) "less" else "${tournament.events!!.size - 2} more"}",
                     color = MaterialTheme.colors.primary,
                     style = MaterialTheme.typography.body1

@@ -21,13 +21,13 @@ fun FilterPill(text: String, enabled: Boolean, clickable: Boolean, onClick: () -
         modifier = Modifier
             .clip(CircleShape)
             .background(if (enabled) MaterialTheme.colors.secondary else MaterialTheme.colors.background)
-            .then(
-                if (!enabled) Modifier.border(
-                    1.dp,
-                    MaterialTheme.colors.onSurface,
-                    shape = CircleShape
-                ) else Modifier
-            )
+//            .then(
+//                if (!enabled) Modifier.border(
+//                    1.dp,
+//                    MaterialTheme.colors.onSurface,
+//                    shape = CircleShape
+//                ) else Modifier
+//            )
             .clickable(onClick = onClick, enabled = clickable)
             .padding(horizontal = 16.dp, vertical = 8.dp),
         color = if (enabled) MaterialTheme.colors.onSecondary else MaterialTheme.colors.onSurface
