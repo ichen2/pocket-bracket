@@ -239,9 +239,13 @@ private fun initializeDateRangePickerListeners(
     }
 }
 
+const val DATE_RANGE_PICKER_TAG = "dateRangePicker"
+
 private fun showDateRangePicker(context: Context) {
     if (context is AppCompatActivity) {
-        dateRangePicker.show(context.supportFragmentManager, null)
+        if(context.supportFragmentManager.findFragmentByTag(DATE_RANGE_PICKER_TAG) == null) {
+            dateRangePicker.show(context.supportFragmentManager, DATE_RANGE_PICKER_TAG)
+        }
     } else {
         Toast.makeText(context, "Error displaying date picker", Toast.LENGTH_SHORT).show()
     }
