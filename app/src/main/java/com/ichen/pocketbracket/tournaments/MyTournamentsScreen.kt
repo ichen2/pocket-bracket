@@ -62,7 +62,7 @@ fun ColumnScope.MyTournamentsScreen(
                 ErrorSplash("Error fetching your tournaments from smash.gg")
             }
             else if (viewModel.tournaments.value.status == Status.SUCCESS) {
-                Text("No tournaments found", color = MaterialTheme.colors.onBackground)
+                ErrorSplash("No tournaments found", isCritical = false)
             } else {
                 TournamentsListLoading(viewModel.tournaments.value.data.size)
             }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import com.ichen.pocketbracket.components.ErrorSplash
 import com.ichen.pocketbracket.details.components.EventItem
 import com.ichen.pocketbracket.models.Event
 import com.ichen.pocketbracket.models.Tournament
@@ -17,6 +18,6 @@ fun ColumnScope.EventsScreen(events: List<Event>?, tournamentSlug: String) = Col
             EventItem(event, tournamentSlug)
         }
     } else {
-        Text("No events found", color = MaterialTheme.colors.onBackground)
+        ErrorSplash("No events found", isCritical = false)
     }
 }

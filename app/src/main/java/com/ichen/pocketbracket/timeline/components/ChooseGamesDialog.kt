@@ -143,10 +143,10 @@ fun ChooseGamesDialog(
     if (viewModel.videogames.value.data.isEmpty()) {
         when (viewModel.videogames.value.status) {
             Status.ERROR -> {
-                Text("Error loading video games", color = MaterialTheme.colors.onBackground)
+                ErrorSplash("Error loading video games")
             }
             Status.SUCCESS -> {
-                ErrorSplash("No video games found")
+                ErrorSplash("No video games found", isCritical = false)
             }
             else -> {
                 VideoGamesListLoading(numItems = 10)

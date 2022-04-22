@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.ichen.pocketbracket.components.ErrorSplash
 import com.ichen.pocketbracket.details.attendees.AttendeesViewModel
 import com.ichen.pocketbracket.details.components.AttendeeProfile
 import com.ichen.pocketbracket.details.components.AttendeesListLoading
@@ -54,10 +55,10 @@ fun ColumnScope.AttendeesScreen(
     if (viewModel.attendees.value.data.isEmpty()) {
         when (viewModel.attendees.value.status) {
             Status.ERROR -> {
-                Text("Error loading attendees", color = MaterialTheme.colors.onBackground)
+                ErrorSplash("Error loading attendees")
             }
             Status.SUCCESS -> {
-                Text("No attendees found", color = MaterialTheme.colors.onBackground)
+                ErrorSplash("No attendees found", isCritical = false)
             }
             else -> {
                 AttendeesListLoading(numItems = 10)

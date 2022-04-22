@@ -20,13 +20,13 @@ import coil.compose.rememberImagePainter
 import com.ichen.pocketbracket.R
 
 @Composable
-fun ErrorSplash(message: String) = Column(Modifier.fillMaxSize().padding(32.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Top){
+fun ErrorSplash(message: String, isCritical: Boolean = true) = Column(Modifier.fillMaxSize().padding(32.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Top){
     Icon(
         Icons.Filled.Error,
         contentDescription = "error",
         modifier = Modifier
             .size(48.dp),
-        tint = MaterialTheme.colors.error
+        tint = if(isCritical) MaterialTheme.colors.error else MaterialTheme.colors.secondary
     )
     Spacer(Modifier.height(8.dp))
     Text(message, textAlign = TextAlign.Center)

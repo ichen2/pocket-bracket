@@ -110,7 +110,7 @@ fun TournamentCard(tournament: Tournament, clickable: Boolean, onClick: (String)
         }
     }
     if (tournament.events?.size ?: 0 > 0) {
-        Column(Modifier.padding(16.dp)) {
+        Column(Modifier.padding(vertical = 16.dp)) {
             for (i in 0..min(
                 if (eventsListIsExpanded.value) Int.MAX_VALUE else 1,
                 tournament.events?.size ?: 0
@@ -192,7 +192,8 @@ fun EventCardItem(event: Event, clickable: Boolean, onClick: (String) -> Unit) {
     Column(
         Modifier
             .fillMaxWidth()
-            .clickable(enabled = clickable) { onClick(event.url) }) {
+            .clickable(enabled = clickable) { onClick(event.url) }
+            .padding(horizontal = 16.dp)) {
         Text(
             text = event.name,
             color = MaterialTheme.colors.primary,
