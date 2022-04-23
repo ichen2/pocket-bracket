@@ -45,7 +45,7 @@ fun ColumnScope.TournamentsTimelineScreen(
     val tournamentName = remember { mutableStateOf("") }
     val tournamentGames: MutableState<List<Videogame>?> = remember { mutableStateOf(null) }
     val tournamentLocationRadius: MutableState<LocationRadius?> = remember { mutableStateOf(null) }
-    val tournamentDateRange: MutableState<DateRange?> = remember { mutableStateOf(DateRange(today, Date(today.time + SECONDS_IN_DAY * 14 * 1000))) }
+    val tournamentDateRange: MutableState<DateRange?> = remember { mutableStateOf(null) }//DateRange(today, Date(today.time + SECONDS_IN_DAY * 14 * 1000))) }
     val tournamentType = remember { mutableStateOf(TournamentType.NO_FILTER) }
     val tournamentPrice = remember { mutableStateOf(TournamentPrice.NO_FILTER) }
     val tournamentRegistrationStatus =
