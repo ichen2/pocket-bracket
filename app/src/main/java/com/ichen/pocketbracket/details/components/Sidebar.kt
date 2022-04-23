@@ -1,5 +1,6 @@
 package com.ichen.pocketbracket.details.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,7 +16,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
@@ -25,7 +25,10 @@ import com.ichen.pocketbracket.R
 import com.ichen.pocketbracket.details.CurrentTab
 import com.ichen.pocketbracket.models.DateRange
 import com.ichen.pocketbracket.models.Tournament
-import com.ichen.pocketbracket.utils.*
+import com.ichen.pocketbracket.utils.SITE_ENDPOINT
+import com.ichen.pocketbracket.utils.mergeAddress
+import com.ichen.pocketbracket.utils.openBrowser
+import com.ichen.pocketbracket.utils.toPrettyString
 
 @Composable
 fun Sidebar(
@@ -34,6 +37,7 @@ fun Sidebar(
     goBack: () -> Unit,
     toggle: () -> Unit
 ) = Row(Modifier.fillMaxSize()) {
+    Log.d("TournamentInfo", "${SITE_ENDPOINT}/${tournament.slug}/register")
     val context = LocalContext.current
     Column(
         Modifier
@@ -95,7 +99,7 @@ fun Sidebar(
                 onClick = { openBrowser(context, "${SITE_ENDPOINT}/${tournament.slug}/register") },
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
             ) {
-                Text("Register")
+                Text("Register", style = MaterialTheme.typography.h5)
             }
             Spacer(Modifier.height(16.dp))
             if (tournament.startAt != null && tournament.endAt != null) {

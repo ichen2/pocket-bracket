@@ -1,12 +1,9 @@
 package com.ichen.pocketbracket.timeline
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -19,18 +16,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.ichen.pocketbracket.components.ErrorSplash
-import com.ichen.pocketbracket.components.ShimmerAnimation
-import com.ichen.pocketbracket.components.WebView
 import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.timeline.components.TimelineHeader
 import com.ichen.pocketbracket.timeline.components.TournamentCard
-import com.ichen.pocketbracket.timeline.components.TournamentCardLoading
 import com.ichen.pocketbracket.timeline.components.TournamentsListLoading
 import com.ichen.pocketbracket.utils.SECONDS_IN_DAY
 import com.ichen.pocketbracket.utils.SetComposableFunction
 import com.ichen.pocketbracket.utils.Status
 import com.ichen.pocketbracket.utils.openTournamentDetailsScreen
-import java.lang.Integer.max
 import java.util.*
 
 val today = Date()

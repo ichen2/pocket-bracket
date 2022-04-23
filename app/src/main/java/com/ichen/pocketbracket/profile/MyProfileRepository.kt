@@ -1,15 +1,11 @@
 package com.ichen.pocketbracket.profile
 
 import android.content.Context
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.await
-import com.apollographql.apollo.coroutines.toDeferred
 import com.apollographql.apollo.exception.ApolloException
 import com.ichen.pocketbracket.GetUserDetailsQuery
-import com.ichen.pocketbracket.GetUserEventsQuery
-import com.ichen.pocketbracket.apiKey
+import com.ichen.pocketbracket.home.apiKey
 import com.ichen.pocketbracket.utils.API_ENDPOINT
 import com.ichen.pocketbracket.utils.AuthorizationInterceptor
 import kotlinx.coroutines.Job

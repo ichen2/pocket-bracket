@@ -6,7 +6,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.ichen.pocketbracket.components.ShimmerAnimation
-import com.ichen.pocketbracket.timeline.components.TournamentCardLoading
 
 @Composable
 fun AttendeesListLoading(numItems: Int = 2) = Column(

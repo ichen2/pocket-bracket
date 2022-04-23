@@ -31,7 +31,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.PocketBracket.NoActionBar" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".home.HomeActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:screenOrientation="portrait"

@@ -1,37 +1,23 @@
-package com.ichen.pocketbracket
+package com.ichen.pocketbracket.home
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.ichen.pocketbracket.auth.AuthActivity
 import com.ichen.pocketbracket.home.components.NavigationFooter
 import com.ichen.pocketbracket.profile.MyProfileScreen
 import com.ichen.pocketbracket.timeline.TournamentsTimelineScreen
 import com.ichen.pocketbracket.tournaments.MyTournamentsScreen
 import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
-import com.ichen.pocketbracket.ui.theme.medWhite
 import com.ichen.pocketbracket.utils.*
 
 enum class CurrentTab {

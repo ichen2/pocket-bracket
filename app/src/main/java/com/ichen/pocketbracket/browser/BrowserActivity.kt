@@ -1,7 +1,6 @@
 package com.ichen.pocketbracket.browser
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import com.ichen.pocketbracket.components.WebView

@@ -1,15 +1,11 @@
 package com.ichen.pocketbracket.timeline.components
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -19,14 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import com.ichen.pocketbracket.models.Videogame
-import com.ichen.pocketbracket.models.videogamesList
-import com.ichen.pocketbracket.utils.SetComposableFunction
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.ichen.pocketbracket.components.ErrorSplash
-import com.ichen.pocketbracket.details.components.AttendeesListLoading
+import com.ichen.pocketbracket.models.Videogame
 import com.ichen.pocketbracket.models.VideogameFilter
 import com.ichen.pocketbracket.utils.Status
 

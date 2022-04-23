@@ -1,11 +1,7 @@
 package com.ichen.pocketbracket.profile
 
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,7 +25,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
@@ -37,7 +32,7 @@ import coil.size.OriginalSize
 import coil.size.Scale
 import coil.transform.CircleCropTransformation
 import com.ichen.pocketbracket.R
-import com.ichen.pocketbracket.apiKey
+import com.ichen.pocketbracket.home.apiKey
 import com.ichen.pocketbracket.auth.AuthActivity
 import com.ichen.pocketbracket.components.ErrorSplash
 import com.ichen.pocketbracket.components.ShimmerAnimation
@@ -45,9 +40,6 @@ import com.ichen.pocketbracket.components.WebView
 import com.ichen.pocketbracket.profile.components.UserSetting
 import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
 import com.ichen.pocketbracket.ui.theme.medGrey
-import com.ichen.pocketbracket.ui.theme.medOrange
-import com.ichen.pocketbracket.utils.API_KEY_STORAGE_KEY
-import com.ichen.pocketbracket.utils.SHARED_PREFERENCES_KEY
 import com.ichen.pocketbracket.utils.SetComposableFunction
 import com.ichen.pocketbracket.utils.Status
 

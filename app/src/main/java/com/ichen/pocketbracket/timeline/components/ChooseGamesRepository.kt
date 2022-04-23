@@ -1,13 +1,12 @@
 package com.ichen.pocketbracket.timeline.components
 
 import android.content.Context
-import android.util.Log
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Input
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloException
 import com.ichen.pocketbracket.GetVideogamesQuery
-import com.ichen.pocketbracket.apiKey
+import com.ichen.pocketbracket.home.apiKey
 import com.ichen.pocketbracket.models.VideogameFilter
 import com.ichen.pocketbracket.utils.API_ENDPOINT
 import com.ichen.pocketbracket.utils.AuthorizationInterceptor

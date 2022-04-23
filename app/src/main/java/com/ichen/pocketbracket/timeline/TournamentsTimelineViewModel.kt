@@ -1,14 +1,12 @@
 package com.ichen.pocketbracket.timeline
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo.api.Response
 import com.ichen.pocketbracket.GetTournamentsQuery
-import com.ichen.pocketbracket.GetVideogamesQuery
 import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.utils.Field
 import com.ichen.pocketbracket.utils.SITE_ENDPOINT

@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo.api.Response
 import com.ichen.pocketbracket.GetParticipantsQuery
-import com.ichen.pocketbracket.GetTournamentsQuery
 import com.ichen.pocketbracket.details.tournament
 import com.ichen.pocketbracket.models.Attendee
 import com.ichen.pocketbracket.models.Event

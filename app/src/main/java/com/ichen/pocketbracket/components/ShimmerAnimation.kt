@@ -1,16 +1,11 @@
 package com.ichen.pocketbracket.components
 
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import com.ichen.pocketbracket.ui.theme.lightBlack
-import com.ichen.pocketbracket.ui.theme.lightWhite
-import com.ichen.pocketbracket.ui.theme.medBlack
-import com.ichen.pocketbracket.ui.theme.medWhite
 
 @Composable
 fun ShimmerAnimation(shimmerItem: @Composable (brush: Brush) -> Unit) {

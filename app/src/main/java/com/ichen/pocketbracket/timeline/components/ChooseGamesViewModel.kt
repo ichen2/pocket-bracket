@@ -1,18 +1,14 @@
 package com.ichen.pocketbracket.timeline.components
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo.api.Response
 import com.ichen.pocketbracket.GetVideogamesQuery
-import com.ichen.pocketbracket.models.Tournament
-import com.ichen.pocketbracket.models.TournamentFilter
 import com.ichen.pocketbracket.models.Videogame
 import com.ichen.pocketbracket.models.VideogameFilter
-import com.ichen.pocketbracket.timeline.TournamentsTimelineRepository
 import com.ichen.pocketbracket.utils.Field
 import com.ichen.pocketbracket.utils.Status
 import kotlinx.coroutines.Job

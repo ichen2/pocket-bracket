@@ -23,7 +23,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.ichen.pocketbracket.ui.theme.medGrey
 import com.ichen.pocketbracket.utils.Field
 import com.ichen.pocketbracket.utils.Status

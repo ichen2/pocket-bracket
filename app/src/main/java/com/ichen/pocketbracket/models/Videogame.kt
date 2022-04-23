@@ -1,23 +1,5 @@
 package com.ichen.pocketbracket.models
 
-enum class VideogameName {
-    SMASH,
-    SMASH_MELEE,
-    SMASH_PM,
-    SMASH_P_PLUS,
-    SMASH_ULTIMATE,
-    SMASH_BRAWL,
-    SFV_ARCADE,
-    ROCKET_LEAGUE,
-    KILLER_INSTINCT,
-    BRAWLHALLA,
-    GG_STRIVE,
-    VALORANT,
-    CS_GO,
-    LEAGUE_OF_LEGENDS,
-    TEKKEN_7,
-}
-
 data class Videogame(val id: Int, val displayName: String)
 
 val videogamesList = listOf(

@@ -1,7 +1,5 @@
 package com.ichen.pocketbracket.tournaments
 
-import android.content.Intent
-import android.os.Parcelable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -15,18 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
-import androidx.core.content.ContextCompat.startActivity
 import com.ichen.pocketbracket.components.ErrorSplash
-import com.ichen.pocketbracket.components.WebView
-import com.ichen.pocketbracket.details.TournamentDetailsActivity
-import com.ichen.pocketbracket.timeline.TournamentsTimelineViewModel
 import com.ichen.pocketbracket.timeline.components.TournamentCard
 import com.ichen.pocketbracket.timeline.components.TournamentsListLoading
-import com.ichen.pocketbracket.utils.*
+import com.ichen.pocketbracket.utils.SetComposableFunction
+import com.ichen.pocketbracket.utils.Status
+import com.ichen.pocketbracket.utils.openTournamentDetailsScreen
 
 @Composable
 fun ColumnScope.MyTournamentsScreen(

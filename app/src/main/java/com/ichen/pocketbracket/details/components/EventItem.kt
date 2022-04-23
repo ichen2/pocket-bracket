@@ -46,7 +46,7 @@ fun EventItem(event: Event, tournamentSlug: String) {
             onClick = { openBrowser(context, "${SITE_ENDPOINT}/${tournamentSlug}/register") },
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
         ) {
-            Text("Register")
+            Text("Register", style = MaterialTheme.typography.h5)
         }
     }
 }

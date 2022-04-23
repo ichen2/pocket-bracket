@@ -1,7 +1,5 @@
 package com.ichen.pocketbracket.models
 
-import androidx.compose.runtime.MutableState
-
 data class UserDetails(
     val id: String,
     val url: String,

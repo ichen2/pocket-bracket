@@ -3,20 +3,15 @@ package com.ichen.pocketbracket.auth
 import android.content.Context
 import android.content.Intent
 import androidx.compose.runtime.mutableStateOf
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.await
-import com.apollographql.apollo.coroutines.toDeferred
 import com.apollographql.apollo.exception.ApolloException
 import com.ichen.pocketbracket.GetUserDetailsQuery
-import com.ichen.pocketbracket.HomeActivity
-import com.ichen.pocketbracket.apiKey
+import com.ichen.pocketbracket.home.HomeActivity
 import com.ichen.pocketbracket.utils.*
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
 import okhttp3.OkHttpClient
 

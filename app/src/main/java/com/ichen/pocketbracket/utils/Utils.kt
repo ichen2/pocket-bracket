@@ -4,15 +4,11 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.toArgb
 import androidx.core.content.ContextCompat
-import com.apollographql.apollo.api.Response
-import com.google.android.gms.maps.model.LatLng
-import com.ichen.pocketbracket.BuildConfig
-import com.ichen.pocketbracket.GetTournamentsQuery
 import com.ichen.pocketbracket.browser.BrowserActivity
 import com.ichen.pocketbracket.details.TournamentDetailsActivity
-import com.ichen.pocketbracket.models.*
+import com.ichen.pocketbracket.models.LocationRadius
+import com.ichen.pocketbracket.models.Tournament
 import com.ichen.pocketbracket.timeline.components.RADIUS_MAX
 import com.ichen.pocketbracket.timeline.components.RADIUS_MIN
 import okhttp3.Interceptor
@@ -131,7 +127,7 @@ const val Z_INDEX_MID = 500f
 const val Z_INDEX_BOT = 0f
 
 const val API_ENDPOINT = "https://api.smash.gg/gql/alpha"
-const val SITE_ENDPOINT = "https://smash.gg/"
+const val SITE_ENDPOINT = "https://smash.gg"
 const val SHARED_PREFERENCES_KEY = "POCKET_BRACKET"
 const val API_KEY_STORAGE_KEY = "API_KEY"
 const val CURRENT_TAB_STORAGE_KEY = "CURRENT_TAB"

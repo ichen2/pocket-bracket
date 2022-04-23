@@ -6,8 +6,7 @@ import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloException
 import com.ichen.pocketbracket.GetParticipantsQuery
-import com.ichen.pocketbracket.GetTournamentsQuery
-import com.ichen.pocketbracket.apiKey
+import com.ichen.pocketbracket.home.apiKey
 import com.ichen.pocketbracket.utils.API_ENDPOINT
 import com.ichen.pocketbracket.utils.AuthorizationInterceptor
 import kotlinx.coroutines.Job

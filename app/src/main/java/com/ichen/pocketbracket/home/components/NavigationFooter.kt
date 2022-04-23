@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.ichen.pocketbracket.CurrentTab
+import com.ichen.pocketbracket.home.CurrentTab
 
 @Composable
 fun NavigationFooter(currentTab: MutableState<CurrentTab>, clickable: Boolean = true) =

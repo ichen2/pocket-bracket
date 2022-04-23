@@ -1,9 +1,9 @@
-package com.ichen.pocketbracket.details
+package com.ichen.pocketbracket.details.attendees
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyItemScope
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -14,14 +14,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.ichen.pocketbracket.components.ErrorSplash
-import com.ichen.pocketbracket.details.attendees.AttendeesViewModel
 import com.ichen.pocketbracket.details.components.AttendeeProfile
 import com.ichen.pocketbracket.details.components.AttendeesListLoading
-import com.ichen.pocketbracket.models.Tournament
-import com.ichen.pocketbracket.timeline.TournamentsTimelineViewModel
-import com.ichen.pocketbracket.timeline.components.TournamentCard
 import com.ichen.pocketbracket.utils.Status
-import com.ichen.pocketbracket.utils.openTournamentDetailsScreen
 
 /*
 

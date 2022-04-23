@@ -1,27 +1,20 @@
 package com.ichen.pocketbracket.timeline
 
 import android.content.Context
-import android.util.Log
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Input
 import com.apollographql.apollo.coroutines.await
-import com.apollographql.apollo.coroutines.toDeferred
 import com.apollographql.apollo.exception.ApolloException
-import com.ichen.pocketbracket.BuildConfig
 import com.ichen.pocketbracket.GetTournamentsQuery
-import com.ichen.pocketbracket.GetVideogamesQuery
-import com.ichen.pocketbracket.apiKey
+import com.ichen.pocketbracket.home.apiKey
 import com.ichen.pocketbracket.models.*
-import com.ichen.pocketbracket.tournaments.MyTournamentsJobs
 import com.ichen.pocketbracket.type.TournamentLocationFilter
 import com.ichen.pocketbracket.utils.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import java.time.LocalDateTime
 import java.util.*
 
 enum class TournamentsTimelineJobs {
