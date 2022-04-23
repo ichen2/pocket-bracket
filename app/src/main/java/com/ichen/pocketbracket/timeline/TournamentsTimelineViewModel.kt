@@ -84,7 +84,7 @@ open class TournamentsTimelineViewModel : ViewModel() {
                 Tournament(
                     id = node!!.id!!.toInt(),
                     name = node.name!!,
-                    url = SITE_ENDPOINT + node.slug!!,
+                    url ="${SITE_ENDPOINT}/${node.slug!!}",
                     startAt = convertBigDecimalToDate(node.startAt),
                     endAt = convertBigDecimalToDate(node.endAt),
                     isOnline = node.isOnline,

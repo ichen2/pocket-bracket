@@ -69,7 +69,7 @@ open class MyTournamentsViewModel : ViewModel() {
             Tournament(
                 id = tournament!!.id!!.toInt(),
                 name = tournament.name!!,
-                url = SITE_ENDPOINT + event.slug!!,
+                url = "${SITE_ENDPOINT}/${event.slug!!}",
                 startAt = convertBigDecimalToDate(tournament.startAt),
                 endAt = convertBigDecimalToDate(tournament.endAt),
                 isOnline = tournament.isOnline,
@@ -87,7 +87,7 @@ open class MyTournamentsViewModel : ViewModel() {
                     Event(
                         id = event.id!!,
                         name = event.name!!,
-                        url = SITE_ENDPOINT + event.slug,
+                        url = "${SITE_ENDPOINT}/${event.slug!!}",
                         numEntrants = event.numEntrants,
                         startAt = convertBigDecimalToDate(tournament.startAt),
                         videogame = if (event.videogame?.id != null && videogamesMap.containsKey(

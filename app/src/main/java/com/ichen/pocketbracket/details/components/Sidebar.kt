@@ -37,7 +37,6 @@ fun Sidebar(
     goBack: () -> Unit,
     toggle: () -> Unit
 ) = Row(Modifier.fillMaxSize()) {
-    Log.d("TournamentInfo", "${SITE_ENDPOINT}/${tournament.slug}/register")
     val context = LocalContext.current
     Column(
         Modifier

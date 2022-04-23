@@ -19,7 +19,7 @@ data class Event(
     constructor(event: GetTournamentsQuery.Event) : this(
         id = event.id!!,
         name = event.name!!,
-        url = SITE_ENDPOINT + event.slug!!,
+        url = "${SITE_ENDPOINT}/${event.slug!!}",
         numEntrants = event.numEntrants,
         startAt = convertBigDecimalToDate(event.startAt),
         videogame = if (event.videogame?.id != null && videogamesMap.containsKey(
@@ -30,7 +30,7 @@ data class Event(
     constructor(event: GetParticipantsQuery.Event) : this(
         id = event.id!!,
         name = event.name!!,
-        url = SITE_ENDPOINT + event.slug!!,
+        url = "${SITE_ENDPOINT}/${event.slug!!}",
     )
     constructor(parcel: Parcel) : this(
         parcel.readString().toString(),

@@ -30,7 +30,7 @@ class MyProfileViewModel : ViewModel() {
                         UserDetails(
                             id = parsedResponse.id,
                             tag = parsedResponse.player?.gamerTag,
-                            url = SITE_ENDPOINT + parsedResponse.slug,
+                            url = "${SITE_ENDPOINT}/${parsedResponse.slug}",
                             name = parsedResponse.name,
                             imageUrls = parsedResponse.images.mapNotNull { image ->
                                 image!!.url

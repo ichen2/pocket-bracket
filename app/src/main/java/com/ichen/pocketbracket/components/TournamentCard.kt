@@ -115,12 +115,14 @@ fun TournamentCard(tournament: Tournament, clickable: Boolean, onClick: (String)
                 if (eventsListIsExpanded.value) Int.MAX_VALUE else 1,
                 tournament.events?.size ?: 0
             )) {
-                if (i != 0) Spacer(Modifier.height(16.dp))
-                if (tournament.events?.getOrNull(i) != null) EventCardItem(
-                    event = tournament.events[i],
-                    clickable = clickable,
-                    onClick = onClick
-                )
+                if (tournament.events?.getOrNull(i) != null) {
+                    if (i != 0) Spacer(Modifier.height(16.dp))
+                    EventCardItem(
+                        event = tournament.events[i],
+                        clickable = clickable,
+                        onClick = onClick
+                    )
+                }
             }
             if (tournament.events?.size ?: 0 > 2) {
                 Spacer(Modifier.height(16.dp))
