@@ -4,7 +4,7 @@ import android.content.Context
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloException
-import com.ichen.pocketbracket.GetUserEventsQuery
+import com.ichen.pocketbracket.GetUserTournamentsQuery
 import com.ichen.pocketbracket.home.apiKey
 import com.ichen.pocketbracket.utils.API_ENDPOINT
 import com.ichen.pocketbracket.utils.AuthorizationInterceptor
@@ -26,7 +26,7 @@ class MyTournamentsRepository {
         page: Int,
         perPage: Int,
         context: Context,
-        onResponse: (com.apollographql.apollo.api.Response<GetUserEventsQuery.Data>?) -> Unit
+        onResponse: (com.apollographql.apollo.api.Response<GetUserTournamentsQuery.Data>?) -> Unit
     ) {
         val apolloClient = ApolloClient.builder()
             .serverUrl(API_ENDPOINT)
@@ -41,7 +41,7 @@ class MyTournamentsRepository {
                 val response = try {
                     withTimeoutOrNull(15000) {
                         apolloClient.query(
-                            GetUserEventsQuery(page, perPage)
+                            GetUserTournamentsQuery(page, perPage)
                         ).await()
                     }
                 } catch (e: ApolloException) {

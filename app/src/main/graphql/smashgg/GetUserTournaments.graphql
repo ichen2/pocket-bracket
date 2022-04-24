@@ -1,0 +1,46 @@
+query GetUserTournaments(
+    $page: Int!,
+    $perPage: Int!
+) {
+    currentUser {
+        id
+        tournaments(query:{
+            perPage:$perPage
+            page:$page
+        }) {
+            nodes {
+                id
+                name
+                slug
+                startAt
+                endAt
+                isOnline
+                state
+                city
+                numAttendees
+                images {
+                    url
+                }
+                isRegistrationOpen
+                events {
+                    id
+                    name
+                    slug
+                    startAt
+                    numEntrants
+                    videogame {
+                        id
+                        displayName
+                    }
+                }
+                addrState
+                countryCode
+                lat
+                lng
+                primaryContact
+                venueAddress
+                venueName
+            }
+        }
+    }
+}

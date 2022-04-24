@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.ichen.pocketbracket.GetParticipantsQuery
 import com.ichen.pocketbracket.GetTournamentsQuery
+import com.ichen.pocketbracket.GetUserTournamentsQuery
 import com.ichen.pocketbracket.utils.SITE_ENDPOINT
 import com.ichen.pocketbracket.utils.convertBigDecimalToDate
 import java.util.*
@@ -17,6 +18,17 @@ data class Event(
     val videogame: Videogame? = null,
 ) : Parcelable {
     constructor(event: GetTournamentsQuery.Event) : this(
+        id = event.id!!,
+        name = event.name!!,
+        url = "${SITE_ENDPOINT}/${event.slug!!}",
+        numEntrants = event.numEntrants,
+        startAt = convertBigDecimalToDate(event.startAt),
+        videogame = if (event.videogame?.id != null && videogamesMap.containsKey(
+                event.videogame.id.toInt()
+            )
+        ) videogamesMap[event.videogame.id.toInt()] else null
+    )
+    constructor(event: GetUserTournamentsQuery.Event) : this(
         id = event.id!!,
         name = event.name!!,
         url = "${SITE_ENDPOINT}/${event.slug!!}",
