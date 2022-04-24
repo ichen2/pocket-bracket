@@ -23,34 +23,37 @@ data class Event(
         url = "${SITE_ENDPOINT}/${event.slug!!}",
         numEntrants = event.numEntrants,
         startAt = convertBigDecimalToDate(event.startAt),
-        videogame = if (event.videogame?.id != null && videogamesMap.containsKey(
-                event.videogame.id.toInt()
-            )
-        ) videogamesMap[event.videogame.id.toInt()] else null
+        videogame = if (event.videogame?.id != null && event.videogame.displayName != null) Videogame(
+            event.videogame.id.toInt(),
+            event.videogame?.displayName
+        ) else null
     )
+
     constructor(event: GetUserTournamentsQuery.Event) : this(
         id = event.id!!,
         name = event.name!!,
         url = "${SITE_ENDPOINT}/${event.slug!!}",
         numEntrants = event.numEntrants,
         startAt = convertBigDecimalToDate(event.startAt),
-        videogame = if (event.videogame?.id != null && videogamesMap.containsKey(
-                event.videogame.id.toInt()
-            )
-        ) videogamesMap[event.videogame.id.toInt()] else null
+        videogame = if (event.videogame?.id != null && event.videogame.displayName != null) Videogame(
+            event.videogame.id.toInt(),
+            event.videogame?.displayName
+        ) else null
     )
+
     constructor(event: GetParticipantsQuery.Event) : this(
         id = event.id!!,
         name = event.name!!,
         url = "${SITE_ENDPOINT}/${event.slug!!}",
     )
+
     constructor(parcel: Parcel) : this(
         parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readValue(Int::class.java.classLoader) as? Int,
         Date(parcel.readLong()),
-        videogamesMap.getOrDefault(parcel.readInt(), videogamesMap[1])
+        Videogame(parcel.readInt(), parcel.readString().toString())
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -60,6 +63,7 @@ data class Event(
         parcel.writeValue(numEntrants)
         parcel.writeLong(startAt?.time ?: -1)
         parcel.writeInt(videogame?.id ?: -1)
+        parcel.writeString(videogame?.displayName)
     }
 
     override fun describeContents(): Int {

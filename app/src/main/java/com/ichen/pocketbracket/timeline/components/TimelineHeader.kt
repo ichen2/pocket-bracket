@@ -187,7 +187,7 @@ fun TimelineHeader(
             }
             Text(
                 text = "Clear",
-                fontWeight = FontWeight.SemiBold,
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .clip(CircleShape)
                     .background(MaterialTheme.colors.error)

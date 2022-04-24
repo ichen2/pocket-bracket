@@ -5,6 +5,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -96,7 +98,7 @@ fun Sidebar(
                 .height(48.dp)
                 .padding(4.dp),
                 onClick = { openBrowser(context, "${SITE_ENDPOINT}/${tournament.slug}/register") },
-                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
             ) {
                 Text("Register", style = MaterialTheme.typography.h5)
             }
@@ -160,21 +162,28 @@ fun Sidebar(
             }
             Spacer(Modifier.height(16.dp))
             if (tournament.events?.isNotEmpty() == true) {
-                tournament.events.forEach { event ->
-                    Column(
-                        Modifier
-                            .fillMaxWidth()
-                            .clickable { openBrowser(context, event.url) }
-                            .padding(8.dp)) {
-                        Text(event.name, style = MaterialTheme.typography.h5, color = MaterialTheme.colors.onSurface)
-                        if (event.startAt != null) {
+                LazyColumn(Modifier.fillMaxWidth().fillMaxHeight()) {
+                    items(tournament.events) { event ->
+                        Column(
+                            Modifier
+                                .fillMaxWidth()
+                                .clickable { openBrowser(context, event.url) }
+                                .padding(8.dp)) {
                             Text(
-                                event.startAt.toPrettyString(),
+                                event.name,
+                                style = MaterialTheme.typography.h5,
                                 color = MaterialTheme.colors.onSurface
                             )
+                            if (event.startAt != null) {
+                                Text(
+                                    event.startAt.toPrettyString(),
+                                    color = MaterialTheme.colors.onSurface
+                                )
+                            }
                         }
                     }
                 }
+
             }
         }
     }

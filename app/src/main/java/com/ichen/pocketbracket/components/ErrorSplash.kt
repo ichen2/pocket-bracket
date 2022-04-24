@@ -20,7 +20,7 @@ fun ErrorSplash(message: String, isCritical: Boolean = true) = Column(Modifier.f
         contentDescription = "error",
         modifier = Modifier
             .size(48.dp),
-        tint = if(isCritical) MaterialTheme.colors.error else MaterialTheme.colors.secondary
+        tint = if(isCritical) MaterialTheme.colors.error else MaterialTheme.colors.primary
     )
     Spacer(Modifier.height(8.dp))
     Text(message, textAlign = TextAlign.Center)

@@ -89,7 +89,7 @@ fun TournamentCard(tournament: Tournament, clickable: Boolean, onClick: (String)
         Column(Modifier.padding(16.dp)) {
             Text(
                 text = tournament.name,
-                color = MaterialTheme.colors.onSurface,
+                color = MaterialTheme.colors.primary,
                 style = MaterialTheme.typography.h4
             )
             if (tournament.startAt != null && tournament.endAt != null) {
@@ -98,7 +98,8 @@ fun TournamentCard(tournament: Tournament, clickable: Boolean, onClick: (String)
                         tournament.startAt,
                         tournament.endAt
                     ),
-                    color = MaterialTheme.colors.onSurface
+                    color = MaterialTheme.colors.onSurface,
+                    style = MaterialTheme.typography.h5
                 )
             }
             if (tournament.isOnline != null) {
@@ -209,7 +210,7 @@ fun EventCardItem(event: Event, clickable: Boolean, onClick: (String) -> Unit) {
                         "h:mm a",
                         Locale.getDefault()
                     ).format(event.startAt),
-                    color = MaterialTheme.colors.secondary,
+                    color = MaterialTheme.colors.onSurface,
                     style = MaterialTheme.typography.h5,
                 )
             }
