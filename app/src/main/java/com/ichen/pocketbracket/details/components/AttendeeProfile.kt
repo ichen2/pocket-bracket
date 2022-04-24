@@ -56,7 +56,7 @@ fun AttendeeProfile(attendee: Attendee, tournamentSlug: String) {
                 )
             }
         }
-        Spacer(Modifier.width(8.dp))
+        Spacer(Modifier.width(16.dp))
         Text(
             attendee.tag,
             color = MaterialTheme.colors.onBackground,
