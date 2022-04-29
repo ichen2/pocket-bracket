@@ -26,15 +26,20 @@ class MyProfileViewModel : ViewModel() {
                     && parsedResponse.slug != null
                     && parsedResponse.images != null
                 ) {
+                    val profileImageUrl: String? = parsedResponse.images.filter { image ->
+                        image?.type == "profile"
+                    }.getOrNull(0)?.url
+                    val bannerImageUrl: String? = parsedResponse.images.filter { image ->
+                        image?.type == "banner"
+                    }.getOrNull(0)?.url
                     userDetails.value = Field(
                         UserDetails(
                             id = parsedResponse.id,
                             tag = parsedResponse.player?.gamerTag,
                             url = "${SITE_ENDPOINT}/${parsedResponse.slug}",
                             name = parsedResponse.name,
-                            imageUrls = parsedResponse.images.mapNotNull { image ->
-                                image!!.url
-                            },
+                            profileImageUrl = profileImageUrl,
+                            bannerImageUrl = bannerImageUrl,
                             location = parsedResponse.location?.country
                         ), Status.SUCCESS
                     )

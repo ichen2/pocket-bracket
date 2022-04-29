@@ -13,6 +13,7 @@ query GetParticipants(
                 connectedAccounts
                 images {
                     url
+                    type
                 }
                 prefix
                 events {
@@ -23,6 +24,7 @@ query GetParticipants(
                 user {
                     images {
                         url
+                        type
                     }
                 }
                 gamerTag

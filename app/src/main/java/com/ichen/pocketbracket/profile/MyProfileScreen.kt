@@ -18,15 +18,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import coil.size.OriginalSize
 import coil.size.Scale
@@ -66,13 +70,13 @@ fun ColumnScope.MyProfileScreen(
             Box(Modifier.verticalScroll(rememberScrollState()), contentAlignment = Alignment.TopCenter) {
                 Image(
                     contentScale = ContentScale.FillWidth,
-                    painter = if (userDetails?.imageUrls?.getOrNull(1) != null) rememberImagePainter(
-                        data = userDetails.imageUrls[1],
+                    painter = if (userDetails?.bannerImageUrl != null) rememberImagePainter(
+                        data = userDetails.bannerImageUrl,
                         builder = {
                             size(OriginalSize)
                             placeholder(R.drawable.image_unavailable)
-                        }) else painterResource(id = R.drawable.image_unavailable),
-                    contentDescription = "profile image",
+                        }) else ColorPainter(MaterialTheme.colors.primary),
+                    contentDescription = "banner image",
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(128.dp)
@@ -84,26 +88,40 @@ fun ColumnScope.MyProfileScreen(
                 ) {
                     Spacer(Modifier.height(100.dp))
                     Row {
-                        Image(
-                            painter = if (userDetails?.imageUrls?.getOrNull(0) != null) rememberImagePainter(
-                                data = userDetails.imageUrls[0],
-                                builder = {
-                                    scale(Scale.FILL)
-                                    transformations(CircleCropTransformation())
-                                    placeholder(R.drawable.image_unavailable)
-                                }) else painterResource(id = R.drawable.image_unavailable),
-                            contentDescription = "profile image",
-                            modifier = Modifier
-                                .size(100.dp)
-                                .clip(
-                                    CircleShape
+                        if(userDetails?.profileImageUrl != null) {
+                            Image(
+                                painter = rememberImagePainter(
+                                    data = userDetails.profileImageUrl,
+                                    builder = {
+                                        scale(Scale.FILL)
+                                        transformations(CircleCropTransformation())
+                                        placeholder(R.drawable.image_unavailable)
+                                    }),
+                                contentDescription = "profile image",
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .clip(
+                                        CircleShape
+                                    )
+                                    .border(
+                                        color = MaterialTheme.colors.background,
+                                        width = 4.dp,
+                                        shape = CircleShape
+                                    ),
+                            )
+                        } else {
+                            Box(
+                                Modifier.size(100.dp).clip(CircleShape).background(Color.LightGray),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "${userDetails?.tag?.getOrNull(0)?.toUpperCase() ?: "?"}",
+                                    fontSize = 48.sp,
+                                    lineHeight = 20.sp,
+                                    color = Color.White
                                 )
-                                .border(
-                                    color = MaterialTheme.colors.background,
-                                    width = 4.dp,
-                                    shape = CircleShape
-                                ),
-                        )
+                            }
+                        }
                         Spacer(Modifier.width(16.dp))
                         Column {
                             Spacer(Modifier.height(36.dp))

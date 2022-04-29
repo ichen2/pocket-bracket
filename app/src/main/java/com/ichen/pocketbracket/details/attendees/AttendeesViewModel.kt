@@ -55,11 +55,16 @@ class AttendeesViewModel : ViewModel() {
             node?.id != null
             node?.gamerTag != null
         }.map { node ->
+            val profileImageUrl: String? = node?.images?.filter { image ->
+                image?.type == "profile"
+            }?.getOrNull(0)?.url ?: node?.user?.images?.filter { image ->
+                image?.type == "profile"
+            }?.getOrNull(0)?.url
             Attendee(
                 id = node!!.id!!,
                 prefix = node.prefix,
                 tag = node.gamerTag!!,
-                imageUrl = node.images?.getOrNull(0)?.url ?: node.user?.images?.getOrNull(0)?.url, // if user set a custom avatar for this tournament, use it,
+                imageUrl = profileImageUrl,
                 events = (node.events?.filter { event ->
                     event?.id != null &&
                     event.name != null &&

@@ -6,5 +6,6 @@ data class UserDetails(
     val name: String?,
     val tag: String?,
     val location: String?,
-    val imageUrls: List<String>,
+    val profileImageUrl: String?,
+    val bannerImageUrl: String?
 )
