@@ -25,12 +25,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ichen.pocketbracket.ui.theme.medGrey
 import com.ichen.pocketbracket.utils.Field
+import com.ichen.pocketbracket.utils.SITE_ENDPOINT
 import com.ichen.pocketbracket.utils.Status
+import com.ichen.pocketbracket.utils.openBrowser
 
 @Composable
 fun AuthScreen(
     viewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
-    showWebView: () -> Unit
 ) =
     Column(
         Modifier
@@ -140,8 +141,13 @@ fun AuthScreen(
                     },
                     color = MaterialTheme.colors.onBackground
                 )
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "4. Copy that token, return to Pocket Bracket, and paste it above",
+                    color = MaterialTheme.colors.onBackground
+                )
                 Button(
-                    onClick = { showWebView() },
+                    onClick = { openBrowser(context, SITE_ENDPOINT) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(64.dp)

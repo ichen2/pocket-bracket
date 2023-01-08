@@ -44,11 +44,11 @@ import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
 import com.ichen.pocketbracket.ui.theme.medGrey
 import com.ichen.pocketbracket.utils.SetComposableFunction
 import com.ichen.pocketbracket.utils.Status
+import com.ichen.pocketbracket.utils.openBrowser
 
 
 @Composable
 fun ColumnScope.MyProfileScreen(
-    setDialogComposable: SetComposableFunction,
     viewModel: MyProfileViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) =
     Column(
@@ -163,11 +163,7 @@ fun ColumnScope.MyProfileScreen(
                         )
                         if (userDetails?.url != null) {
                             UserSetting(Icons.Filled.AccountCircle, "Edit Profile") {
-                                setDialogComposable {
-                                    WebView(userDetails.url) {
-                                        setDialogComposable(null)
-                                    }
-                                }
+                                openBrowser(context, userDetails.url)
                             }
                         }
                         UserSetting(Icons.Filled.Logout, "Log Out") {

@@ -15,11 +15,7 @@ class AuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PocketBracketTheme {
-                AuthScreen(showWebView = {
-                        val intent =
-                            Intent(Intent.ACTION_VIEW, Uri.parse(SITE_ENDPOINT))
-                        startActivity(intent)
-                })
+                AuthScreen()
             }
         }
     }

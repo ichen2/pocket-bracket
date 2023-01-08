@@ -70,13 +70,6 @@ fun ColumnScope.MyTournamentsScreen(
                     }
                     TournamentCard(tournament, true) { url ->
                         openTournamentDetailsScreen(context, tournament)
-                        /*
-                        setDialogComposable {
-                            WebView(url) {
-                                setDialogComposable(null)
-                            }
-                        }
-                        */
                     }
                 }
                 if (viewModel.tournaments.value.status == Status.LOADING) {

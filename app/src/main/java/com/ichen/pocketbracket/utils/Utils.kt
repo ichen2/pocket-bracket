@@ -2,6 +2,7 @@ package com.ichen.pocketbracket.utils
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
 import androidx.core.content.ContextCompat
@@ -27,8 +28,8 @@ fun openTournamentDetailsScreen(context: Context, tournament: Tournament) {
 }
 
 fun openBrowser(context: Context, url: String) {
-    val intent = Intent(context, BrowserActivity::class.java)
-    intent.putExtra("url", url)
+    val intent =
+        Intent(Intent.ACTION_VIEW, Uri.parse(url))
     ContextCompat.startActivity(context, intent, null)
 }
 

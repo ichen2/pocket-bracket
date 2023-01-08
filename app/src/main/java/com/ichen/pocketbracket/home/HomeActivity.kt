@@ -74,9 +74,7 @@ class HomeActivity : AppCompatActivity() {
                                     })
                                 }
                                 CurrentTab.MyProfile -> {
-                                    MyProfileScreen(setDialogComposable = {
-                                        dialogComposable.value = it
-                                    })
+                                    MyProfileScreen()
                                 }
                             }
                             NavigationFooter(currentTab, dialogComposable.value == null)

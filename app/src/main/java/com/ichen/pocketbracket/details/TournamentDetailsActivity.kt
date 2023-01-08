@@ -21,7 +21,7 @@ import com.ichen.pocketbracket.details.attendees.AttendeesScreen
 import com.ichen.pocketbracket.details.components.Header
 import com.ichen.pocketbracket.details.components.Sidebar
 import com.ichen.pocketbracket.details.events.EventsScreen
-import com.ichen.pocketbracket.details.home.HomeScreen
+import com.ichen.pocketbracket.details.home.DetailsScreen
 import com.ichen.pocketbracket.models.Tournament
 import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
 import com.ichen.pocketbracket.utils.API_KEY_STORAGE_KEY
@@ -59,7 +59,7 @@ class TournamentDetailsActivity : AppCompatActivity() {
                             Header(tournament!!, !showSidebar) { showSidebar = !showSidebar }
                                 when (currentTab.value) {
                                     CurrentTab.Home -> {
-                                        HomeScreen()
+                                        DetailsScreen()
                                     }
                                     CurrentTab.Attendees -> {
                                         AttendeesScreen(tournament?.slug ?: "") // pass empty string if no slug so browser will redirect to 404

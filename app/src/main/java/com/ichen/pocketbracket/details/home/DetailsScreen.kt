@@ -8,7 +8,7 @@ import com.ichen.pocketbracket.details.components.Banner
 import com.ichen.pocketbracket.details.tournament
 
 @Composable
-fun ColumnScope.HomeScreen() {
+fun ColumnScope.DetailsScreen() {
     Column {
         Banner(tournament!!)
     }
