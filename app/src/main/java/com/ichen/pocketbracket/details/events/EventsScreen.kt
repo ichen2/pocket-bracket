@@ -1,4 +1,4 @@
-package com.ichen.pocketbracket.details
+package com.ichen.pocketbracket.details.events
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope

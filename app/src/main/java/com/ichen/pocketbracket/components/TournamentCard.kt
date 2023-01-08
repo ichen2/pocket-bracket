@@ -1,5 +1,6 @@
 package com.ichen.pocketbracket.timeline.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -203,23 +204,22 @@ fun EventCardItem(event: Event, clickable: Boolean, onClick: (String) -> Unit) {
             style = MaterialTheme.typography.h5
         )
         Row {
+            if (event.numEntrants != null) {
+                Text(
+                    text = "${event.numEntrants} ${if (event.numEntrants == 1) "entrant" else "entrants"}",
+                    color = MaterialTheme.colors.onSurface,
+                )
+                Spacer(Modifier.weight(1f))
+            }
+            Log.d("IVC", "${event.startAt == null}")
             if (event.startAt != null) {
                 Text(
-                    modifier = Modifier.weight(1f),
                     text = SimpleDateFormat(
                         "h:mm a",
                         Locale.getDefault()
                     ).format(event.startAt),
                     color = MaterialTheme.colors.onSurface,
                     style = MaterialTheme.typography.h5,
-                )
-            }
-            if (event.numEntrants != null) {
-                Text(
-                    modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.End,
-                    text = "${event.numEntrants} ${if (event.numEntrants == 1) "entrant" else "entrants"}",
-                    color = MaterialTheme.colors.onSurface,
                 )
             }
         }

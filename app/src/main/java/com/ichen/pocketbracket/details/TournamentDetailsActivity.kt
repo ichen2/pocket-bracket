@@ -20,6 +20,8 @@ import com.ichen.pocketbracket.components.ErrorSplash
 import com.ichen.pocketbracket.details.attendees.AttendeesScreen
 import com.ichen.pocketbracket.details.components.Header
 import com.ichen.pocketbracket.details.components.Sidebar
+import com.ichen.pocketbracket.details.events.EventsScreen
+import com.ichen.pocketbracket.details.home.HomeScreen
 import com.ichen.pocketbracket.models.Tournament
 import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
 import com.ichen.pocketbracket.utils.API_KEY_STORAGE_KEY
