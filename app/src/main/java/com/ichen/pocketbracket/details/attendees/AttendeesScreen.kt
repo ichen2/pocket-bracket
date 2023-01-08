@@ -1,5 +1,6 @@
 package com.ichen.pocketbracket.details.attendees
 
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,7 +13,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ichen.pocketbracket.components.ErrorSplash
 import com.ichen.pocketbracket.details.components.AttendeeProfile
 import com.ichen.pocketbracket.details.components.AttendeesListLoading
@@ -33,9 +33,9 @@ TODO: Ideally, I think these two approaches should be combined (check the number
  */
 
 @Composable
-fun AttendeesScreen(
+fun ColumnScope.AttendeesScreen(
     tournamentSlug: String,
-    viewModel: AttendeesViewModel = viewModel()
+    viewModel: AttendeesViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
     val context = LocalContext.current
     var searchPhrase by remember { mutableStateOf("") }
