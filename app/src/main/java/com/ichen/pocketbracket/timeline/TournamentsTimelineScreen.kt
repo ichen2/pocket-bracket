@@ -107,7 +107,7 @@ fun ColumnScope.TournamentsTimelineScreen(
     ) {
         if (viewModel.tournaments.value.data.isEmpty()) {
             if (viewModel.tournaments.value.status == Status.ERROR) {
-                ErrorSplash("Error fetching tournaments from smash.gg")
+                ErrorSplash("Error fetching tournaments from start.gg")
             } else if (viewModel.tournaments.value.status == Status.SUCCESS) {
                 ErrorSplash("No tournaments found", isCritical = false)
             } else {

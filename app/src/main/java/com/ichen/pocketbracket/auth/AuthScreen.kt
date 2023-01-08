@@ -98,7 +98,7 @@ fun AuthScreen(
             Column(verticalArrangement = spacedBy(16.dp)) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    text = "In order to connect your account with smash.gg, PocketBracket needs an authentication token. To generate this token:",
+                    text = "In order to connect your account with start.gg, PocketBracket needs an authentication token. To generate this token:",
                     color = MaterialTheme.colors.onBackground
                 )
                 Text(
@@ -109,7 +109,7 @@ fun AuthScreen(
                             style =
                             SpanStyle(color = MaterialTheme.colors.primary)
                         ) {
-                            append("smash.gg")
+                            append("start.gg")
                         }
                     },
                     color = MaterialTheme.colors.onBackground
@@ -147,7 +147,7 @@ fun AuthScreen(
                         .height(64.dp)
                         .padding(4.dp)
                 ) {
-                    Text(text = "Open smash.gg")
+                    Text(text = "Open start.gg")
                 }
                 val annotatedString = buildAnnotatedString {
                     val text =

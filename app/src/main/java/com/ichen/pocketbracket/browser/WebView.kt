@@ -1,4 +1,4 @@
-package com.ichen.pocketbracket.components
+package com.ichen.pocketbracket.browser
 
 import android.view.ViewGroup
 import android.webkit.WebViewClient
@@ -54,7 +54,7 @@ fun WebViewPreview() = Column(
         .background(Color.Red)) {
     var showWebView by remember { mutableStateOf(true) }
     if(showWebView) {
-        WebView("https://smash.gg/tournament/tired-of-0-2-3") { showWebView = false }
+        WebView("https://start.gg/tournament/tired-of-0-2-3") { showWebView = false }
     } else {
         Text("WebView closed")
     }

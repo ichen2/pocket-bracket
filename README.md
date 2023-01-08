@@ -1,6 +1,6 @@
 # Pocket Bracket
 
-An Android client for the open source smash.gg API. Built with Kotlin and Jetpack Compose.
+An Android client for the open source start.gg API. Built with Kotlin and Jetpack Compose.
 
 Play Store Link: [https://play.google.com/store/apps/details?id=com.ichen.pocketbracket](https://play.google.com/store/apps/details?id=com.ichen.pocketbracket)
 
@@ -10,7 +10,7 @@ Pocket Bracket lets users search for, view, and register for esports tournaments
 
 - Tournament Search - lets the user search for tournaments using several filters
 - My Tournaments - displays all tournaments the user has registered for and/or competed in
-- My Profile - displays the user's smash.gg profile
+- My Profile - displays the user's start.gg profile
 
 #### Feature Roadmap
 
@@ -26,7 +26,7 @@ Add tools for tournament organizers to create and run tournaments from within th
 
 Currently the profile screen only displays basic information about the user. Profiles should contain additional users info. Some examples of additional info to include could be:
 
-- A player schedule, similar to https://smash.gg/user/31d46d72/schedule
+- A player schedule, similar to https://start.gg/user/31d46d72/schedule
 - A detailed breakdown of user placings in tournaments, and a timeline to show improvement
 - Statistics on character usage, placings, tournaments attended, etc.
 

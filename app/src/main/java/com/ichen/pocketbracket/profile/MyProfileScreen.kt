@@ -23,10 +23,8 @@ import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,7 +38,7 @@ import com.ichen.pocketbracket.home.apiKey
 import com.ichen.pocketbracket.auth.AuthActivity
 import com.ichen.pocketbracket.components.ErrorSplash
 import com.ichen.pocketbracket.components.ShimmerAnimation
-import com.ichen.pocketbracket.components.WebView
+import com.ichen.pocketbracket.browser.WebView
 import com.ichen.pocketbracket.profile.components.UserSetting
 import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
 import com.ichen.pocketbracket.ui.theme.medGrey
@@ -192,7 +190,7 @@ fun ColumnScope.MyProfileScreen(
                         Spacer(Modifier.height(16.dp))
                         val annotatedString = buildAnnotatedString {
                             val text =
-                                "Pocket Bracket is powered by the smash.gg API. For support, bug reports, or feature suggestions please contact "
+                                "Pocket Bracket is powered by the start.gg API. For support, bug reports, or feature suggestions please contact "
                             val annotatedText = "pocketbracket@gmail.com"
                             append(text + annotatedText)
                             addStringAnnotation(
@@ -228,7 +226,7 @@ fun ColumnScope.MyProfileScreen(
                 }
             }
         } else if (viewModel.userDetails.value.status == Status.ERROR) {
-            ErrorSplash("Error fetching your profile from smash.gg")
+            ErrorSplash("Error fetching your profile from start.gg")
             Row(Modifier.clickable {
                 apiKey = null
                 context.startActivity(Intent(context, AuthActivity::class.java))

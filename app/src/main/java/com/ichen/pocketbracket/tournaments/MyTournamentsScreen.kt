@@ -53,7 +53,7 @@ fun ColumnScope.MyTournamentsScreen(
     ) {
         if (viewModel.tournaments.value.data.isEmpty()) {
             if(viewModel.tournaments.value.status == Status.ERROR) {
-                ErrorSplash("Error fetching your tournaments from smash.gg")
+                ErrorSplash("Error fetching your tournaments from start.gg")
             }
             else if (viewModel.tournaments.value.status == Status.SUCCESS) {
                 ErrorSplash("No tournaments found", isCritical = false)

@@ -72,7 +72,7 @@ class TournamentDetailsActivity : AppCompatActivity() {
                         }
                     }
                 } else {
-                    ErrorSplash("Error fetching tournament details from smash.gg")
+                    ErrorSplash("Error fetching tournament details from start.gg")
                 }
             }
         }
