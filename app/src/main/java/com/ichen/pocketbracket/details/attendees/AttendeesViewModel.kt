@@ -5,7 +5,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.apollographql.apollo.api.Response
+import com.apollographql.apollo3.api.ApolloResponse
 import com.ichen.pocketbracket.GetParticipantsQuery
 import com.ichen.pocketbracket.details.tournament
 import com.ichen.pocketbracket.models.Attendee
@@ -49,7 +49,7 @@ class AttendeesViewModel : ViewModel() {
         }
     }
 
-    private fun parseGetParticipantsResponse(response: Response<GetParticipantsQuery.Data>?): List<Attendee>? {
+    private fun parseGetParticipantsResponse(response: ApolloResponse<GetParticipantsQuery.Data>?): List<Attendee>? {
         val nodes = response?.data?.tournament?.participants?.nodes ?: return null
         return nodes.filter { node ->
             node?.id != null

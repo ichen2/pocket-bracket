@@ -1,10 +1,12 @@
 package com.ichen.pocketbracket.timeline.components
 
 import android.content.Context
-import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.api.Input
-import com.apollographql.apollo.coroutines.await
-import com.apollographql.apollo.exception.ApolloException
+import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.ApolloResponse
+import com.apollographql.apollo3.api.Optional
+
+import com.apollographql.apollo3.exception.ApolloException
+import com.apollographql.apollo3.network.okHttpClient
 import com.ichen.pocketbracket.GetVideogamesQuery
 import com.ichen.pocketbracket.home.apiKey
 import com.ichen.pocketbracket.models.VideogameFilter
@@ -23,7 +25,7 @@ class ChooseGamesRepository {
     suspend fun getVideogames(
         filter: VideogameFilter,
         context: Context,
-        onResponse: (com.apollographql.apollo.api.Response<GetVideogamesQuery.Data>?) -> Unit
+        onResponse: (ApolloResponse<GetVideogamesQuery.Data>?) -> Unit
     ) {
         val apolloClient = ApolloClient.builder()
             .serverUrl(API_ENDPOINT)
@@ -41,9 +43,9 @@ class ChooseGamesRepository {
                             GetVideogamesQuery(
                                 page = filter.page,
                                 perPage = filter.perPage,
-                                name = Input.optional(filter.name)
+                                name = Optional.presentIfNotNull(filter.name)
                             )
-                        ).await()
+                        ).execute()
                     }
                 } catch (e: ApolloException) {
                     // handle protocol errors

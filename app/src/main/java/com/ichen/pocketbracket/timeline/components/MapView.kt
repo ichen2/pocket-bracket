@@ -195,7 +195,7 @@ fun LocationPicker(
                     .background(MaterialTheme.colors.background)
                     .clickable {
                         locationButtonClicked.value = true
-                        if (!locationPermissionState.allPermissionsGranted && !locationPermissionState.permissionRequested) {
+                        if (!locationPermissionState.allPermissionsGranted) { // TODO: rewrite location request
                             locationPermissionState.launchMultiplePermissionRequest()
                         }
                     }, contentAlignment = Alignment.Center

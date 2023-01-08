@@ -1,10 +1,12 @@
 package com.ichen.pocketbracket.timeline
 
 import android.content.Context
-import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.api.Input
-import com.apollographql.apollo.coroutines.await
-import com.apollographql.apollo.exception.ApolloException
+import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.ApolloResponse
+import com.apollographql.apollo3.api.Optional
+
+import com.apollographql.apollo3.exception.ApolloException
+import com.apollographql.apollo3.network.okHttpClient
 import com.ichen.pocketbracket.GetTournamentsQuery
 import com.ichen.pocketbracket.home.apiKey
 import com.ichen.pocketbracket.models.*
@@ -28,7 +30,7 @@ class TournamentsTimelineRepository {
     suspend fun getTournaments(
         filter: TournamentFilter,
         context: Context,
-        onResponse: (com.apollographql.apollo.api.Response<GetTournamentsQuery.Data>?) -> Unit
+        onResponse: (ApolloResponse<GetTournamentsQuery.Data>?) -> Unit
     ) {
         val apolloClient = ApolloClient.builder()
             .serverUrl(API_ENDPOINT)
@@ -46,36 +48,36 @@ class TournamentsTimelineRepository {
                             GetTournamentsQuery(
                                 page = filter.page,
                                 perPage = filter.perPage,
-                                name = Input.optional(filter.name),
+                                name = Optional.presentIfNotNull(filter.name),
                                 isOnline = when (filter.type) {
-                                    TournamentType.IS_ONLINE -> Input.optional(true)
-                                    TournamentType.IS_OFFLINE -> Input.optional(false)
-                                    else -> Input.absent()
+                                    TournamentType.IS_ONLINE -> Optional.presentIfNotNull(true)
+                                    TournamentType.IS_OFFLINE -> Optional.presentIfNotNull(false)
+                                    else -> Optional.Absent
                                 },
-                                location = if (filter.location != null) Input.optional(
+                                location = if (filter.location != null) Optional.presentIfNotNull(
                                     TournamentLocationFilter(
-                                        distanceFrom = Input.optional("${filter.location.center.latitude},${filter.location.center.longitude}"),
-                                        distance = Input.optional("${filter.location.radius.toInt()}mi")
+                                        distanceFrom = Optional.presentIfNotNull("${filter.location.center.latitude},${filter.location.center.longitude}"),
+                                        distance = Optional.presentIfNotNull("${filter.location.radius.toInt()}mi")
                                     )
-                                ) else Input.absent(),
+                                ) else Optional.Absent,
                                 registrationIsOpen = when (filter.registration) {
-                                    TournamentRegistrationStatus.OPEN -> Input.optional(true)
-                                    TournamentRegistrationStatus.CLOSED -> Input.optional(false)
-                                    else -> Input.absent()
+                                    TournamentRegistrationStatus.OPEN -> Optional.presentIfNotNull(true)
+                                    TournamentRegistrationStatus.CLOSED -> Optional.presentIfNotNull(false)
+                                    else -> Optional.Absent
                                 },
-                                afterDate = if (filter.dates != null) Input.optional(filter.dates.start.time / 1000) else Input.absent(),
-                                beforeDate = if (filter.dates != null) Input.optional(
+                                afterDate = if (filter.dates != null) Optional.presentIfNotNull(filter.dates.start.time / 1000) else Optional.Absent,
+                                beforeDate = if (filter.dates != null) Optional.presentIfNotNull(
                                     filter.dates.end.addHours(
                                         1
                                     ).time / 1000
-                                ) else Input.optional(
+                                ) else Optional.presentIfNotNull(
                                     Date().addDays(365).time / 1000
                                 ),
-                                videogameIds = if (filter.games != null) Input.optional(filter.games.map { videogame ->
+                                videogameIds = if (filter.games != null) Optional.presentIfNotNull(filter.games.map { videogame ->
                                     videogame.id.toString()
-                                }) else Input.absent()
+                                }) else Optional.Absent
                             )
-                        ).await()
+                        ).execute()
                     }
                 } catch (e: ApolloException) {
                     // handle protocol errors

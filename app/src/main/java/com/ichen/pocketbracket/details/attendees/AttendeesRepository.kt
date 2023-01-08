@@ -2,9 +2,11 @@ package com.ichen.pocketbracket.details.attendees
 
 
 import android.content.Context
-import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.coroutines.await
-import com.apollographql.apollo.exception.ApolloException
+import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.ApolloResponse
+
+import com.apollographql.apollo3.exception.ApolloException
+import com.apollographql.apollo3.network.okHttpClient
 import com.ichen.pocketbracket.GetParticipantsQuery
 import com.ichen.pocketbracket.home.apiKey
 import com.ichen.pocketbracket.utils.API_ENDPOINT
@@ -18,7 +20,7 @@ import okhttp3.OkHttpClient
 class AttendeesRepository {
     var currentJob: Job? = null
 
-    suspend fun getAttendees(tournamentId: String, page: Int, context: Context, onResponse: (com.apollographql.apollo.api.Response<GetParticipantsQuery.Data>?) -> Unit) {
+    suspend fun getAttendees(tournamentId: String, page: Int, context: Context, onResponse: (ApolloResponse<GetParticipantsQuery.Data>?) -> Unit) {
         val apolloClient = ApolloClient.builder()
             .serverUrl(API_ENDPOINT)
             .okHttpClient(
@@ -33,7 +35,7 @@ class AttendeesRepository {
                     withTimeoutOrNull(15000) {
                         apolloClient.query(
                             GetParticipantsQuery(id = tournamentId, perPage = 50, page = page)
-                        ).await()
+                        ).execute()
                     }
                 } catch (e: ApolloException) {
                     null

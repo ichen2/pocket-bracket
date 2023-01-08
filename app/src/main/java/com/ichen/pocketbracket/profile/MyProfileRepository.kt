@@ -1,9 +1,11 @@
 package com.ichen.pocketbracket.profile
 
 import android.content.Context
-import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.coroutines.await
-import com.apollographql.apollo.exception.ApolloException
+import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.ApolloResponse
+
+import com.apollographql.apollo3.exception.ApolloException
+import com.apollographql.apollo3.network.okHttpClient
 import com.ichen.pocketbracket.GetUserDetailsQuery
 import com.ichen.pocketbracket.home.apiKey
 import com.ichen.pocketbracket.utils.API_ENDPOINT
@@ -23,7 +25,7 @@ class MyProfileRepository {
 
     suspend fun getUserDetails(
         context: Context,
-        onResponse: (com.apollographql.apollo.api.Response<GetUserDetailsQuery.Data>?) -> Unit
+        onResponse: (ApolloResponse<GetUserDetailsQuery.Data>?) -> Unit
     ) {
         val apolloClient = ApolloClient.builder()
             .serverUrl(API_ENDPOINT)
@@ -39,7 +41,7 @@ class MyProfileRepository {
                     withTimeoutOrNull(15000) {
                         apolloClient.query(
                             GetUserDetailsQuery()
-                        ).await()
+                        ).execute()
                     }
                 } catch (e: ApolloException) {
                     // handle protocol errors

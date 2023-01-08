@@ -5,9 +5,9 @@ import android.content.Intent
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.coroutines.await
-import com.apollographql.apollo.exception.ApolloException
+import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.exception.ApolloException
+import com.apollographql.apollo3.network.okHttpClient
 import com.ichen.pocketbracket.GetUserDetailsQuery
 import com.ichen.pocketbracket.home.HomeActivity
 import com.ichen.pocketbracket.utils.*
@@ -36,7 +36,7 @@ class AuthViewModel : ViewModel() {
                     withTimeoutOrNull(10000) {
                         apolloClient.query(
                             GetUserDetailsQuery()
-                        ).await()
+                        ).execute()
                     }
                 } catch (e: ApolloException) {
                     null

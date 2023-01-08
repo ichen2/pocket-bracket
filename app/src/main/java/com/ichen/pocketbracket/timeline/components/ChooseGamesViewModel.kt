@@ -5,7 +5,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.apollographql.apollo.api.Response
+import com.apollographql.apollo3.api.ApolloResponse
 import com.ichen.pocketbracket.GetVideogamesQuery
 import com.ichen.pocketbracket.models.Videogame
 import com.ichen.pocketbracket.models.VideogameFilter
@@ -41,7 +41,7 @@ open class ChooseGamesViewModel : ViewModel() {
         }
     }
 
-    private fun parseGetVideogamesResponse(response: Response<GetVideogamesQuery.Data>?): List<Videogame>? {
+    private fun parseGetVideogamesResponse(response: ApolloResponse<GetVideogamesQuery.Data>?): List<Videogame>? {
         val nodes = response?.data?.videogames?.nodes
         if (nodes == null || nodes.isEmpty()) {
             return listOf()

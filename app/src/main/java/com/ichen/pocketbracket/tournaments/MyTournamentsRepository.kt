@@ -1,9 +1,11 @@
 package com.ichen.pocketbracket.tournaments
 
 import android.content.Context
-import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.coroutines.await
-import com.apollographql.apollo.exception.ApolloException
+import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.ApolloResponse
+
+import com.apollographql.apollo3.exception.ApolloException
+import com.apollographql.apollo3.network.okHttpClient
 import com.ichen.pocketbracket.GetUserTournamentsQuery
 import com.ichen.pocketbracket.home.apiKey
 import com.ichen.pocketbracket.utils.API_ENDPOINT
@@ -26,7 +28,7 @@ class MyTournamentsRepository {
         page: Int,
         perPage: Int,
         context: Context,
-        onResponse: (com.apollographql.apollo.api.Response<GetUserTournamentsQuery.Data>?) -> Unit
+        onResponse: (ApolloResponse<GetUserTournamentsQuery.Data>?) -> Unit
     ) {
         val apolloClient = ApolloClient.builder()
             .serverUrl(API_ENDPOINT)
@@ -42,7 +44,7 @@ class MyTournamentsRepository {
                     withTimeoutOrNull(15000) {
                         apolloClient.query(
                             GetUserTournamentsQuery(page, perPage)
-                        ).await()
+                        ).execute()
                     }
                 } catch (e: ApolloException) {
                     // handle protocol errors
