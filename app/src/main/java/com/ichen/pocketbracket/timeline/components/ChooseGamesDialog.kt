@@ -22,12 +22,13 @@ import com.ichen.pocketbracket.components.ErrorSplash
 import com.ichen.pocketbracket.models.Videogame
 import com.ichen.pocketbracket.models.VideogameFilter
 import com.ichen.pocketbracket.utils.Status
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun ChooseGamesDialog(
     onPositiveButtonClick: (List<Videogame>) -> Unit,
     onNegativeButtonClick: () -> Unit,
-    viewModel: ChooseGamesViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: ChooseGamesViewModel = viewModel()
 ) = Column(
     Modifier
         .fillMaxSize(1f)

@@ -14,13 +14,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.ichen.pocketbracket.components.ErrorSplash
 import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.timeline.components.TimelineHeader
 import com.ichen.pocketbracket.timeline.components.TournamentCard
 import com.ichen.pocketbracket.timeline.components.TournamentsListLoading
-import com.ichen.pocketbracket.utils.SECONDS_IN_DAY
 import com.ichen.pocketbracket.utils.SetComposableFunction
 import com.ichen.pocketbracket.utils.Status
 import com.ichen.pocketbracket.utils.openTournamentDetailsScreen
@@ -33,7 +33,7 @@ val today = Date()
 fun ColumnScope.TournamentsTimelineScreen(
     clickable: Boolean,
     setDialogComposable: SetComposableFunction,
-    viewModel: TournamentsTimelineViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: TournamentsTimelineViewModel = viewModel()
 ) = Column(
     Modifier
         .weight(1f)

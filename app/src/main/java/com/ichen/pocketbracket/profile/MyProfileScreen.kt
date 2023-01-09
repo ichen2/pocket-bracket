@@ -29,27 +29,26 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import coil.size.OriginalSize
 import coil.size.Scale
 import coil.transform.CircleCropTransformation
 import com.ichen.pocketbracket.R
-import com.ichen.pocketbracket.home.apiKey
 import com.ichen.pocketbracket.auth.AuthActivity
 import com.ichen.pocketbracket.components.ErrorSplash
 import com.ichen.pocketbracket.components.ShimmerAnimation
-import com.ichen.pocketbracket.browser.WebView
+import com.ichen.pocketbracket.home.apiKey
 import com.ichen.pocketbracket.profile.components.UserSetting
 import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
 import com.ichen.pocketbracket.ui.theme.medGrey
-import com.ichen.pocketbracket.utils.SetComposableFunction
 import com.ichen.pocketbracket.utils.Status
 import com.ichen.pocketbracket.utils.openBrowser
 
 
 @Composable
 fun ColumnScope.MyProfileScreen(
-    viewModel: MyProfileViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: MyProfileViewModel = viewModel()
 ) =
     Column(
         modifier = Modifier

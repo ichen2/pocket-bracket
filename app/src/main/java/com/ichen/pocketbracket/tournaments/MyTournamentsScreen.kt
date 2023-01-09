@@ -18,13 +18,13 @@ import androidx.compose.ui.unit.dp
 import com.ichen.pocketbracket.components.ErrorSplash
 import com.ichen.pocketbracket.timeline.components.TournamentCard
 import com.ichen.pocketbracket.timeline.components.TournamentsListLoading
-import com.ichen.pocketbracket.utils.SetComposableFunction
 import com.ichen.pocketbracket.utils.Status
 import com.ichen.pocketbracket.utils.openTournamentDetailsScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun ColumnScope.MyTournamentsScreen(
-    viewModel: MyTournamentsViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: MyTournamentsViewModel = viewModel()
 ) = Column(Modifier.weight(1f)) {
 
     val context = LocalContext.current

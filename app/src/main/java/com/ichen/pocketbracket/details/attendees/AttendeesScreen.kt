@@ -17,6 +17,7 @@ import com.ichen.pocketbracket.components.ErrorSplash
 import com.ichen.pocketbracket.details.components.AttendeeProfile
 import com.ichen.pocketbracket.details.components.AttendeesListLoading
 import com.ichen.pocketbracket.utils.Status
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 /*
 
@@ -36,7 +37,7 @@ TODO: Ideally, I think these two approaches should be combined (check the number
 @Composable
 fun ColumnScope.AttendeesScreen(
     tournamentSlug: String,
-    viewModel: AttendeesViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: AttendeesViewModel = viewModel()
 ) {
     val context = LocalContext.current
     var searchPhrase by remember { mutableStateOf("") }

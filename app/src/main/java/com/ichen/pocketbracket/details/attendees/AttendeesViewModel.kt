@@ -40,7 +40,7 @@ class AttendeesViewModel : ViewModel() {
                         (attendees.value.data + (parsedResponse ?: listOf())).distinctBy { attendee -> attendee.id },
                         if (parsedResponse == null) Status.ERROR else Status.SUCCESS
                     )
-                    hasMoreAttendees = parsedResponse?.size ?: 0 > 0
+                    hasMoreAttendees = (parsedResponse?.size ?: 0) > 0
                     if(attendees.value.status != Status.ERROR) getAttendees(context)
                 }
             }

@@ -28,10 +28,11 @@ import com.ichen.pocketbracket.utils.Field
 import com.ichen.pocketbracket.utils.SITE_ENDPOINT
 import com.ichen.pocketbracket.utils.Status
 import com.ichen.pocketbracket.utils.openBrowser
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun AuthScreen(
-    viewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    viewModel: AuthViewModel = viewModel(),
 ) =
     Column(
         Modifier
