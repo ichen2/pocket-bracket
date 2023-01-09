@@ -7,6 +7,7 @@ import com.ichen.pocketbracket.details.events.EventsScreen
 import com.ichen.pocketbracket.details.components.Banner
 import com.ichen.pocketbracket.details.tournament
 
+/* Don't believe his lies - Removing ColumnScope crashes screen */
 @Composable
 fun ColumnScope.DetailsScreen() {
     Column {

@@ -119,8 +119,11 @@ class AuthorizationInterceptor(val context: Context, val apiKey: String) : Inter
 }
 
 fun mergeAddress(city: String?, state: String?, country: String?) : String? {
-    val address: String = (if(city != null) "$city, " else "") + (if(state != null) "$state, " else "") + if(country != null) "$country" else ""
-    return if(address.isEmpty()) null else address
+    val address: String =
+        (if(city != null) "$city, " else "") +
+        (if(state != null) "$state, " else "") +
+        (if(country != null) "$country" else "")
+    return address.ifEmpty { null }
 }
 
 const val Z_INDEX_TOP = 1000f

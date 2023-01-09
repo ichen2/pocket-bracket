@@ -83,12 +83,15 @@ fun AuthScreen(
             }
             Spacer(Modifier.weight(1f))
         }
-        Button(modifier = Modifier
-            .fillMaxWidth()
-            .height(64.dp)
-            .padding(4.dp), onClick = {
-            viewModel.verifyApiKey(context)
-        }) {
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp)
+                .padding(4.dp),
+            onClick = {
+                viewModel.verifyApiKey(context)
+            },
+        ) {
             if (viewModel.apiKeyText.value.status == Status.LOADING) {
                 CircularProgressIndicator(color = MaterialTheme.colors.onPrimary)
             } else {
@@ -144,25 +147,24 @@ fun AuthScreen(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = "4. Copy that token, return to Pocket Bracket, and paste it above",
-                    color = MaterialTheme.colors.onBackground
+                    color = MaterialTheme.colors.onBackground,
                 )
                 Button(
                     onClick = { openBrowser(context, SITE_ENDPOINT) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(64.dp)
-                        .padding(4.dp)
+                        .padding(4.dp),
                 ) {
                     Text(text = "Open start.gg")
                 }
                 val annotatedString = buildAnnotatedString {
-                    val text =
-                        "Still having trouble? Contact "
+                    val text = "Still having trouble? Contact "
                     val annotatedText = "pocketbracket@gmail.com"
                     append(text + annotatedText)
                     addStringAnnotation(
-                        "URL",
-                        "mailto:$annotatedText",
+                        tag = "URL",
+                        annotation = "mailto:$annotatedText",
                         start = text.length,
                         end = text.length + annotatedText.length
                     )
@@ -171,24 +173,30 @@ fun AuthScreen(
                             color = MaterialTheme.colors.onSurface,
                             fontSize = MaterialTheme.typography.body1.fontSize,
                             textDecoration = TextDecoration.None
-                        ), start = 0, end = text.length
+                        ),
+                        start = 0,
+                        end = text.length,
                     )
                     addStyle(
                         style = SpanStyle(
                             color = MaterialTheme.colors.primary,
                             fontSize = MaterialTheme.typography.body1.fontSize,
                             textDecoration = TextDecoration.Underline
-                        ), start = text.length, end = text.length + annotatedText.length
+                        ), start = text.length,
+                        end = text.length + annotatedText.length,
                     )
                 }
                 val uriHandler = LocalUriHandler.current
-                ClickableText(text = annotatedString, onClick = {
-                    annotatedString
-                        .getStringAnnotations("URL", it, it)
-                        .firstOrNull()?.let { stringAnnotation ->
-                            uriHandler.openUri(stringAnnotation.item)
-                        }
-                })
+                ClickableText(
+                    text = annotatedString,
+                    onClick = {
+                        annotatedString
+                            .getStringAnnotations("URL", it, it)
+                            .firstOrNull()?.let { stringAnnotation ->
+                                uriHandler.openUri(stringAnnotation.item)
+                            }
+                    },
+                )
             }
         } else {
             Text(

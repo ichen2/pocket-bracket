@@ -24,27 +24,28 @@ fun EventItem(event: Event, tournamentSlug: String) {
             Modifier
                 .weight(1f)
                 .clickable { openBrowser(context, event.url) }
-                .padding(8.dp)) {
+                .padding(8.dp)
+        ) {
             if (event.startAt != null) Text(
-                event.startAt.toPrettyString(),
+                text = event.startAt.toPrettyString(),
                 color = MaterialTheme.colors.onBackground,
                 style = MaterialTheme.typography.body1
             )
             Text(
-                event.name,
+                text = event.name,
                 color = MaterialTheme.colors.onBackground,
                 style = MaterialTheme.typography.h5
             )
             if (event.videogame != null) Text(
-                event.videogame.displayName,
+                text = event.videogame.displayName,
                 color = MaterialTheme.colors.onBackground,
                 style = MaterialTheme.typography.body2
             )
         }
-        Button(modifier = Modifier
-            .padding(4.dp),
+        Button(
+            modifier = Modifier.padding(4.dp),
             onClick = { openBrowser(context, "${SITE_ENDPOINT}/${tournamentSlug}/register") },
-            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
+            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
         ) {
             Text("Register", style = MaterialTheme.typography.h5)
         }

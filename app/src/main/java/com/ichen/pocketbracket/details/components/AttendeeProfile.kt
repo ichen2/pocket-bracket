@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.size.Scale
 import com.ichen.pocketbracket.R
@@ -25,11 +26,15 @@ import com.ichen.pocketbracket.models.Attendee
 import com.ichen.pocketbracket.utils.SITE_ENDPOINT
 import com.ichen.pocketbracket.utils.openBrowser
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun AttendeeProfile(attendee: Attendee, tournamentSlug: String) {
     val context = LocalContext.current
     Row(
-        Modifier.fillMaxWidth().clickable { openBrowser(context, "${SITE_ENDPOINT}/${tournamentSlug}/attendee/${attendee.id}") }.padding(8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { openBrowser(context, "${SITE_ENDPOINT}/${tournamentSlug}/attendee/${attendee.id}") }
+            .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
@@ -44,21 +49,21 @@ fun AttendeeProfile(attendee: Attendee, tournamentSlug: String) {
             contentScale = ContentScale.Crop,
         ) else {
             Box(
-                Modifier.size(32.dp).clip(CircleShape).background(Color.LightGray),
-                contentAlignment = Alignment.Center
+                modifier = Modifier.size(32.dp).clip(CircleShape).background(Color.LightGray),
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = "${attendee.tag.getOrNull(0)?.toUpperCase() ?: "?"}",
                     fontSize = 16.sp,
                     lineHeight = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = Color.White,
                 )
             }
         }
         Spacer(Modifier.width(16.dp))
         Text(
-            attendee.tag,
+            text = attendee.tag,
             color = MaterialTheme.colors.onBackground,
             style = MaterialTheme.typography.h5
         )
@@ -66,9 +71,12 @@ fun AttendeeProfile(attendee: Attendee, tournamentSlug: String) {
 }
 
 @Composable
-fun AttendeeProfileLoading(brush: Brush) = Row(modifier = Modifier
-    .fillMaxWidth()
-    .background(brush = brush).padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
+fun AttendeeProfileLoading(brush: Brush) = Row(
+    modifier = Modifier
+        .fillMaxWidth()
+        .background(brush = brush).padding(8.dp),
+    verticalAlignment = Alignment.CenterVertically,
+) {
     Box(Modifier.size(32.dp).clip(CircleShape).background(MaterialTheme.colors.background))
     Spacer(Modifier.width(8.dp))
     Box(Modifier.width(200.dp).height(16.dp).background(MaterialTheme.colors.background))

@@ -69,9 +69,7 @@ class HomeActivity : AppCompatActivity() {
                                     )
                                 }
                                 CurrentTab.MyTournaments -> {
-                                    MyTournamentsScreen(setDialogComposable = {
-                                        dialogComposable.value = it
-                                    })
+                                    MyTournamentsScreen()
                                 }
                                 CurrentTab.MyProfile -> {
                                     MyProfileScreen()

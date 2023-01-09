@@ -37,7 +37,7 @@ fun Sidebar(
     tournament: Tournament,
     currentTab: MutableState<CurrentTab>,
     goBack: () -> Unit,
-    toggle: () -> Unit
+    toggle: () -> Unit,
 ) = Row(Modifier.fillMaxSize()) {
     val context = LocalContext.current
     Column(
@@ -48,12 +48,12 @@ fun Sidebar(
             .padding(vertical = 8.dp), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
-            Icons.Filled.ChevronLeft,
+            imageVector = Icons.Filled.ChevronLeft,
             contentDescription = "go back",
             modifier = Modifier
                 .size(48.dp)
                 .clickable { goBack() },
-            tint = MaterialTheme.colors.onPrimary
+            tint = MaterialTheme.colors.onPrimary,
         )
     }
     Column(
@@ -93,30 +93,29 @@ fun Sidebar(
             )
         }
         Column(Modifier.padding(8.dp)) {
-            Button(modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
-                .padding(4.dp),
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .padding(4.dp),
                 onClick = { openBrowser(context, "${SITE_ENDPOINT}/${tournament.slug}/register") },
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
             ) {
-                Text("Register", style = MaterialTheme.typography.h5)
+                Text(text = "Register", style = MaterialTheme.typography.h5)
             }
             Spacer(Modifier.height(16.dp))
             if (tournament.startAt != null && tournament.endAt != null) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        Icons.Filled.Event,
-                        "date icon",
-                        Modifier.size(16.dp),
+                        imageVector = Icons.Filled.Event,
+                        contentDescription = "date icon",
+                        modifier = Modifier.size(16.dp),
                         tint = MaterialTheme.colors.primary
                     )
                     Spacer(Modifier.width(4.dp))
                     Text(
-                        text = DateRange(
-                            tournament.startAt,
-                            tournament.endAt
-                        ).toString(), style = MaterialTheme.typography.body1,
+                        text = DateRange(tournament.startAt, tournament.endAt).toString(),
+                        style = MaterialTheme.typography.body1,
                         color = MaterialTheme.colors.onSurface
                     )
                 }
@@ -126,10 +125,10 @@ fun Sidebar(
             if (mergedAddress != null) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        Icons.Filled.LocationOn,
-                        "location icon",
-                        Modifier.size(16.dp),
-                        tint = MaterialTheme.colors.primary
+                        imageVector = Icons.Filled.LocationOn,
+                        contentDescription = "location icon",
+                        modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colors.primary,
                     )
                     Spacer(Modifier.width(4.dp))
                     Text(
@@ -140,22 +139,26 @@ fun Sidebar(
                 }
             }
             Spacer(Modifier.height(16.dp))
-            SidebarItem(Icons.Filled.Home, "Home", currentTab.value == CurrentTab.Home) {
+            SidebarItem(
+                icon = Icons.Filled.Home,
+                name = "Home",
+                selected = currentTab.value == CurrentTab.Home,
+            ) {
                 toggle()
                 currentTab.value = CurrentTab.Home
             }
             SidebarItem(
-                Icons.Filled.Person,
-                "Attendees",
-                currentTab.value == CurrentTab.Attendees
+                icon = Icons.Filled.Person,
+                name = "Attendees",
+                selected = currentTab.value == CurrentTab.Attendees
             ) {
                 toggle()
                 currentTab.value = CurrentTab.Attendees
             }
             SidebarItem(
-                Icons.Filled.SportsEsports,
-                "Events",
-                currentTab.value == CurrentTab.Events
+                icon = Icons.Filled.SportsEsports,
+                name = "Events",
+                selected = currentTab.value == CurrentTab.Events
             ) {
                 toggle()
                 currentTab.value = CurrentTab.Events
@@ -168,15 +171,16 @@ fun Sidebar(
                             Modifier
                                 .fillMaxWidth()
                                 .clickable { openBrowser(context, event.url) }
-                                .padding(8.dp)) {
+                                .padding(8.dp)
+                        ) {
                             Text(
-                                event.name,
+                                text = event.name,
                                 style = MaterialTheme.typography.h5,
                                 color = MaterialTheme.colors.onSurface
                             )
                             if (event.startAt != null) {
                                 Text(
-                                    event.startAt.toPrettyString(),
+                                    text = event.startAt.toPrettyString(),
                                     color = MaterialTheme.colors.onSurface
                                 )
                             }
@@ -192,7 +196,10 @@ fun Sidebar(
             .fillMaxWidth()
             .fillMaxHeight()
             .background(color = Color.Black.copy(.5f))
-            .clickable { toggle() }) {}
+            .clickable { toggle() }
+    ) {
+        /* empty space to the right of the sidebar so user can click out of it */
+    }
 }
 
 @Composable
@@ -216,7 +223,7 @@ fun ColumnScope.SidebarItem(
     )
     Spacer(Modifier.width(8.dp))
     Text(
-        name,
+        text = name,
         style = if (selected) MaterialTheme.typography.h5 else MaterialTheme.typography.body1,
         color = MaterialTheme.colors.onSurface
     )

@@ -52,12 +52,12 @@ fun ColumnScope.MyProfileScreen(
     viewModel: MyProfileViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) =
     Column(
-        Modifier
+        modifier = Modifier
             .weight(1f)
             .background(MaterialTheme.colors.background)
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        verticalArrangement = Arrangement.Top,
     ) {
         val context = LocalContext.current
         LaunchedEffect(key1 = viewModel) {
@@ -65,7 +65,10 @@ fun ColumnScope.MyProfileScreen(
         }
         if (viewModel.userDetails.value.status == Status.SUCCESS && viewModel.userDetails.value.data != null) {
             val userDetails = viewModel.userDetails.value.data
-            Box(Modifier.verticalScroll(rememberScrollState()), contentAlignment = Alignment.TopCenter) {
+            Box(
+                modifier = Modifier.verticalScroll(rememberScrollState()),
+                contentAlignment = Alignment.TopCenter,
+            ) {
                 Image(
                     contentScale = ContentScale.FillWidth,
                     painter = if (userDetails?.bannerImageUrl != null) rememberImagePainter(
@@ -98,9 +101,7 @@ fun ColumnScope.MyProfileScreen(
                                 contentDescription = "profile image",
                                 modifier = Modifier
                                     .size(100.dp)
-                                    .clip(
-                                        CircleShape
-                                    )
+                                    .clip(CircleShape)
                                     .border(
                                         color = MaterialTheme.colors.background,
                                         width = 4.dp,
@@ -109,7 +110,7 @@ fun ColumnScope.MyProfileScreen(
                             )
                         } else {
                             Box(
-                                Modifier.size(100.dp).clip(CircleShape).background(Color.LightGray),
+                                modifier = Modifier.size(100.dp).clip(CircleShape).background(Color.LightGray),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
@@ -125,27 +126,30 @@ fun ColumnScope.MyProfileScreen(
                             Spacer(Modifier.height(36.dp))
                             if (userDetails?.tag != null) {
                                 Text(
-                                    userDetails.tag,
+                                    text = userDetails.tag,
                                     color = MaterialTheme.colors.onBackground,
                                     style = MaterialTheme.typography.h4
                                 )
                             }
                             if (userDetails?.name != null) {
-                                Text(userDetails.name, color = MaterialTheme.colors.onBackground)
+                                Text(
+                                    text  =userDetails.name,
+                                    color = MaterialTheme.colors.onBackground,
+                                )
                             }
                         }
                     }
                     if (userDetails?.location != null) {
                         Row(Modifier.padding(8.dp)) {
                             Icon(
-                                Icons.Filled.LocationOn,
+                                imageVector = Icons.Filled.LocationOn,
                                 contentDescription = "user location",
-                                tint = MaterialTheme.colors.primary
+                                tint = MaterialTheme.colors.primary,
                             )
                             Spacer(Modifier.width(8.dp))
                             Text(
-                                userDetails.location,
-                                color = MaterialTheme.colors.onBackground
+                                text = userDetails.location,
+                                color = MaterialTheme.colors.onBackground,
                             )
                         }
                     }
@@ -156,10 +160,10 @@ fun ColumnScope.MyProfileScreen(
                             .background(MaterialTheme.colors.surface)
                     ) {
                         Text(
-                            "User Settings",
+                            text = "User Settings",
                             color = MaterialTheme.colors.onBackground,
                             modifier = Modifier.padding(16.dp),
-                            style = MaterialTheme.typography.h4
+                            style = MaterialTheme.typography.h4,
                         )
                         if (userDetails?.url != null) {
                             UserSetting(Icons.Filled.AccountCircle, "Edit Profile") {
@@ -179,7 +183,7 @@ fun ColumnScope.MyProfileScreen(
                             .padding(16.dp)
                     ) {
                         Text(
-                            "About",
+                            text = "About",
                             color = MaterialTheme.colors.onBackground,
                             style = MaterialTheme.typography.h4
                         )
@@ -211,13 +215,16 @@ fun ColumnScope.MyProfileScreen(
                             )
                         }
                         val uriHandler = LocalUriHandler.current
-                        ClickableText(text = annotatedString, onClick = {
-                            annotatedString
-                                .getStringAnnotations("URL", it, it)
-                                .firstOrNull()?.let { stringAnnotation ->
-                                    uriHandler.openUri(stringAnnotation.item)
-                                }
-                        })
+                        ClickableText(
+                            text = annotatedString,
+                            onClick = {
+                                annotatedString
+                                    .getStringAnnotations("URL", it, it)
+                                    .firstOrNull()?.let { stringAnnotation ->
+                                        uriHandler.openUri(stringAnnotation.item)
+                                    }
+                            },
+                        )
                     }
                 }
             }
@@ -234,7 +241,7 @@ fun ColumnScope.MyProfileScreen(
                     tint = MaterialTheme.colors.onSurface
                 )
                 Spacer(Modifier.width(16.dp))
-                Text("Log Out", color = MaterialTheme.colors.onSurface)
+                Text(text = "Log Out", color = MaterialTheme.colors.onSurface)
             }
         } else {
             MyProfileScreenLoading()

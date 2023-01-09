@@ -24,7 +24,6 @@ import com.ichen.pocketbracket.utils.openTournamentDetailsScreen
 
 @Composable
 fun ColumnScope.MyTournamentsScreen(
-    setDialogComposable: SetComposableFunction,
     viewModel: MyTournamentsViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) = Column(Modifier.weight(1f)) {
 
@@ -38,27 +37,32 @@ fun ColumnScope.MyTournamentsScreen(
     }
 
     Box(
-        Modifier
+        modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colors.primarySurface)
-            .padding(16.dp), contentAlignment = Alignment.Center) {
+            .padding(16.dp),
+        contentAlignment = Alignment.Center,
+    ) {
         Text("My Tournaments", style = MaterialTheme.typography.h4, color = if(isSystemInDarkTheme()) MaterialTheme.colors.onSurface else MaterialTheme.colors.onPrimary)
     }
     Box(
-        contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxWidth()
             .weight(1f)
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colors.background),
+        contentAlignment = Alignment.Center,
     ) {
         if (viewModel.tournaments.value.data.isEmpty()) {
-            if(viewModel.tournaments.value.status == Status.ERROR) {
-                ErrorSplash("Error fetching your tournaments from start.gg")
-            }
-            else if (viewModel.tournaments.value.status == Status.SUCCESS) {
-                ErrorSplash("No tournaments found", isCritical = false)
-            } else {
-                TournamentsListLoading(viewModel.tournaments.value.data.size)
+            when (viewModel.tournaments.value.status) {
+                Status.ERROR -> {
+                    ErrorSplash("Error fetching your tournaments from start.gg")
+                }
+                Status.SUCCESS -> {
+                    ErrorSplash("No tournaments found", isCritical = false)
+                }
+                else -> {
+                    TournamentsListLoading(viewModel.tournaments.value.data.size)
+                }
             }
         } else {
             LazyColumn(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Top, modifier = Modifier.fillMaxSize()) {
@@ -89,5 +93,4 @@ fun ColumnScope.MyTournamentsScreen(
             }
         }
     }
-
 }

@@ -32,6 +32,7 @@ TODO: Ideally, I think these two approaches should be combined (check the number
 
  */
 
+/* Don't believe his lies - Removing ColumnScope crashes screen */
 @Composable
 fun ColumnScope.AttendeesScreen(
     tournamentSlug: String,
@@ -80,7 +81,8 @@ fun ColumnScope.AttendeesScreen(
                 items = viewModel.attendees.value.data.filter { attendee ->
                     attendee.tag.lowercase().contains(searchPhrase.lowercase())
                 },
-                key = { _, attendee -> attendee.id }) { index, attendee ->
+                key = { _, attendee -> attendee.id })
+            { _, attendee ->
                 AttendeeProfile(attendee, tournamentSlug)
             }
             if (viewModel.attendees.value.status == Status.LOADING) {
