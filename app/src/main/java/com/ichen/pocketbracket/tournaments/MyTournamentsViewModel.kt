@@ -3,23 +3,18 @@ package com.ichen.pocketbracket.tournaments
 import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.api.ApolloResponse
-import com.ichen.pocketbracket.GetTournamentsQuery
 import com.ichen.pocketbracket.GetUserTournamentsQuery
 import com.ichen.pocketbracket.models.*
-import com.ichen.pocketbracket.utils.Field
-import com.ichen.pocketbracket.utils.SITE_ENDPOINT
-import com.ichen.pocketbracket.utils.Status
-import com.ichen.pocketbracket.utils.convertBigDecimalToDate
+import com.ichen.pocketbracket.utils.*
 import kotlinx.coroutines.launch
 
 const val EVENTS_PER_PAGE = 10
 
-open class MyTournamentsViewModel : ViewModel() {
+open class MyTournamentsViewModel : LAVM() {
     private val repository = MyTournamentsRepository()
-    var hasMoreEvents = true
+    private var hasMoreEvents = true
     private var page = 1
     open val tournaments: MutableState<Field<List<Tournament>>> = mutableStateOf(
         Field(
@@ -28,35 +23,24 @@ open class MyTournamentsViewModel : ViewModel() {
         )
     )
 
-    open fun getEvents(context: Context) {
-        page = 1
-        tournaments.value = Field(listOf(), Status.LOADING)
-        viewModelScope.launch {
-            repository.getUserEvents(page, EVENTS_PER_PAGE, context) { response ->
-                val parsedResponse = parseGetUserTournamentsResponse(response)
-                tournaments.value = Field(
-                    parsedResponse ?: listOf(),
-                    if (parsedResponse == null) Status.ERROR else Status.SUCCESS
-                )
-                hasMoreEvents = parsedResponse?.size ?: 0 > 0
-            }
-        }
+    override fun onCreated(context: Context) {
+        getEvents(context = context)
     }
 
-    open fun getMoreEvents(context: Context) {
-        if(hasMoreEvents) {
-            page++
-            tournaments.value = tournaments.value.withStatus(Status.LOADING)
-            viewModelScope.launch {
-                repository.getUserEvents(page, EVENTS_PER_PAGE, context) { response ->
-                    val parsedResponse = parseGetUserTournamentsResponse(response)
-                    tournaments.value = Field(
-                        tournaments.value.data + (parsedResponse ?: listOf()),
-                        if (parsedResponse == null) Status.ERROR else Status.SUCCESS
-                    )
-                    hasMoreEvents = parsedResponse?.size ?: 0 > 0
-                }
+    open fun getEvents(context: Context) {
+        if (tournaments.value.status == Status.LOADING || !hasMoreEvents) return
+        tournaments.value = tournaments.value.withStatus(Status.LOADING)
+        viewModelScope.launch {
+            val parsedResponse = repository.getUserEvents(page, EVENTS_PER_PAGE, context)?.let {
+                parseGetUserTournamentsResponse(it)
             }
+            val newTournaments = parsedResponse ?: emptyList()
+            hasMoreEvents = newTournaments.size == EVENTS_PER_PAGE
+            if (hasMoreEvents) { page++ }
+            tournaments.value = Field(
+                data = tournaments.value.data + newTournaments,
+                status = if (parsedResponse == null) Status.ERROR else Status.SUCCESS,
+            )
         }
     }
 
@@ -87,13 +71,15 @@ open class MyTournamentsViewModel : ViewModel() {
                     },
                     primaryImageUrl = node.images?.getOrNull(0)?.url,
                     secondaryImageUrl = node.images?.getOrNull(1)?.url,
-                    events = (node.events?.filter { event ->
-                        event?.id != null &&
-                                event.name != null &&
-                                event.slug != null
-                    } as List<GetUserTournamentsQuery.Event>?)?.map { event ->
-                        Event(event)
-                    }?.toMutableList(),
+                    events = (
+                        (node.events ?: emptyList()).filter { event ->
+                            event?.id != null &&
+                            event.name != null &&
+                            event.slug != null
+                        }.map { event ->
+                            Event(event!!)
+                        }.toMutableList()
+                    ),
                     addrState = node.addrState,
                     countryCode = node.countryCode,
                     // TODO: location
@@ -107,10 +93,6 @@ open class MyTournamentsViewModel : ViewModel() {
             }
         }
     }
-
-    open fun cleanup() {
-        repository.currentJob?.cancel()
-    }
 }
 
 class TestMyTournamentsViewModel : MyTournamentsViewModel() {
@@ -121,6 +103,4 @@ class TestMyTournamentsViewModel : MyTournamentsViewModel() {
         )
     )
     override fun getEvents(context: Context) {}
-    override fun getMoreEvents(context: Context) {}
-    override fun cleanup() {}
 }

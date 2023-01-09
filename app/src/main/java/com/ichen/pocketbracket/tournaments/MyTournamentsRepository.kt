@@ -10,10 +10,7 @@ import com.ichen.pocketbracket.GetUserTournamentsQuery
 import com.ichen.pocketbracket.home.apiKey
 import com.ichen.pocketbracket.utils.API_ENDPOINT
 import com.ichen.pocketbracket.utils.AuthorizationInterceptor
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 
 enum class MyTournamentsJobs {
@@ -22,15 +19,12 @@ enum class MyTournamentsJobs {
 
 class MyTournamentsRepository {
 
-    var currentJob: Job? = null
-
     suspend fun getUserEvents(
         page: Int,
         perPage: Int,
         context: Context,
-        onResponse: (ApolloResponse<GetUserTournamentsQuery.Data>?) -> Unit
-    ) {
-        val apolloClient = ApolloClient.builder()
+    ): ApolloResponse<GetUserTournamentsQuery.Data>? {
+        val apolloClient = ApolloClient.Builder()
             .serverUrl(API_ENDPOINT)
             .okHttpClient(
                 OkHttpClient.Builder()
@@ -38,20 +32,17 @@ class MyTournamentsRepository {
                     .build()
             )
             .build()
-        coroutineScope {
-            currentJob = launch {
-                val response = try {
-                    withTimeoutOrNull(15000) {
-                        apolloClient.query(
-                            GetUserTournamentsQuery(page, perPage)
-                        ).execute()
-                    }
-                } catch (e: ApolloException) {
-                    // handle protocol errors
-                    null
-                }
-                onResponse(response)
+
+        // handle protocol errors
+        return try {
+            withTimeoutOrNull(15000) {
+                apolloClient.query(
+                    query = GetUserTournamentsQuery(page, perPage)
+                ).execute()
             }
+        } catch (e: ApolloException) {
+            // handle protocol errors
+            null
         }
     }
 }

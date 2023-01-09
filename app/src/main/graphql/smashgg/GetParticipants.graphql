@@ -16,11 +16,12 @@ query GetParticipants(
                     type
                 }
                 prefix
-                events {
-                    id
-                    name
-                    slug
-                }
+# TODO: useless until we have profile pages
+#                events {
+#                    id
+#                    name
+#                    slug
+#                }
                 user {
                     images {
                         url

@@ -98,13 +98,16 @@ open class TournamentsTimelineViewModel : ViewModel() {
                     },
                     primaryImageUrl = node.images?.getOrNull(0)?.url,
                     secondaryImageUrl = node.images?.getOrNull(1)?.url,
-                    events = (node.events?.filter { event ->
-                        event?.id != null &&
-                        event.name != null &&
-                        event.slug != null
-                    } as List<GetTournamentsQuery.Event>?)?.map { event ->
-                        Event(event)
-                    }?.toMutableList(),
+                    events = (
+                        // TODO: graphql response types would be nice so we could make this fun generic
+                        (node.events ?: emptyList()).filter { event ->
+                            event?.id != null &&
+                            event.name != null &&
+                            event.slug != null
+                        }.map { event ->
+                            Event(event!!)
+                        }.toMutableList()
+                    ),
                     addrState = node.addrState,
                     countryCode = node.countryCode,
                     // TODO: location

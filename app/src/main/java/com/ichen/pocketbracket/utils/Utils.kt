@@ -6,7 +6,6 @@ import android.net.Uri
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
 import androidx.core.content.ContextCompat
-import com.ichen.pocketbracket.browser.BrowserActivity
 import com.ichen.pocketbracket.details.TournamentDetailsActivity
 import com.ichen.pocketbracket.models.LocationRadius
 import com.ichen.pocketbracket.models.Tournament
@@ -17,6 +16,7 @@ import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
+import androidx.lifecycle.ViewModel
 
 const val METERS_IN_MILE = 1609.34
 const val SECONDS_IN_DAY = 86400
@@ -124,6 +124,18 @@ fun mergeAddress(city: String?, state: String?, country: String?) : String? {
         (if(state != null) "$state, " else "") +
         (if(country != null) "$country" else "")
     return address.ifEmpty { null }
+}
+
+/*
+    LifecycleAwareViewModel
+
+    Literally just a wrapper around ViewModel that adds simple
+    lifecycle methods for DisposableEffects
+ */
+
+abstract class LAVM: ViewModel() {
+    abstract fun onCreated(context: Context)
+    public override fun onCleared() { super.onCleared() }
 }
 
 const val Z_INDEX_TOP = 1000f

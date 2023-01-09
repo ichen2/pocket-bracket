@@ -65,13 +65,16 @@ class AttendeesViewModel : ViewModel() {
                 prefix = node.prefix,
                 tag = node.gamerTag!!,
                 imageUrl = profileImageUrl,
-                events = (node.events?.filter { event ->
-                    event?.id != null &&
-                    event.name != null &&
-                    event.slug != null
-                } as List<GetParticipantsQuery.Event>?)?.map { event ->
-                    Event(event)
-                }
+                // TODO: once attendee/profile page is implemented we can use these again
+//                events = (
+//                    (node.events ?: emptyList()).filter { event ->
+//                        event?.id != null &&
+//                        event.name != null &&
+//                        event.slug != null
+//                    }.map { event ->
+//                        Event(event!!)
+//                    }.toMutableList()
+//                ),
             )
         }
     }

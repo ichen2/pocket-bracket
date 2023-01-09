@@ -25,7 +25,7 @@ data class Event(
         startAt = convertBigDecimalToDate(event.startAt),
         videogame = if (event.videogame?.id != null && event.videogame.displayName != null) Videogame(
             event.videogame.id.toInt(),
-            event.videogame?.displayName
+            event.videogame.displayName
         ) else null
     )
 
@@ -37,15 +37,15 @@ data class Event(
         startAt = convertBigDecimalToDate(event.startAt),
         videogame = if (event.videogame?.id != null && event.videogame.displayName != null) Videogame(
             event.videogame.id.toInt(),
-            event.videogame?.displayName
+            event.videogame.displayName
         ) else null
     )
 
-    constructor(event: GetParticipantsQuery.Event) : this(
-        id = event.id!!,
-        name = event.name!!,
-        url = "${SITE_ENDPOINT}/${event.slug!!}",
-    )
+//    constructor(event: GetParticipantsQuery.Event) : this(
+//        id = event.id!!,
+//        name = event.name!!,
+//        url = "${SITE_ENDPOINT}/${event.slug!!}",
+//    )
 
     constructor(parcel: Parcel) : this(
         parcel.readString().toString(),

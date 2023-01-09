@@ -1,5 +1,6 @@
 package com.ichen.pocketbracket.tournaments
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -30,10 +31,8 @@ fun ColumnScope.MyTournamentsScreen(
     val context = LocalContext.current
 
     DisposableEffect(key1 = viewModel) {
-        if(viewModel.tournaments.value.status != Status.SUCCESS) viewModel.getEvents(context = context)
-        onDispose {
-            viewModel.cleanup()
-        }
+        viewModel.onCreated(context)
+        onDispose { viewModel.onCleared() }
     }
 
     Box(
@@ -70,7 +69,7 @@ fun ColumnScope.MyTournamentsScreen(
                     items = viewModel.tournaments.value.data,
                     key = { _, tournament -> tournament.events?.getOrNull(0)?.id  ?: -1}) { index, tournament ->
                     if (index == viewModel.tournaments.value.data.size - 1) {
-                        viewModel.getMoreEvents(context)
+                        viewModel.getEvents(context)
                     }
                     TournamentCard(tournament, true) { url ->
                         openTournamentDetailsScreen(context, tournament)
