@@ -45,9 +45,7 @@ fun Banner(tournament: Tournament) {
         )
     }
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
+        Modifier.fillMaxWidth().padding(16.dp)
     ) {
         if(tournament.primaryImageUrl != null) {
             Image(
@@ -64,7 +62,11 @@ fun Banner(tournament: Tournament) {
             Spacer(Modifier.width(16.dp))
         }
         Column {
-            Text(text = tournament.name, style = MaterialTheme.typography.h4, color = MaterialTheme.colors.onSurface)
+            Text(
+                text = tournament.name,
+                style = MaterialTheme.typography.h4,
+                color = MaterialTheme.colors.onSurface,
+            )
             if (tournament.startAt != null && tournament.endAt != null) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
@@ -107,17 +109,18 @@ fun Banner(tournament: Tournament) {
                     val annotatedText = tournament.primaryContact
                     append(annotatedText)
                     addStringAnnotation(
-                        "URL",
+                        tag = "URL",
                         if(annotatedText.contains("@")) "mailto:$annotatedText" else annotatedText,
                         start = 0,
-                        end = annotatedText.length
+                        end = annotatedText.length,
                     )
                     addStyle(
                         style = SpanStyle(
                             color = MaterialTheme.colors.primary,
                             fontSize = MaterialTheme.typography.body1.fontSize,
                             textDecoration = TextDecoration.Underline
-                        ), start = 0, end = annotatedText.length
+                        ),
+                        start = 0, end = annotatedText.length,
                     )
                 }
                 val uriHandler = LocalUriHandler.current
@@ -126,16 +129,21 @@ fun Banner(tournament: Tournament) {
                         imageVector = if(tournament.primaryContact.contains("@")) Icons.Filled.Email else Icons.Filled.ContactSupport,
                         contentDescription = "email icon",
                         modifier = Modifier.size(16.dp),
-                        tint = MaterialTheme.colors.primary
+                        tint = MaterialTheme.colors.primary,
                     )
                     Spacer(Modifier.width(4.dp))
-                    ClickableText(text = annotatedString, onClick = {
-                        annotatedString
-                            .getStringAnnotations("URL", it, it)
-                            .firstOrNull()?.let { stringAnnotation ->
-                                uriHandler.openUri(stringAnnotation.item)
-                            }
-                    }, maxLines = 1, overflow = TextOverflow.Clip)
+                    ClickableText(
+                        text = annotatedString,
+                        onClick = {
+                            annotatedString
+                                .getStringAnnotations("URL", it, it)
+                                .firstOrNull()?.let { stringAnnotation ->
+                                    uriHandler.openUri(stringAnnotation.item)
+                                }
+                        },
+                        maxLines = 1,
+                        overflow = TextOverflow.Clip,
+                    )
                 }
             }
         }

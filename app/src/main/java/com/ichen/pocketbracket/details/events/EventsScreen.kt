@@ -9,6 +9,7 @@ import com.ichen.pocketbracket.components.ErrorSplash
 import com.ichen.pocketbracket.details.components.EventItem
 import com.ichen.pocketbracket.models.Event
 
+/* Don't believe his lies - Removing ColumnScope crashes screen */
 @Composable
 fun ColumnScope.EventsScreen(events: List<Event>?, tournamentSlug: String) = Column {
     if(!events.isNullOrEmpty()) {

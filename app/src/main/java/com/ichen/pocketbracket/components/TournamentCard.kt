@@ -1,6 +1,5 @@
 package com.ichen.pocketbracket.timeline.components
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,10 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.size.OriginalSize
 import coil.size.Scale
@@ -34,6 +33,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.min
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun TournamentCard(tournament: Tournament, clickable: Boolean, onClick: (String) -> Unit) = Column(
     Modifier
@@ -77,7 +77,7 @@ fun TournamentCard(tournament: Tournament, clickable: Boolean, onClick: (String)
                 )
             }
             Text(
-                tournament.state.toString(),
+                text = tournament.state.toString(),
                 color = MaterialTheme.colors.onPrimary,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
@@ -111,7 +111,7 @@ fun TournamentCard(tournament: Tournament, clickable: Boolean, onClick: (String)
             }
         }
     }
-    if (tournament.events?.size ?: 0 > 0) {
+    if ((tournament.events?.size ?: 0) > 0) {
         Column(Modifier.padding(vertical = 16.dp)) {
             for (i in 0..min(
                 if (eventsListIsExpanded.value) Int.MAX_VALUE else 1,
@@ -126,12 +126,15 @@ fun TournamentCard(tournament: Tournament, clickable: Boolean, onClick: (String)
                     )
                 }
             }
-            if (tournament.events?.size ?: 0 > 2) {
+            if ((tournament.events?.size ?: 0) > 2) {
                 Spacer(Modifier.height(16.dp))
                 Text(
-                    modifier = Modifier.fillMaxWidth().clickable(enabled = clickable, onClick = {
-                        eventsListIsExpanded.value = !eventsListIsExpanded.value
-                    }).padding(horizontal = 16.dp, vertical = 4.dp) ,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable(enabled = clickable, onClick = {
+                            eventsListIsExpanded.value = !eventsListIsExpanded.value
+                        })
+                        .padding(horizontal = 16.dp, vertical = 4.dp) ,
                     text = "Show ${if (eventsListIsExpanded.value) "less" else "${tournament.events!!.size - 2} more"}",
                     color = MaterialTheme.colors.primary,
                     style = MaterialTheme.typography.body1
@@ -211,7 +214,6 @@ fun EventCardItem(event: Event, clickable: Boolean, onClick: (String) -> Unit) {
                 )
                 Spacer(Modifier.weight(1f))
             }
-            Log.d("IVC", "${event.startAt == null}")
             if (event.startAt != null) {
                 Text(
                     text = SimpleDateFormat(

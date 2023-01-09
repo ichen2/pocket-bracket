@@ -96,7 +96,7 @@ fun ChooseGamesDialog(
         }
         Spacer(Modifier.height(8.dp))
         val textColor =
-            if (isSystemInDarkTheme()) MaterialTheme.colors.onSurface else MaterialTheme.colors.onPrimary
+            if (isSystemInDarkTheme()) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onPrimary
         TextField(
             value = videogameName,
             onValueChange = { value ->

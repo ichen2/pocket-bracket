@@ -14,18 +14,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ErrorSplash(message: String, isCritical: Boolean = true) = Column(Modifier.fillMaxSize().padding(32.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Top){
+fun ErrorSplash(message: String, isCritical: Boolean = true) = Column(
+    modifier = Modifier.fillMaxSize().padding(32.dp),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.Top,
+){
     Icon(
-        Icons.Filled.Error,
+        imageVector = Icons.Filled.Error,
         contentDescription = "error",
-        modifier = Modifier
-            .size(48.dp),
-        tint = if(isCritical) MaterialTheme.colors.error else MaterialTheme.colors.primary
+        modifier = Modifier.size(48.dp),
+        tint = if (isCritical) MaterialTheme.colors.error else MaterialTheme.colors.primary
     )
     Spacer(Modifier.height(8.dp))
-    Text(message, textAlign = TextAlign.Center)
-    //Image(painter = rememberImagePainter(data = R.drawable.gorf), "gorf", modifier = Modifier.size(200.dp))
-    //Text("Sorry about that - please enjoy this picture of Gorf", color = MaterialTheme.colors.onBackground, textAlign = TextAlign.Center)
+    Text(text = message, textAlign = TextAlign.Center, color = MaterialTheme.colors.onBackground)
 }
 
 @Preview
