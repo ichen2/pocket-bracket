@@ -9,11 +9,14 @@ import androidx.compose.runtime.Composable
 private val DarkColorPalette = darkColors(
     primary = lightPurple,
     primaryVariant = darkPurple,
-    secondary = medPurple,
+    onPrimary = darkBlack,
+    secondary = darkGrey,
     secondaryVariant = lightBlack,
     onSecondary = lightWhite,
     surface = medBlack,
+    onSurface = lightWhite,
     background = darkBlack,
+    onBackground = lightWhite,
     error = medRed,
     onError = lightWhite,
 )
@@ -21,21 +24,16 @@ private val DarkColorPalette = darkColors(
 private val LightColorPalette = lightColors(
     primary = medPurple,
     primaryVariant = darkPurple,
-    secondary = lightPurple,
+    onPrimary = lightWhite,
+    secondary = darkGrey,
     secondaryVariant = medWhite,
     onSecondary = darkBlack,
     surface = lightWhite,
+    onSurface = darkBlack,
     background = lightWhite,
+    onBackground = darkBlack,
     error = medRed,
     onError = lightWhite,
-    /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
 )
 
 @Composable
@@ -48,7 +46,6 @@ fun PocketBracketTheme(
     } else {
         LightColorPalette
     }
-    val outlineColor = if (darkTheme) medWhite else medBlack
     MaterialTheme(
         colors = colors,
         typography = Typography,

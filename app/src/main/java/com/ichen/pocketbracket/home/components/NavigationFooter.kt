@@ -14,6 +14,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.ichen.pocketbracket.home.CurrentTab
@@ -45,11 +46,10 @@ fun RowScope.FooterItem(icon: ImageVector, contentDescription: String, selected:
         Icon(
             icon,
             contentDescription = contentDescription,
-            tint = MaterialTheme.colors.primary,
+            tint = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.secondary,
             modifier = Modifier
                 .padding(16.dp)
                 .size(32.dp)
         )
-        if (selected) Row(Modifier.fillMaxWidth().height(2.dp).background(MaterialTheme.colors.primary).align(Alignment.TopCenter)) {}
     }
 }
