@@ -12,9 +12,9 @@ data class TournamentFilter(
     val games: List<Videogame>? = null,
     val location: LocationRadius? = null,
     val dates: DateRange? = null,
-    val type: TournamentType? = null,
-    val price: TournamentPrice? = null,
-    val registration: TournamentRegistrationStatus? = null,
+    val type: TournamentType = TournamentType.NO_FILTER,
+    val price: TournamentPrice = TournamentPrice.NO_FILTER,
+    val registration: TournamentRegistrationStatus = TournamentRegistrationStatus.NO_FILTER,
 )
 
 enum class TournamentType(private val displayName: String) {

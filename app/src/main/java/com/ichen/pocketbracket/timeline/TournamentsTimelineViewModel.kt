@@ -1,67 +1,46 @@
 package com.ichen.pocketbracket.timeline
 
 import android.content.Context
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.api.ApolloResponse
 import com.ichen.pocketbracket.GetTournamentsQuery
 import com.ichen.pocketbracket.models.*
-import com.ichen.pocketbracket.utils.Field
-import com.ichen.pocketbracket.utils.SITE_ENDPOINT
-import com.ichen.pocketbracket.utils.Status
-import com.ichen.pocketbracket.utils.convertBigDecimalToDate
-import kotlinx.coroutines.Job
+import com.ichen.pocketbracket.utils.*
 import kotlinx.coroutines.launch
 
-open class TournamentsTimelineViewModel : ViewModel() {
+open class TournamentsTimelineViewModel : LAVM() {
 
     private val repository = TournamentsTimelineRepository()
     private var hasMoreTournaments = true
-    private var tournamentFilter = TournamentFilter()
-    private var currentJob: Job? = null
-    open val tournaments: MutableState<Field<List<Tournament>>> = mutableStateOf(
-        Field(
-            listOf(),
-            Status.NOT_STARTED
-        )
+    var filter by mutableStateOf(TournamentFilter())
+    open var tournaments: Field<List<Tournament>> by mutableStateOf(
+        Field(emptyList(), Status.NOT_STARTED)
     )
 
-    // TODO: why are these two seperate functions?? they do the same thing
-    open fun getTournaments(tournamentFilter: TournamentFilter = TournamentFilter(), context: Context) {
-        currentJob?.cancel()
-        this.tournamentFilter = tournamentFilter
-        tournaments.value = Field(listOf(), Status.LOADING)
-        currentJob = viewModelScope.launch {
-            repository.getTournaments(tournamentFilter, context) { response ->
-                val parsedResponse = parseGetTournamentsResponse(response)
-                //val sortedTournaments = if(parsedResponse == null) null else sortTournaments(parsedResponse, tournamentFilter)
-                tournaments.value = Field(
-                    parsedResponse ?: listOf(),
-                    if (parsedResponse == null) Status.ERROR else Status.SUCCESS
-                )
-                hasMoreTournaments = parsedResponse?.size ?: 0 > 0 // this could probably be simplified to hasMoreTournaments = parsedResponse.size == tournamentFilter.perPage ??
-            }
-        }
+    override fun onCreated(context: Context) {
+        getTournaments(context = context)
     }
 
-    open fun getMoreTournaments(context: Context) {
-        currentJob?.cancel()
-        if(hasMoreTournaments) {
-            this.tournamentFilter.page++
-            tournaments.value = tournaments.value.withStatus(Status.LOADING)
-            currentJob = viewModelScope.launch {
-                repository.getTournaments(tournamentFilter, context) { response ->
-                    val parsedResponse = parseGetTournamentsResponse(response)
-                    //val sortedTournaments = if(parsedResponse == null) null else sortTournaments(parsedResponse, tournamentFilter)
-                    tournaments.value = Field(
-                        tournaments.value.data + (parsedResponse ?: listOf()),
-                        if (parsedResponse == null) Status.ERROR else Status.SUCCESS
-                    )
-                    hasMoreTournaments = parsedResponse?.size ?: 0 > 0
-                }
+    open fun getTournaments(newFilter: TournamentFilter? = null, context: Context) {
+        if (tournaments.status == Status.LOADING || !hasMoreTournaments) return
+        val resetSearch = newFilter != null
+        if (resetSearch) { filter = newFilter!!.copy(page = 1) }
+        tournaments = if (resetSearch) Field(emptyList(), Status.LOADING) else tournaments.withStatus(Status.LOADING)
+        viewModelScope.launch {
+            val response = repository.getTournaments(filter, context)?.let {
+                val parsedResponse = parseGetTournamentsResponse(it)
+                sortTournaments(parsedResponse, filter)
             }
+            val newTournaments = response ?: emptyList()
+            hasMoreTournaments = newTournaments.size == filter.perPage
+            if (hasMoreTournaments) { filter = filter.copy(page = filter.page + 1)}
+            tournaments = Field(
+                data = if (!resetSearch) tournaments.data + newTournaments else newTournaments,
+                status = if (response == null) Status.ERROR else Status.SUCCESS,
+            )
         }
     }
 
@@ -71,10 +50,10 @@ open class TournamentsTimelineViewModel : ViewModel() {
         }
     }
 
-    private fun parseGetTournamentsResponse(response: ApolloResponse<GetTournamentsQuery.Data>?): List<Tournament>? {
+    private fun parseGetTournamentsResponse(response: ApolloResponse<GetTournamentsQuery.Data>?): List<Tournament> {
         val nodes = response?.data?.tournaments?.nodes
         if (nodes == null || nodes.isEmpty()) {
-            return listOf()
+            return emptyList()
         } else {
             return nodes.filter { node ->
                 node?.id != null
@@ -119,20 +98,11 @@ open class TournamentsTimelineViewModel : ViewModel() {
             }
         }
     }
-
-    open fun cleanup() {
-        currentJob?.cancel()
-    }
 }
 
-class TestTournamentsTimelineViewModel : TournamentsTimelineViewModel() {
-    override val tournaments: MutableState<Field<List<Tournament>>> = mutableStateOf(
-        Field(
-            listOf(testTournament1, testTournament2),
-            Status.SUCCESS
-        )
-    )
-    override fun getTournaments(tournamentFilter: TournamentFilter, context: Context) {}
-    override fun getMoreTournaments(context: Context) {}
-    override fun cleanup() {}
-}
+//class TestTournamentsTimelineViewModel : TournamentsTimelineViewModel() {
+//    override var tournaments: Field<List<Tournament>> by mutableStateOf(
+//        Field(listOf(testTournament1, testTournament2), Status.SUCCESS)
+//    )
+//    override fun getTournaments(newFilter: TournamentFilter?, context: Context) {}
+//}

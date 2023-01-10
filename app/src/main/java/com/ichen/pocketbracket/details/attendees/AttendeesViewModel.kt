@@ -22,7 +22,7 @@ class AttendeesViewModel : ViewModel() {
     private var currentJob: Job? = null
     val attendees: MutableState<Field<List<Attendee>>> = mutableStateOf(
         Field(
-            listOf(),
+            emptyList(),
             Status.NOT_STARTED
         )
     )
@@ -37,7 +37,7 @@ class AttendeesViewModel : ViewModel() {
                 repository.getAttendees(tournament!!.id.toString(), page, context) { response ->
                     val parsedResponse = parseGetParticipantsResponse(response)
                     attendees.value = Field(
-                        (attendees.value.data + (parsedResponse ?: listOf())).distinctBy { attendee -> attendee.id },
+                        (attendees.value.data + (parsedResponse ?: emptyList())).distinctBy { attendee -> attendee.id },
                         if (parsedResponse == null) Status.ERROR else Status.SUCCESS
                     )
                     hasMoreAttendees = (parsedResponse?.size ?: 0) > 0

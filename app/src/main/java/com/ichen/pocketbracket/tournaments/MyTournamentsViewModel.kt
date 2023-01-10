@@ -17,10 +17,7 @@ open class MyTournamentsViewModel : LAVM() {
     private var hasMoreEvents = true
     private var page = 1
     open val tournaments: MutableState<Field<List<Tournament>>> = mutableStateOf(
-        Field(
-            listOf(),
-            Status.NOT_STARTED
-        )
+        Field(emptyList(), Status.NOT_STARTED)
     )
 
     override fun onCreated(context: Context) {
@@ -31,23 +28,23 @@ open class MyTournamentsViewModel : LAVM() {
         if (tournaments.value.status == Status.LOADING || !hasMoreEvents) return
         tournaments.value = tournaments.value.withStatus(Status.LOADING)
         viewModelScope.launch {
-            val parsedResponse = repository.getUserEvents(page, EVENTS_PER_PAGE, context)?.let {
+            val response = repository.getUserEvents(page, EVENTS_PER_PAGE, context)?.let {
                 parseGetUserTournamentsResponse(it)
             }
-            val newTournaments = parsedResponse ?: emptyList()
+            val newTournaments = response ?: emptyList()
             hasMoreEvents = newTournaments.size == EVENTS_PER_PAGE
             if (hasMoreEvents) { page++ }
             tournaments.value = Field(
                 data = tournaments.value.data + newTournaments,
-                status = if (parsedResponse == null) Status.ERROR else Status.SUCCESS,
+                status = if (response == null) Status.ERROR else Status.SUCCESS,
             )
         }
     }
 
-    private fun parseGetUserTournamentsResponse(response: ApolloResponse<GetUserTournamentsQuery.Data>?): List<Tournament>? {
+    private fun parseGetUserTournamentsResponse(response: ApolloResponse<GetUserTournamentsQuery.Data>?): List<Tournament> {
         val nodes = response?.data?.currentUser?.tournaments?.nodes
         if (nodes == null || nodes.isEmpty()) {
-            return listOf()
+            return emptyList()
         } else {
             return nodes.filter { node ->
                 node?.id != null

@@ -1,5 +1,6 @@
 package com.ichen.pocketbracket.timeline
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,9 +25,6 @@ import com.ichen.pocketbracket.timeline.components.TournamentsListLoading
 import com.ichen.pocketbracket.utils.SetComposableFunction
 import com.ichen.pocketbracket.utils.Status
 import com.ichen.pocketbracket.utils.openTournamentDetailsScreen
-import java.util.*
-
-val today = Date()
 
 @ExperimentalPermissionsApi
 @Composable
@@ -35,68 +33,27 @@ fun ColumnScope.TournamentsTimelineScreen(
     setDialogComposable: SetComposableFunction,
     viewModel: TournamentsTimelineViewModel = viewModel()
 ) = Column(
-    Modifier
+    modifier = Modifier
         .weight(1f)
         .fillMaxWidth(1f),
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Top,
 ) {
     val context = LocalContext.current
-    val tournamentName = remember { mutableStateOf("") }
-    val tournamentGames: MutableState<List<Videogame>?> = remember { mutableStateOf(null) }
-    val tournamentLocationRadius: MutableState<LocationRadius?> = remember { mutableStateOf(null) }
-    val tournamentDateRange: MutableState<DateRange?> = remember { mutableStateOf(null) }//DateRange(today, Date(today.time + SECONDS_IN_DAY * 14 * 1000))) }
-    val tournamentType = remember { mutableStateOf(TournamentType.NO_FILTER) }
-    val tournamentPrice = remember { mutableStateOf(TournamentPrice.NO_FILTER) }
-    val tournamentRegistrationStatus =
-        remember { mutableStateOf(TournamentRegistrationStatus.NO_FILTER) }
-    val clearFilters = {
-        tournamentName.value = ""
-        tournamentGames.value = null
-        tournamentLocationRadius.value = null
-        tournamentDateRange.value = null
-        tournamentType.value = TournamentType.NO_FILTER
-        tournamentPrice.value = TournamentPrice.NO_FILTER
-        tournamentRegistrationStatus.value = TournamentRegistrationStatus.NO_FILTER
-        viewModel.getTournaments(context = context)
-    }
-
-    fun getTournaments() = run {
-        viewModel.getTournaments(
-            TournamentFilter(
-                name = tournamentName.value,
-                games = tournamentGames.value,
-                location = tournamentLocationRadius.value,
-                dates = tournamentDateRange.value,
-                type = tournamentType.value,
-                price = tournamentPrice.value,
-                registration = tournamentRegistrationStatus.value
-            ),
-            context
-        )
-    }
 
     DisposableEffect(key1 = viewModel) {
-        if (viewModel.tournaments.value.status != Status.SUCCESS) {
-            getTournaments()
-        }
-        onDispose {
-            viewModel.cleanup()
-        }
+        viewModel.onCreated(context)
+        onDispose { viewModel.onCleared() }
     }
 
     TimelineHeader(
-        tournamentName,
-        tournamentGames,
-        tournamentLocationRadius,
-        tournamentDateRange,
-        tournamentType,
-        tournamentPrice,
-        tournamentRegistrationStatus,
-        clearFilters,
-        clickable,
-        setDialogComposable,
-        viewModel,
+        filter = viewModel.filter,
+        setFilter = { newFilter ->
+            viewModel.filter = newFilter
+            viewModel.getTournaments(newFilter = newFilter, context = context)
+        },
+        clickable = clickable,
+        setDialogComposable = setDialogComposable,
     )
     Box(
         contentAlignment = Alignment.Center,
@@ -105,34 +62,32 @@ fun ColumnScope.TournamentsTimelineScreen(
             .weight(1f)
             .background(MaterialTheme.colors.background)
     ) {
-        if (viewModel.tournaments.value.data.isEmpty()) {
-            if (viewModel.tournaments.value.status == Status.ERROR) {
-                ErrorSplash("Error fetching tournaments from start.gg")
-            } else if (viewModel.tournaments.value.status == Status.SUCCESS) {
-                ErrorSplash("No tournaments found", isCritical = false)
-            } else {
-                TournamentsListLoading()
+        if (viewModel.tournaments.data.isEmpty()) {
+            when (viewModel.tournaments.status) {
+                Status.ERROR -> ErrorSplash(message = "Error fetching tournaments from start.gg")
+                Status.SUCCESS -> ErrorSplash(message = "No tournaments found", isCritical = false)
+                else -> TournamentsListLoading()
             }
         } else {
             LazyColumn(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Top, modifier = Modifier.fillMaxSize()) {
                 itemsIndexed(
-                    items = viewModel.tournaments.value.data,
-                    key = { _, tournament -> tournament.id }) { index, tournament ->
+                    items = viewModel.tournaments.data,
+                    key = { _, tournament -> tournament.id },
+                ) { index, tournament ->
+                    Log.d("IVC", viewModel.tournaments.data.getOrNull(0)?.name ?: "none")
                     // ERROR: if no new tournaments, repeatedly tries to fetch new ones anyways
-                    if (index == viewModel.tournaments.value.data.size - 1) viewModel.getMoreTournaments(
-                        context
-                    )
-                    TournamentCard(tournament, clickable) { url ->
+                    if (index == viewModel.tournaments.data.size - 1) viewModel.getTournaments(context = context)
+                    TournamentCard(tournament, clickable) {
                         openTournamentDetailsScreen(context, tournament)
                     }
                 }
-                if (viewModel.tournaments.value.status == Status.LOADING) {
+                if (viewModel.tournaments.status == Status.LOADING) {
                     item {
                         CircularProgressIndicator(
                             strokeWidth = 4.dp
                         )
                     }
-                } else if (viewModel.tournaments.value.status == Status.ERROR) {
+                } else if (viewModel.tournaments.status == Status.ERROR) {
                     item {
                         Text(
                             "Could not load additional tournaments",

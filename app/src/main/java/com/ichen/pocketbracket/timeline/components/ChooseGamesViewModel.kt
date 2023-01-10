@@ -21,7 +21,7 @@ open class ChooseGamesViewModel : ViewModel() {
     private var currentJob: Job? = null
     open val videogames: MutableState<Field<List<Videogame>>> = mutableStateOf(
         Field(
-            listOf(),
+            emptyList(),
             Status.NOT_STARTED
         )
     )
@@ -29,12 +29,12 @@ open class ChooseGamesViewModel : ViewModel() {
     open fun getVideogames(videogameFilter: VideogameFilter, context: Context) {
         currentJob?.cancel()
         this.videogameFilter = videogameFilter
-        videogames.value = Field(listOf(), Status.LOADING)
+        videogames.value = Field(emptyList(), Status.LOADING)
         currentJob = viewModelScope.launch {
             repository.getVideogames(filter = videogameFilter, context = context) { response ->
                 val parsedResponse = parseGetVideogamesResponse(response)
                 videogames.value = Field(
-                    parsedResponse ?: listOf(),
+                    parsedResponse ?: emptyList(),
                     if (parsedResponse == null) Status.ERROR else Status.SUCCESS
                 )
             }
@@ -44,7 +44,7 @@ open class ChooseGamesViewModel : ViewModel() {
     private fun parseGetVideogamesResponse(response: ApolloResponse<GetVideogamesQuery.Data>?): List<Videogame>? {
         val nodes = response?.data?.videogames?.nodes
         if (nodes == null || nodes.isEmpty()) {
-            return listOf()
+            return emptyList()
         } else {
             return nodes.filter { node ->
                 node?.id != null && node.name != null
@@ -59,7 +59,7 @@ open class ChooseGamesViewModel : ViewModel() {
         currentJob?.cancel()
         videogameFilter = VideogameFilter(perPage = 250)
         videogames.value = Field(
-            listOf(),
+            emptyList(),
             Status.NOT_STARTED
         )
     }

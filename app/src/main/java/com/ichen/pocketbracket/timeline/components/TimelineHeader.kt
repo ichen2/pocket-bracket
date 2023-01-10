@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -18,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.ichen.pocketbracket.models.*
-import com.ichen.pocketbracket.timeline.TournamentsTimelineViewModel
 import com.ichen.pocketbracket.utils.SetComposableFunction
 import com.ichen.pocketbracket.utils.getNextEnumValue
 import java.util.*
@@ -31,17 +29,10 @@ private val dateRangePicker =
 @ExperimentalPermissionsApi
 @Composable
 fun TimelineHeader(
-    tournamentName: MutableState<String>,
-    tournamentGames: MutableState<List<Videogame>?>,
-    tournamentLocationRadius: MutableState<LocationRadius?>,
-    tournamentDateRange: MutableState<DateRange?>,
-    tournamentType: MutableState<TournamentType>,
-    tournamentPrice: MutableState<TournamentPrice>,
-    tournamentRegistrationStatus: MutableState<TournamentRegistrationStatus>,
-    clearFilters: () -> Unit,
+    filter: TournamentFilter,
+    setFilter: (TournamentFilter) -> Unit,
     clickable: Boolean,
     setDialogComposable: SetComposableFunction,
-    viewModel: TournamentsTimelineViewModel,
 ) = Surface(
     color = MaterialTheme.colors.primarySurface,
     contentColor = if (isSystemInDarkTheme()) MaterialTheme.colors.onSurface else MaterialTheme.colors.onPrimary,
@@ -49,20 +40,6 @@ fun TimelineHeader(
 ) {
 
     val context = LocalContext.current
-    fun getTournaments() = run {
-        viewModel.getTournaments(
-            TournamentFilter(
-                name = tournamentName.value,
-                games = tournamentGames.value,
-                location = tournamentLocationRadius.value,
-                dates = tournamentDateRange.value,
-                type = tournamentType.value,
-                price = tournamentPrice.value,
-                registration = tournamentRegistrationStatus.value
-            ),
-            context
-        )
-    }
 
     val textColor =
         if (isSystemInDarkTheme()) MaterialTheme.colors.onSurface else MaterialTheme.colors.onPrimary
@@ -70,11 +47,10 @@ fun TimelineHeader(
     Column(Modifier.padding(vertical = 16.dp)) {
         TextField(
             enabled = clickable,
-            value = tournamentName.value,
-            onValueChange = { value ->
-                tournamentName.value = value
+            value = filter.name,
+            onValueChange = { newName ->
+                setFilter(filter.copy(name = newName))
                 // TODO: Implement caching for tournament name queries
-                getTournaments()
             },
             placeholder = {
                 Text(
@@ -104,86 +80,78 @@ fun TimelineHeader(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             FilterPill(
-                "Games",
-                tournamentGames.value?.size ?: 0 > 0,
-                clickable
+                text = "Games",
+                enabled = (filter.games?.size ?: 0) > 0,
+                clickable = clickable
             ) {
-                if(tournamentGames.value == null) {
+                if(filter.games == null) {
                     setDialogComposable {
                         ChooseGamesDialog(
                             onPositiveButtonClick = { videogames ->
-                                tournamentGames.value = videogames
+                                setFilter(filter.copy(games = videogames))
                                 setDialogComposable(null)
-                                getTournaments()
                             },
                             onNegativeButtonClick = { setDialogComposable(null) },
                         )
                     }
                 } else {
-                    tournamentGames.value = null
-                    getTournaments()
+                    setFilter(filter.copy(games = null))
                 }
             }
             FilterPill(
-                "Location",
-                tournamentLocationRadius.value != null,
-                clickable
+                text = "Location",
+                enabled = filter.location != null,
+                clickable = clickable,
             ) {
-                if (tournamentLocationRadius.value == null) {
+                if (filter.location == null) {
                     setDialogComposable {
                         LocationPicker(
-                            onNegativeButtonClick = { setDialogComposable(null) },
                             onPositiveButtonClick = { locationRadius ->
-                                tournamentLocationRadius.value = locationRadius
+                                setFilter(filter.copy(location = locationRadius))
                                 setDialogComposable(null)
-                                getTournaments()
-                            })
+                            },
+                            onNegativeButtonClick = { setDialogComposable(null) },
+                        )
+
                     }
                 } else {
-                    tournamentLocationRadius.value = null
-                    getTournaments()
+                    setFilter(filter.copy(location = null))
                 }
             }
             FilterPill(
-                tournamentDateRange.value?.toString() ?: "Dates",
-                tournamentDateRange.value != null,
-                clickable
+                text = filter.dates?.toString() ?: "Dates",
+                enabled = filter.dates != null,
+                clickable = clickable,
             ) {
-                if (tournamentDateRange.value == null) {
-                    initializeDateRangePickerListeners(
-                        tournamentDateRange,
-                        { getTournaments() },
-                        { getTournaments() })
+                if (filter.dates == null) {
+                    initializeDateRangePickerListeners { dates ->
+                        setFilter(filter.copy(dates = dates))
+                    }
                     showDateRangePicker(context)
                 } else {
-                    tournamentDateRange.value = null
-                    getTournaments()
+                    setFilter(filter.copy(dates = null))
                 }
             }
             FilterPill(
-                tournamentType.value.toString(),
-                tournamentType.value != TournamentType.NO_FILTER,
-                clickable
+                text = filter.type.toString(),
+                enabled = filter.type != TournamentType.NO_FILTER,
+                clickable = clickable,
             ) {
-                tournamentType.value = getNextEnumValue(tournamentType.value)
-                getTournaments()
+                setFilter(filter.copy(type = getNextEnumValue(filter.type)))
             }
             FilterPill(
-                tournamentPrice.value.toString(),
-                tournamentPrice.value != TournamentPrice.NO_FILTER,
-                clickable
+                text = filter.price.toString(),
+                enabled = filter.price != TournamentPrice.NO_FILTER,
+                clickable = clickable,
             ) {
-                tournamentPrice.value = getNextEnumValue(tournamentPrice.value)
-                getTournaments()
+                setFilter(filter.copy(price = getNextEnumValue(filter.price)))
             }
             FilterPill(
-                tournamentRegistrationStatus.value.toString(),
-                tournamentRegistrationStatus.value != TournamentRegistrationStatus.NO_FILTER,
-                clickable
+                text = filter.registration.toString(),
+                enabled = filter.registration != TournamentRegistrationStatus.NO_FILTER,
+                clickable = clickable,
             ) {
-                tournamentRegistrationStatus.value =
-                    getNextEnumValue(tournamentRegistrationStatus.value)
-                getTournaments()
+                setFilter(filter.copy(registration = getNextEnumValue(filter.registration)))
             }
             Text(
                 text = "Clear",
@@ -191,7 +159,7 @@ fun TimelineHeader(
                 modifier = Modifier
                     .clip(CircleShape)
                     .background(MaterialTheme.colors.error)
-                    .clickable(onClick = clearFilters)
+                    .clickable(onClick = { setFilter(TournamentFilter()) })
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 color = MaterialTheme.colors.onError
             )
@@ -200,16 +168,14 @@ fun TimelineHeader(
 }
 
 private fun initializeDateRangePickerListeners(
-    tournamentDateRange: MutableState<DateRange?>,
-    onPositiveButtonClick: () -> Unit,
-    onNegativeButtonClick: () -> Unit,
+    setDates: (DateRange?) -> Unit,
 ) {
     dateRangePicker.addOnPositiveButtonClickListener { _ ->
         val timezone = TimeZone.getDefault()
         val startDate = dateRangePicker.selection?.first
         val endDate = dateRangePicker.selection?.second
-        tournamentDateRange.value = if (startDate != null && endDate != null) DateRange(
-            /*
+
+        /*
             the times picked by the dateRangePicker are in UTC.
             by subtracting the offset from the current timezone to UTC,
             we can convert these times from UTC to the same time in local time.
@@ -220,19 +186,20 @@ private fun initializeDateRangePickerListeners(
             So, to convert the first UTC time to central time, we can add -timezone.rawOffset
             The result is 1577836800000 + 21600000 = 1577858400000,
             which is 12am January 1st 2020 in central time
-            */
-            Date(startDate - timezone.rawOffset),
-            Date(endDate - timezone.rawOffset)
-        ) else null
-        onPositiveButtonClick()
+        */
+
+        setDates(
+            if (startDate != null && endDate != null) DateRange(
+                Date(startDate - timezone.rawOffset),
+                Date(endDate - timezone.rawOffset),
+            ) else null
+        )
     }
     dateRangePicker.addOnNegativeButtonClickListener {
-        tournamentDateRange.value = null
-        onNegativeButtonClick()
+        setDates(null)
     }
     dateRangePicker.addOnCancelListener {
-        tournamentDateRange.value = null
-        onNegativeButtonClick()
+        setDates(null)
     }
 }
 
