@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -12,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ichen.pocketbracket.components.ErrorSplash
@@ -40,6 +44,8 @@ fun ColumnScope.AttendeesScreen(
     viewModel: AttendeesViewModel = viewModel()
 ) {
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
+
     var searchPhrase by remember { mutableStateOf("") }
     DisposableEffect(key1 = viewModel) { // TODO: make sure this effect is right
         if (viewModel.attendees.value.status == Status.NOT_STARTED) {
@@ -64,7 +70,13 @@ fun ColumnScope.AttendeesScreen(
             unfocusedIndicatorColor = Color.Transparent,
             textColor = MaterialTheme.colors.onSurface,
             backgroundColor = MaterialTheme.colors.surface,
-        )
+        ),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                focusManager.clearFocus()
+            }
+        ),
     )
     val filterData = viewModel.attendees.value.data.filter { attendee ->
         attendee.tag.lowercase().contains(searchPhrase.lowercase())

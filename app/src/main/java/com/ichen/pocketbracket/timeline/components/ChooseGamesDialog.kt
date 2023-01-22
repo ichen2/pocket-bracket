@@ -6,6 +6,8 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -16,6 +18,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ichen.pocketbracket.components.ErrorSplash
@@ -35,6 +39,7 @@ fun ChooseGamesDialog(
         .background(MaterialTheme.colors.background)
 ) {
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
 
     fun getVideogames(name: String) = run {
         viewModel.getVideogames(
@@ -120,7 +125,13 @@ fun ChooseGamesDialog(
                 disabledIndicatorColor = Color.Transparent,
                 errorIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-            )
+            ),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    focusManager.clearFocus()
+                }
+            ),
         )
     }
     Row(
