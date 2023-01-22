@@ -23,12 +23,11 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import com.ichen.pocketbracket.ui.theme.medGrey
-import com.ichen.pocketbracket.utils.Field
-import com.ichen.pocketbracket.utils.SITE_ENDPOINT
-import com.ichen.pocketbracket.utils.Status
-import com.ichen.pocketbracket.utils.openBrowser
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ichen.pocketbracket.components.TextWithEndMailLink
+import com.ichen.pocketbracket.utils.*
 
 @Composable
 fun AuthScreen(
@@ -159,44 +158,10 @@ fun AuthScreen(
                 ) {
                     Text(text = "Open start.gg")
                 }
-                val annotatedString = buildAnnotatedString {
-                    val text = "Still having trouble? Contact "
-                    val annotatedText = "pocketbracket@gmail.com"
-                    append(text + annotatedText)
-                    addStringAnnotation(
-                        tag = "URL",
-                        annotation = "mailto:$annotatedText",
-                        start = text.length,
-                        end = text.length + annotatedText.length
-                    )
-                    addStyle(
-                        style = SpanStyle(
-                            color = MaterialTheme.colors.onSurface,
-                            fontSize = MaterialTheme.typography.body1.fontSize,
-                            textDecoration = TextDecoration.None
-                        ),
-                        start = 0,
-                        end = text.length,
-                    )
-                    addStyle(
-                        style = SpanStyle(
-                            color = MaterialTheme.colors.primary,
-                            fontSize = MaterialTheme.typography.body1.fontSize,
-                            textDecoration = TextDecoration.Underline
-                        ), start = text.length,
-                        end = text.length + annotatedText.length,
-                    )
-                }
-                val uriHandler = LocalUriHandler.current
-                ClickableText(
-                    text = annotatedString,
-                    onClick = {
-                        annotatedString
-                            .getStringAnnotations("URL", it, it)
-                            .firstOrNull()?.let { stringAnnotation ->
-                                uriHandler.openUri(stringAnnotation.item)
-                            }
-                    },
+                TextWithEndMailLink(
+                    body = "Still having trouble? Contact ",
+                    mailLink = CONTACT_EMAIL,
+                    context = context,
                 )
             }
         } else {

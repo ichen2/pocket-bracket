@@ -54,10 +54,10 @@ fun ColumnScope.MyTournamentsScreen(
         if (viewModel.tournaments.value.data.isEmpty()) {
             when (viewModel.tournaments.value.status) {
                 Status.ERROR -> {
-                    ErrorSplash("Error fetching your tournaments from start.gg")
+                    ErrorSplash(message = "Could not fetch tournaments from start.gg", isCritical = true,)
                 }
                 Status.SUCCESS -> {
-                    ErrorSplash("No tournaments found", isCritical = false)
+                    ErrorSplash(message = "No tournaments found")
                 }
                 else -> {
                     TournamentsListLoading(viewModel.tournaments.value.data.size)

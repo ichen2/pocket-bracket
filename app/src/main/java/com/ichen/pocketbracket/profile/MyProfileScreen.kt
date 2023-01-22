@@ -38,10 +38,12 @@ import com.ichen.pocketbracket.R
 import com.ichen.pocketbracket.auth.AuthActivity
 import com.ichen.pocketbracket.components.ErrorSplash
 import com.ichen.pocketbracket.components.ShimmerAnimation
+import com.ichen.pocketbracket.components.TextWithEndMailLink
 import com.ichen.pocketbracket.home.apiKey
 import com.ichen.pocketbracket.profile.components.UserSetting
 import com.ichen.pocketbracket.ui.theme.PocketBracketTheme
 import com.ichen.pocketbracket.ui.theme.medGrey
+import com.ichen.pocketbracket.utils.CONTACT_EMAIL
 import com.ichen.pocketbracket.utils.Status
 import com.ichen.pocketbracket.utils.openBrowser
 
@@ -109,7 +111,10 @@ fun ColumnScope.MyProfileScreen(
                             )
                         } else {
                             Box(
-                                modifier = Modifier.size(100.dp).clip(CircleShape).background(Color.LightGray),
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.LightGray),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
@@ -187,61 +192,19 @@ fun ColumnScope.MyProfileScreen(
                             style = MaterialTheme.typography.h4
                         )
                         Spacer(Modifier.height(16.dp))
-                        val annotatedString = buildAnnotatedString {
-                            val text =
-                                "Pocket Bracket is powered by the start.gg API. For support, bug reports, or feature suggestions please contact "
-                            val annotatedText = "pocketbracket@gmail.com"
-                            append(text + annotatedText)
-                            addStringAnnotation(
-                                "URL",
-                                "mailto:$annotatedText",
-                                start = text.length,
-                                end = text.length + annotatedText.length
-                            )
-                            addStyle(
-                                style = SpanStyle(
-                                    color = MaterialTheme.colors.onSurface,
-                                    fontSize = MaterialTheme.typography.body1.fontSize,
-                                    textDecoration = TextDecoration.None
-                                ), start = 0, end = text.length
-                            )
-                            addStyle(
-                                style = SpanStyle(
-                                    color = MaterialTheme.colors.primary,
-                                    fontSize = MaterialTheme.typography.body1.fontSize,
-                                    textDecoration = TextDecoration.Underline
-                                ), start = text.length, end = text.length + annotatedText.length
-                            )
-                        }
-                        val uriHandler = LocalUriHandler.current
-                        ClickableText(
-                            text = annotatedString,
-                            onClick = {
-                                annotatedString
-                                    .getStringAnnotations("URL", it, it)
-                                    .firstOrNull()?.let { stringAnnotation ->
-                                        uriHandler.openUri(stringAnnotation.item)
-                                    }
-                            },
+                        TextWithEndMailLink(
+                            body = "Pocket Bracket is powered by the start.gg API. For support, bug reports, or feature suggestions please contact ",
+                            mailLink = CONTACT_EMAIL,
+                            context = context,
                         )
                     }
                 }
             }
         } else if (viewModel.userDetails.value.status == Status.ERROR) {
-            ErrorSplash("Error fetching your profile from start.gg")
-            Row(Modifier.clickable {
-                apiKey = null
-                context.startActivity(Intent(context, AuthActivity::class.java))
-            }) {
-                Icon(
-                    imageVector = Icons.Filled.Logout,
-                    contentDescription = "log out",
-                    modifier = Modifier.size(32.dp),
-                    tint = MaterialTheme.colors.onSurface
-                )
-                Spacer(Modifier.width(16.dp))
-                Text(text = "Log Out", color = MaterialTheme.colors.onSurface)
-            }
+            ErrorSplash(
+                message = "Could not fetch profile from start.gg",
+                isCritical = true,
+            )
         } else {
             MyProfileScreenLoading()
         }

@@ -74,7 +74,10 @@ class TournamentDetailsActivity : AppCompatActivity() {
                         }
                     }
                 } else {
-                    ErrorSplash("Error fetching tournament details from start.gg")
+                    ErrorSplash(
+                        message = "Could not fetch tournament details from start.gg",
+                        isCritical = true,
+                    )
                 }
             }
         }

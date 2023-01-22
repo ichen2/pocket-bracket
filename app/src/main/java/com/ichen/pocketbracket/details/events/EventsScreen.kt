@@ -19,6 +19,6 @@ fun ColumnScope.EventsScreen(events: List<Event>?, tournamentSlug: String) = Col
             }
         }
     } else {
-        ErrorSplash("No events found", isCritical = false)
+        ErrorSplash("No events found")
     }
 }

@@ -3,6 +3,7 @@ package com.ichen.pocketbracket.models
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.android.gms.maps.model.LatLng
+import com.ichen.pocketbracket.utils.CONTACT_EMAIL
 import com.ichen.pocketbracket.utils.SECONDS_IN_DAY
 import com.ichen.pocketbracket.utils.addDays
 import java.util.*
@@ -111,7 +112,7 @@ val testTournament1: Tournament = Tournament(
     city = "Los Angeles",
     countryCode = "US",
     location = LatLng(34.0522342, -118.2436849),
-    primaryContact = "pocketbracket@gmail.com",
+    primaryContact = CONTACT_EMAIL,
     slug = "test-tournament",
     venueAddress = "Los Angeles, CA, USA",
     venueName = "Test Tournament Venue",
@@ -133,7 +134,7 @@ val testTournament2: Tournament = Tournament(
     city = "Los Angeles",
     countryCode = "US",
     location = LatLng(34.0522342, -118.2436849),
-    primaryContact = "pocketbracket@gmail.com",
+    primaryContact = CONTACT_EMAIL,
     slug = "test-tournament",
     venueAddress = "Los Angeles, CA, USA",
     venueName = "Test Tournament Venue",

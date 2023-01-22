@@ -52,10 +52,13 @@ fun ColumnScope.AttendeesScreen(
     if (viewModel.attendees.value.data.isEmpty()) {
         when (viewModel.attendees.value.status) {
             Status.ERROR -> {
-                ErrorSplash("Error loading attendees")
+                ErrorSplash(
+                    message = "Error loading attendees",
+                    isCritical = true,
+                )
             }
             Status.SUCCESS -> {
-                ErrorSplash("No attendees found", isCritical = false)
+                ErrorSplash("No attendees found")
             }
             else -> {
                 AttendeesListLoading(numItems = 10)
