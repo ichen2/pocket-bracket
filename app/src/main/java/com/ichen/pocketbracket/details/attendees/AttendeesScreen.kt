@@ -13,11 +13,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ichen.pocketbracket.components.ErrorSplash
 import com.ichen.pocketbracket.details.components.AttendeeProfile
 import com.ichen.pocketbracket.details.components.AttendeesListLoading
 import com.ichen.pocketbracket.utils.Status
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 /*
 
@@ -49,7 +49,27 @@ fun ColumnScope.AttendeesScreen(
             viewModel.cleanup()
         }
     }
-    if (viewModel.attendees.value.data.isEmpty()) {
+    TextField(
+        value = searchPhrase,
+        modifier = Modifier
+            .fillMaxWidth(1f)
+            .clip(MaterialTheme.shapes.small)
+            .padding(horizontal = 8.dp, vertical = 16.dp),
+        onValueChange = { newSearchPhrase -> searchPhrase = newSearchPhrase },
+        placeholder = { Text("Search") },
+        colors = TextFieldDefaults.textFieldColors(
+            focusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
+            errorIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            textColor = MaterialTheme.colors.onSurface,
+            backgroundColor = MaterialTheme.colors.surface,
+        )
+    )
+    val filterData = viewModel.attendees.value.data.filter { attendee ->
+        attendee.tag.lowercase().contains(searchPhrase.lowercase())
+    }
+    if (filterData.isEmpty()) {
         when (viewModel.attendees.value.status) {
             Status.ERROR -> {
                 ErrorSplash(
@@ -65,26 +85,9 @@ fun ColumnScope.AttendeesScreen(
             }
         }
     } else {
-        TextField(
-            value = searchPhrase,
-            modifier = Modifier
-                .fillMaxWidth(1f)
-                .clip(MaterialTheme.shapes.small)
-                .padding(horizontal = 8.dp, vertical = 16.dp),
-            onValueChange = { newSearchPhrase -> searchPhrase = newSearchPhrase },
-            placeholder = { Text("Search") },
-            colors = TextFieldDefaults.textFieldColors(
-                focusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
-            )
-        )
         LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
             itemsIndexed(
-                items = viewModel.attendees.value.data.filter { attendee ->
-                    attendee.tag.lowercase().contains(searchPhrase.lowercase())
-                },
+                items = filterData,
                 key = { _, attendee -> attendee.id })
             { _, attendee ->
                 AttendeeProfile(attendee, tournamentSlug)
@@ -98,7 +101,7 @@ fun ColumnScope.AttendeesScreen(
             } else if (viewModel.attendees.value.status == Status.ERROR) {
                 item {
                     Text(
-                        "Could not load additional attendees",
+                        text = "Could not load additional attendees",
                         color = MaterialTheme.colors.onBackground
                     )
                 }

@@ -105,7 +105,6 @@ class HomeActivity : AppCompatActivity() {
 
 
     private fun saveApiKeyToStorage() {
-        println("Saving api key to storage!!!")
         if (apiKey != null) {
             getSharedPreferences(
                 SHARED_PREFERENCES_KEY,
