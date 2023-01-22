@@ -25,9 +25,9 @@ open class TournamentsTimelineViewModel : LAVM() {
     }
 
     open fun getTournaments(newFilter: TournamentFilter? = null, context: Context) {
-        if (tournaments.status == Status.LOADING || !hasMoreTournaments) return
+        if (tournaments.status == Status.LOADING || (newFilter == null && !hasMoreTournaments)) return
+        if (newFilter != null) { filter = newFilter.copy(page = 1) }
         val resetSearch = newFilter != null
-        if (resetSearch) { filter = newFilter!!.copy(page = 1) }
         tournaments = if (resetSearch) Field(emptyList(), Status.LOADING) else tournaments.withStatus(Status.LOADING)
         viewModelScope.launch {
             val response = repository.getTournaments(filter, context)?.let {
