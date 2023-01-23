@@ -26,8 +26,9 @@ open class MyTournamentsViewModel : LAVM() {
 
     open fun getEvents(context: Context) {
         if (tournaments.value.status == Status.LOADING || !hasMoreEvents) return
+        currentJob?.cancel()
         tournaments.value = tournaments.value.withStatus(Status.LOADING)
-        viewModelScope.launch {
+        currentJob = viewModelScope.launch {
             val response = repository.getUserEvents(page, EVENTS_PER_PAGE, context)?.let {
                 parseGetUserTournamentsResponse(it)
             }

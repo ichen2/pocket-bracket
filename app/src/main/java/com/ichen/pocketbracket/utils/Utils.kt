@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.Job
 
 const val METERS_IN_MILE = 1609.34
 const val SECONDS_IN_DAY = 86400
@@ -134,8 +135,12 @@ fun mergeAddress(city: String?, state: String?, country: String?) : String? {
  */
 
 abstract class LAVM: ViewModel() {
+    var currentJob: Job? = null
     abstract fun onCreated(context: Context)
-    public override fun onCleared() { super.onCleared() }
+    public override fun onCleared() {
+        currentJob?.cancel()
+        super.onCleared()
+    }
 }
 
 const val Z_INDEX_TOP = 1000f

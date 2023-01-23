@@ -11,6 +11,7 @@ import com.google.android.gms.location.LocationServices
 import com.ichen.pocketbracket.GetTournamentsQuery
 import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.utils.*
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 open class TournamentsTimelineViewModel : LAVM() {
@@ -27,11 +28,12 @@ open class TournamentsTimelineViewModel : LAVM() {
     }
 
     open fun getTournaments(newFilter: TournamentFilter? = null, context: Context) {
-        if (tournaments.status == Status.LOADING || (newFilter == null && !hasMoreTournaments)) return
+        if (newFilter == null && !hasMoreTournaments) return
+        currentJob?.cancel()
         if (newFilter != null) { filter = newFilter.copy(page = 1) }
         val resetSearch = newFilter != null
         tournaments = if (resetSearch) Field(emptyList(), Status.LOADING) else tournaments.withStatus(Status.LOADING)
-        viewModelScope.launch {
+        currentJob = viewModelScope.launch {
             val response = repository.getTournaments(filter, context)?.let {
                 val parsedResponse = parseGetTournamentsResponse(it)
                 sortTournaments(parsedResponse, filter)
