@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.ichen.pocketbracket.components.ErrorSplash
 import com.ichen.pocketbracket.timeline.components.TimelineHeader
 import com.ichen.pocketbracket.timeline.components.TournamentCard
@@ -30,7 +31,8 @@ import com.ichen.pocketbracket.utils.openTournamentDetailsScreen
 fun ColumnScope.TournamentsTimelineScreen(
     clickable: Boolean,
     setDialogComposable: SetComposableFunction,
-    viewModel: TournamentsTimelineViewModel = viewModel()
+    viewModel: TournamentsTimelineViewModel = viewModel(),
+    locationProvider: FusedLocationProviderClient,
 ) = Column(
     modifier = Modifier
         .weight(1f)
@@ -53,6 +55,7 @@ fun ColumnScope.TournamentsTimelineScreen(
         },
         clickable = clickable,
         setDialogComposable = setDialogComposable,
+        locationProvider = locationProvider,
     )
     Box(
         contentAlignment = Alignment.Center,
@@ -96,11 +99,4 @@ fun ColumnScope.TournamentsTimelineScreen(
             }
         }
     }
-}
-
-@ExperimentalPermissionsApi
-@Composable
-@Preview
-fun TournamentsTimelineScreenPreview() = Column(Modifier.background(Color.White)) {
-    TournamentsTimelineScreen(false, {})
 }

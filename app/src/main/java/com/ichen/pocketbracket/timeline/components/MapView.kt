@@ -2,7 +2,6 @@ package com.ichen.pocketbracket.timeline.components
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.compose.animation.core.Spring
@@ -28,19 +27,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.zIndex
-import androidx.core.content.ContextCompat
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.android.gms.location.*
-import com.google.android.gms.location.LocationRequest
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.Circle
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.tasks.CancellationTokenSource
-import com.google.android.gms.tasks.Task
 import com.ichen.pocketbracket.models.LocationRadius
 import com.ichen.pocketbracket.utils.METERS_IN_MILE
 import com.ichen.pocketbracket.utils.Z_INDEX_TOP
@@ -48,7 +44,7 @@ import com.ichen.pocketbracket.utils.getScaledRadius
 import kotlin.math.roundToInt
 
 const val RADIUS_MAX: Double = 1500.0
-const val RADIUS_MIN: Double = 10.0
+const val RADIUS_MIN: Double = 100.0
 const val RADIUS_START: Double = RADIUS_MIN
 
 @SuppressLint("PermissionLaunchedDuringComposition", "MissingPermission")
@@ -59,15 +55,14 @@ fun LocationPicker(
         39.8283,
         -98.5795
     ),
+    locationProvider: FusedLocationProviderClient,
     onNegativeButtonClick: () -> Unit,
-    onPositiveButtonClick: (LocationRadius) -> Unit
+    onPositiveButtonClick: (LocationRadius) -> Unit,
 ) {
-    val locationPermissionState = rememberMultiplePermissionsState(
-        permissions = listOf(
-            Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
-        )
+    val locationPermissionState = rememberPermissionState(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
     )
-    val locationButtonClicked = remember { mutableStateOf(false) }
+    val loadingLocation = remember { mutableStateOf(false) }
     val mapIsMoving = remember { mutableStateOf(false) }
     val locationRadius = remember {
         mutableStateOf(
@@ -79,84 +74,52 @@ fun LocationPicker(
     var sliderValue by remember { mutableStateOf(0f) }
     val map: MutableState<GoogleMap?> = remember { mutableStateOf(null) }
     val context = LocalContext.current
+    var isFirstTime by remember { mutableStateOf(true) }
 
-    LaunchedEffect(locationButtonClicked.value, locationPermissionState.allPermissionsGranted) {
-        if (locationButtonClicked.value && ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            val builder = LocationSettingsRequest
-                .Builder()
-                .addLocationRequest(
-                    LocationRequest
-                        .create()
-                        .apply {
-                            priority =
-                                LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-                            interval = 10000
-                        })
-            val client: SettingsClient = LocationServices.getSettingsClient(context)
-            val task: Task<LocationSettingsResponse> =
-                client.checkLocationSettings(builder.build())
-            task.addOnSuccessListener {
-                LocationServices
-                    .getFusedLocationProviderClient(context)
-                    .getCurrentLocation(
-                        LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY,
-                        CancellationTokenSource().token
+    LaunchedEffect(locationPermissionState.status.isGranted) {
+        if (isFirstTime) {
+            /*
+
+            this is kinda jank but
+            we don't want to center on the user's location when they open this screen
+            but we do want to center when the location permission is granted
+            so this prevents the first time centering
+            but lets us catch the permission being granted centering
+
+             */
+            isFirstTime = false
+        } else if (locationPermissionState.status.isGranted) {
+            loadingLocation.value = true
+            locationProvider.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    locationRadius.value = LocationRadius(
+                        LatLng(location.latitude, location.longitude),
+                        locationRadius.value.radius
                     )
-                    .addOnSuccessListener { location ->
-                        if (location != null) {
-                            locationRadius.value = LocationRadius(
-                                LatLng(location.latitude, location.longitude),
-                                locationRadius.value.radius
-                            )
-                            map.value?.moveCamera(
-                                CameraUpdateFactory.newLatLng(
-                                    locationRadius.value.center
-                                )
-                            )
-                            locationButtonClicked.value = false
-                        } else {
-                            Toast
-                                .makeText(
-                                    context,
-                                    "Error retrieving user location",
-                                    Toast.LENGTH_SHORT
-                                )
-                                .show()
-                            locationButtonClicked.value = false
-                        }
-                    }
-                    .addOnFailureListener {
-                        Toast
-                            .makeText(
-                                context,
-                                "Error retrieving user location",
-                                Toast.LENGTH_SHORT
-                            )
-                            .show()
-                        locationButtonClicked.value = false
-                    }
-            }
-            task.addOnFailureListener {
-                Toast
-                    .makeText(
+                    map.value?.moveCamera(
+                        CameraUpdateFactory.newLatLng(
+                            locationRadius.value.center
+                        )
+                    )
+                } else {
+                    Toast.makeText(
                         context,
-                        "Error retrieving user location. Please enable location services in your settings",
-                        Toast.LENGTH_LONG
-                    )
-                    .show()
-                locationButtonClicked.value = false
+                        "Error fetching location. Please make sure you have location permissions enabled.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+                loadingLocation.value = false
+            }.addOnFailureListener {
+                Toast.makeText(
+                    context,
+                    "Error fetching location. Please make sure you have location permissions enabled.",
+                    Toast.LENGTH_SHORT,
+                ).show()
+                loadingLocation.value = false
             }
-
         }
     }
+
     Box {
         MapView(map, mapIsMoving, locationRadius)
         Row(
@@ -194,13 +157,41 @@ fun LocationPicker(
                     .clip(CircleShape)
                     .background(MaterialTheme.colors.background)
                     .clickable {
-                        locationButtonClicked.value = true
-                        if (!locationPermissionState.allPermissionsGranted) { // TODO: rewrite location request
-                            locationPermissionState.launchMultiplePermissionRequest()
+                        if (!locationPermissionState.status.isGranted) { // TODO: rewrite location request
+                            locationPermissionState.launchPermissionRequest()
+                        } else {
+                            loadingLocation.value = true
+                            locationProvider.lastLocation.addOnSuccessListener { location ->
+                                if (location != null) {
+                                    locationRadius.value = LocationRadius(
+                                        LatLng(location.latitude, location.longitude),
+                                        locationRadius.value.radius
+                                    )
+                                    map.value?.moveCamera(
+                                        CameraUpdateFactory.newLatLng(
+                                            locationRadius.value.center
+                                        )
+                                    )
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "Error fetching location. Please make sure you have location permissions enabled.",
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
+                                }
+                                loadingLocation.value = false
+                            }.addOnFailureListener {
+                                Toast.makeText(
+                                    context,
+                                    "Error fetching location. Please make sure you have location permissions enabled.",
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                                loadingLocation.value = false
+                            }
                         }
                     }, contentAlignment = Alignment.Center
             ) {
-                if(!locationButtonClicked.value) {
+                if(!loadingLocation.value) {
                     Icon(
                         Icons.Filled.LocationOn,
                         contentDescription = "get my location",
@@ -237,8 +228,8 @@ fun LocationPicker(
     }
 }
 
-const val CIRCLE_SELECTED_TRANSPARENCY = .25f
-const val CIRCLE_UNSELECTED_TRANSPARENCY = .1f
+const val CIRCLE_SELECTED_TRANSPARENCY = .5f
+const val CIRCLE_UNSELECTED_TRANSPARENCY = .2f
 
 @Composable
 fun MapView(
@@ -310,7 +301,7 @@ fun MapView(
             Box(
                 Modifier
                     .fillMaxSize()
-                    .alpha(.5f)
+                    .alpha(.4f)
                     .background(Color.Black)
             )
         }

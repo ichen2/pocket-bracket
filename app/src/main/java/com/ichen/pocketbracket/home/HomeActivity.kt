@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.android.gms.location.LocationServices
 import com.ichen.pocketbracket.auth.AuthActivity
 import com.ichen.pocketbracket.home.components.NavigationFooter
 import com.ichen.pocketbracket.profile.MyProfileScreen
@@ -56,6 +57,7 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this, AuthActivity::class.java))
         }
         saveApiKeyToStorage()
+        val locationProvider = LocationServices.getFusedLocationProviderClient(this)
         setContent {
             PocketBracketTheme {
                 if (userIsAuthenticated) {
@@ -66,6 +68,7 @@ class HomeActivity : AppCompatActivity() {
                                     TournamentsTimelineScreen(
                                         clickable = dialogComposable.value == null,
                                         setDialogComposable = { dialogComposable.value = it },
+                                        locationProvider = locationProvider,
                                     )
                                 }
                                 CurrentTab.MyTournaments -> {

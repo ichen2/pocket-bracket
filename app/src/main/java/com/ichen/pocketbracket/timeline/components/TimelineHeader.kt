@@ -19,6 +19,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.utils.SetComposableFunction
@@ -37,6 +38,7 @@ fun TimelineHeader(
     setFilter: (TournamentFilter) -> Unit,
     clickable: Boolean,
     setDialogComposable: SetComposableFunction,
+    locationProvider: FusedLocationProviderClient,
 ) = Surface(
     color = MaterialTheme.colors.primarySurface,
     contentColor = if (isSystemInDarkTheme()) MaterialTheme.colors.onSurface else MaterialTheme.colors.onPrimary,
@@ -117,6 +119,7 @@ fun TimelineHeader(
                 if (filter.location == null) {
                     setDialogComposable {
                         LocationPicker(
+                            locationProvider = locationProvider,
                             onPositiveButtonClick = { locationRadius ->
                                 setFilter(filter.copy(location = locationRadius))
                                 setDialogComposable(null)

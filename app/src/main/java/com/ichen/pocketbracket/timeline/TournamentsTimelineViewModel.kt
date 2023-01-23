@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.api.ApolloResponse
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.ichen.pocketbracket.GetTournamentsQuery
 import com.ichen.pocketbracket.models.*
 import com.ichen.pocketbracket.utils.*
